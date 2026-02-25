@@ -1,0 +1,26 @@
+schema: spec-driven
+
+context: |
+  项目类型：Astro 博客站点（Astro 5 + React 19 + TypeScript 5）
+  包管理器：pnpm
+  样式方案：Tailwind CSS 4（Vite 插件）
+  目录结构：src/pages, src/layouts, src/components, src/assets, src/styles
+  客户端交互：优先 Astro 静态渲染，React 仅用于必要交互区域
+  路径别名：@ -> src
+  需求背景：终端风格博客页面迁移至 Astro，并对齐 Astro 最佳实践
+  现有规范：.trae/specs/embed-terminal-ui-astro 与 .trae/specs/align-astro-best-practices
+  风格要求：保持 UI 视觉一致，最小化客户端 JS，避免全页面 React 渲染
+
+rules:
+  proposal:
+    - 必须说明 Why/What Changes/Capabilities/Impact
+    - Capabilities 中需列出 kebab-case 新增功能
+  design:
+    - 解释系统结构与关键交互流
+    - 标注关键文件/目录与职责
+  specs:
+    - 必须说明 Why/What Changes/Impact
+    - 必须包含新增/修改/移除需求区块
+  tasks:
+    - 任务需与 specs 需求一一对应
+    - 按依赖顺序编排任务

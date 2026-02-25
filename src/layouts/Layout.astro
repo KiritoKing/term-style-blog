@@ -1,19 +1,21 @@
 ---
 import '@/styles/global.css';
+import { ViewTransitions } from 'astro:transitions';
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class="dark">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
-		<meta name="description" content="A terminal-inspired personal blog interface built with Astro and React." />
+		<meta name="description" content="A terminal-inspired personal blog interface built with Astro." />
 		<meta name="generator" content={Astro.generator} />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<title>Terminal Style Blog</title>
+		<ViewTransitions />
 	</head>
-	<body>
+	<body class="font-mode-pixel">
 		<slot />
 	</body>
 </html>

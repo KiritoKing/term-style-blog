@@ -1,8 +1,54 @@
 ---
-import App from '@/components/App';
-import Layout from '@/layouts/Layout.astro';
+import ShellLayout from '@/layouts/ShellLayout.astro';
+import { LATEST_POST } from '@/data/posts';
 ---
 
-<Layout>
-	<App client:load />
-</Layout>
+<ShellLayout>
+	<div class="animate-in fade-in duration-300">
+		<p class="text-blue-600 dark:text-green-400 mb-4">$ ./welcome.sh</p>
+		<h1 class="text-4xl font-pixel text-gray-900 dark:text-white mb-4 text-glow-white">SYSTEM ONLINE</h1>
+		<p class="text-gray-600 dark:text-gray-300 mb-2">Welcome to my personal server.</p>
+		<p class="text-gray-500 dark:text-gray-400 mb-6">Type 'help' or click around to navigate.</p>
+
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-lg max-w-2xl mb-8 p-4 border border-gray-300 dark:border-[#333] bg-gray-50 dark:bg-[#0a0a0a]">
+			<div class="flex">
+				<span class="text-gray-500 w-24">OS:</span>
+				<span class="text-blue-600 dark:text-green-300">Debian GNU/Linux 12</span>
+			</div>
+			<div class="flex">
+				<span class="text-gray-500 w-24">Kernel:</span>
+				<span class="text-blue-600 dark:text-green-300">6.1.0-18-amd64</span>
+			</div>
+			<div class="flex">
+				<span class="text-gray-500 w-24">Uptime:</span>
+				<span class="text-blue-600 dark:text-green-300">94 days, 12:34</span>
+			</div>
+			<div class="flex">
+				<span class="text-gray-500 w-24">Packages:</span>
+				<span class="text-blue-600 dark:text-green-300">1423 (dpkg)</span>
+			</div>
+			<div class="flex">
+				<span class="text-gray-500 w-24">Shell:</span>
+				<span class="text-blue-600 dark:text-green-300">zsh 5.9</span>
+			</div>
+			<div class="flex">
+				<span class="text-gray-500 w-24">Terminal:</span>
+				<span class="text-blue-600 dark:text-green-300">xterm-256color</span>
+			</div>
+		</div>
+
+		<p class="text-yellow-600 dark:text-yellow-400 mb-4 font-pixel">LATEST_POST.md</p>
+		<a
+			class="block border border-gray-300 dark:border-[#333] bg-white dark:bg-[#111] p-4 cursor-pointer hover:border-blue-500 dark:hover:border-green-500 transition-colors group"
+			href={`/posts/${LATEST_POST.id}`}
+		>
+			<h3 class="text-2xl font-pixel text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-green-400 mb-2">
+				{LATEST_POST.title}
+			</h3>
+			<p class="text-gray-500 dark:text-gray-400 text-sm mb-2">
+				{LATEST_POST.date} | {LATEST_POST.category} | {LATEST_POST.tags.join(', ')}
+			</p>
+			<p class="text-gray-600 dark:text-gray-300 line-clamp-2">{LATEST_POST.content}</p>
+		</a>
+	</div>
+</ShellLayout>

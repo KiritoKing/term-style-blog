@@ -1,0 +1,64 @@
+---
+import ShellLayout from '@/layouts/ShellLayout.astro';
+import { POSTS, type Post } from '@/data/posts';
+import LucideIcon from '@/components/icons/LucideIcon.astro';
+
+interface Props {
+  post: Post;
+}
+
+export function getStaticPaths() {
+  return POSTS.map((post) => ({
+    params: { id: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props as Props;
+---
+
+<ShellLayout>
+  <div class="animate-in fade-in duration-300">
+    <p class="text-blue-600 dark:text-green-400 mb-6">$ cat ~/posts/{post.id}.md</p>
+    <div class="border border-gray-300 dark:border-[#333] bg-gray-50 dark:bg-[#0a0a0a] p-6 md:p-8 text-gray-700 dark:text-gray-300 relative">
+      <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500/50 dark:from-green-500/50 to-transparent"></div>
+      <h1 class="text-3xl md:text-5xl font-pixel text-gray-900 dark:text-white mb-4 text-glow-white">
+        {post.title}
+      </h1>
+      <div class="flex flex-wrap gap-4 text-sm text-gray-500 mb-8 border-b border-gray-300 dark:border-[#333] pb-4">
+        <span class="bg-white dark:bg-[#111] px-2 py-1 rounded border border-gray-200 dark:border-[#222]">
+          DATE: {post.date}
+        </span>
+        <a
+          href={`/categories/${post.category.toLowerCase()}`}
+          class="bg-white dark:bg-[#111] px-2 py-1 rounded border border-gray-200 dark:border-[#222] cursor-pointer hover:border-blue-500 dark:hover:border-green-500 hover:text-blue-600 dark:hover:text-green-400 transition-colors"
+        >
+          CATEGORY: {post.category}
+        </a>
+        <span class="bg-white dark:bg-[#111] px-2 py-1 rounded border border-gray-200 dark:border-[#222] flex gap-1">
+          TAGS:
+          {post.tags.map((tag, idx) => (
+            <span>
+              <a
+                href={`/tags/${tag.toLowerCase()}`}
+                class="cursor-pointer hover:text-blue-600 dark:hover:text-green-400 transition-colors"
+              >
+                {tag}
+              </a>
+              {idx < post.tags.length - 1 ? ', ' : ''}
+            </span>
+          ))}
+        </span>
+      </div>
+      <div class="prose dark:prose-invert prose-p:font-console prose-headings:font-pixel max-w-none text-xl leading-relaxed whitespace-pre-wrap">
+        {post.content}
+      </div>
+    </div>
+    <a
+      href="/posts"
+      class="mt-6 text-blue-600 dark:text-green-500 hover:text-gray-900 dark:hover:text-white hover:bg-blue-100 dark:hover:bg-green-900/30 px-4 py-2 rounded flex items-center gap-2 transition-colors border border-transparent hover:border-blue-500/50 dark:hover:border-green-500/50 w-fit"
+    >
+      <LucideIcon name="chevron-right" size={18} /> cd ../
+    </a>
+  </div>
+</ShellLayout>

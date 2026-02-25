@@ -1,0 +1,60 @@
+---
+import ShellLayout from '@/layouts/ShellLayout.astro';
+import { getPostsByTag, getTags, type Post } from '@/data/posts';
+import LucideIcon from '@/components/icons/LucideIcon.astro';
+
+interface Props {
+  slug: string;
+  posts: Post[];
+}
+
+export function getStaticPaths() {
+  return getTags().map((slug) => ({
+    params: { slug },
+    props: { slug, posts: getPostsByTag(slug) },
+  }));
+}
+
+const { slug, posts } = Astro.props as Props;
+---
+
+<ShellLayout>
+  <div class="animate-in fade-in duration-300">
+    <p class="text-blue-600 dark:text-green-400 mb-6">$ ls -la ~/tags/{slug}</p>
+    <div class="flex flex-col gap-2">
+      <div class="flex items-center gap-4 text-gray-500 border-b border-gray-300 dark:border-[#333] pb-2 mb-2 font-bold">
+        <span class="w-24">PERMISSIONS</span>
+        <span class="w-16">OWNER</span>
+        <span class="w-24">DATE</span>
+        <span>NAME</span>
+      </div>
+      {posts.map((post) => (
+        <a
+          href={`/posts/${post.id}`}
+          class="group cursor-pointer flex flex-col md:flex-row md:items-center gap-2 md:gap-4 py-2 hover:bg-gray-200 dark:hover:bg-[#111] px-2 -mx-2 rounded transition-colors"
+        >
+          <div class="flex items-center gap-4 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">
+            <span class="text-blue-500 dark:text-blue-400 w-24">-rw-r--r--</span>
+            <span class="text-green-600 w-16">guest</span>
+            <span class="w-24">{post.date}</span>
+          </div>
+          <div class="flex-1 flex flex-col md:flex-row md:items-center justify-between gap-2">
+            <span class="text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-green-400 flex items-center gap-2 text-xl">
+              <LucideIcon name="file-text" size={18} class="inline text-gray-500 group-hover:text-blue-600 dark:group-hover:text-green-400" />
+              {post.id}.md
+            </span>
+            <span class="text-sm text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300 md:text-right">
+              # {post.title}
+            </span>
+          </div>
+        </a>
+      ))}
+    </div>
+    <a
+      href="/tags"
+      class="mt-6 text-blue-600 dark:text-green-500 hover:text-gray-900 dark:hover:text-white hover:bg-blue-100 dark:hover:bg-green-900/30 px-4 py-2 rounded flex items-center gap-2 transition-colors border border-transparent hover:border-blue-500/50 dark:hover:border-green-500/50 w-fit"
+    >
+      <LucideIcon name="chevron-right" size={18} /> cd ../
+    </a>
+  </div>
+</ShellLayout>

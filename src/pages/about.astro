@@ -1,0 +1,47 @@
+---
+import ShellLayout from '@/layouts/ShellLayout.astro';
+---
+
+<ShellLayout>
+  <div class="animate-in fade-in duration-300">
+    <p class="text-blue-600 dark:text-green-400 mb-6">$ cat ~/about.txt</p>
+    <div class="flex flex-col lg:flex-row gap-8 items-start border border-gray-300 dark:border-[#333] bg-gray-50 dark:bg-[#0a0a0a] p-6 md:p-8">
+      <div class="bg-white dark:bg-[#111] p-4 border border-gray-200 dark:border-[#222] rounded shadow-inner">
+        <pre class="text-blue-600 dark:text-green-500 text-xs leading-none font-bold">
+{`
+      _.-'''''-._
+    .'  _     _  '.
+   /   (o)   (o)   \\
+  |                 |
+  |  \\           /  |
+   \\  '.       .'  /
+    '.  \`'---'\`  .'
+      '-._____.-'
+`}
+        </pre>
+      </div>
+      <div class="flex-1">
+        <h2 class="text-3xl font-pixel text-gray-900 dark:text-white mb-6 border-b border-gray-300 dark:border-[#333] pb-2">
+          ABOUT_ME
+        </h2>
+        <p class="text-xl text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
+          Hi, I'm a developer who loves retro aesthetics, pixel art, and building things from scratch.
+        </p>
+        <p class="text-xl text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
+          I specialize in creating web experiences that don't just look like standard corporate templates. I believe
+          the web should be fun, weird, and personal.
+        </p>
+        <div class="mt-8">
+          <h3 class="text-xl font-pixel text-blue-600 dark:text-green-400 mb-4">SKILLS</h3>
+          <div class="flex flex-wrap gap-2">
+            {['React', 'TypeScript', 'Rust', 'TailwindCSS', 'Pixel Art', 'Linux'].map((skill) => (
+              <span class="bg-white dark:bg-[#111] border border-gray-300 dark:border-[#333] px-3 py-1 text-gray-700 dark:text-gray-300 text-lg">
+                {skill}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ShellLayout>

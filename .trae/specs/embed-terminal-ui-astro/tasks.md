@@ -8,11 +8,11 @@
 - [x] Task 3: 处理客户端交互与资源路径
   - [x] SubTask 3.1: 迁移脚本或交互逻辑到 Astro
   - [x] SubTask 3.2: 校准静态资源路径与构建输出
-- [ ] Task 4: 验证 UI 一致性与构建可用性
-  - [ ] SubTask 4.1: 本地预览对比页面视觉一致性
-  - [ ] SubTask 4.2: 运行构建或检查无错误输出
-- [ ] Task 5: 修复终端输入框可访问性属性
-  - [ ] SubTask 5.1: 为输入框补充 id/name/aria-label
+- [x] Task 4: 验证 UI 一致性与构建可用性
+  - [x] SubTask 4.1: 本地预览对比页面视觉一致性
+  - [x] SubTask 4.2: 运行构建或检查无错误输出
+- [x] Task 5: 修复终端输入框可访问性属性
+  - [x] SubTask 5.1: 为输入框补充 id/name/aria-label
 
 # Task Dependencies
 - Task 2 depends on Task 1

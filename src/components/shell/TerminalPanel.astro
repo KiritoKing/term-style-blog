@@ -1,0 +1,12 @@
+---
+import TerminalPanelInteractive from '@/components/react/TerminalPanel';
+
+interface Props {
+  promptPath: string;
+  route: string;
+}
+
+const { promptPath, route } = Astro.props;
+---
+
+<TerminalPanelInteractive client:load promptPath={promptPath} route={route} />

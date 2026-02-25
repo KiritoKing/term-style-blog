@@ -1,0 +1,108 @@
+---
+import LucideIcon from '@/components/icons/LucideIcon.astro';
+
+interface Props {
+  navActive: string;
+}
+
+const { navActive } = Astro.props;
+---
+
+<div class="w-full md:w-64 flex flex-col gap-4 shrink-0">
+  <div class="pixel-panel p-4 flex flex-col items-center text-center">
+    <pre class="text-[10px] leading-none mb-4 text-blue-600 dark:text-green-500 font-bold">
+{`
+ _____ 
+/     \\
+| () () |
+\\  ^  / 
+ |||||  
+ |||||  
+`}
+    </pre>
+    <h1 class="font-pixel text-xl text-gray-900 dark:text-white mb-1 text-glow-white">GUEST_USER</h1>
+    <p class="text-sm text-blue-600 dark:text-green-600 mb-4">Level 42 Developer</p>
+
+    <div class="w-full h-px bg-gray-300 dark:bg-[#333] my-2"></div>
+
+    <div class="flex flex-col w-full text-left gap-1 mt-2">
+      <a
+        href="/"
+        class={`pixel-btn px-3 py-2 flex items-center gap-3 text-lg ${
+          navActive === 'home'
+            ? 'bg-blue-100 dark:bg-green-900/40 text-blue-600 dark:text-green-400 border-l-2 border-blue-500 dark:border-green-500'
+            : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+        }`}
+      >
+        <LucideIcon name="terminal" size={18} /> ~/home
+      </a>
+      <a
+        href="/posts"
+        class={`pixel-btn px-3 py-2 flex items-center gap-3 text-lg ${
+          navActive === 'posts'
+            ? 'bg-blue-100 dark:bg-green-900/40 text-blue-600 dark:text-green-400 border-l-2 border-blue-500 dark:border-green-500'
+            : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+        }`}
+      >
+        <LucideIcon name="folder" size={18} /> ~/posts
+      </a>
+      <a
+        href="/categories"
+        class={`pixel-btn px-3 py-2 flex items-center gap-3 text-lg ${
+          navActive === 'categories'
+            ? 'bg-blue-100 dark:bg-green-900/40 text-blue-600 dark:text-green-400 border-l-2 border-blue-500 dark:border-green-500'
+            : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+        }`}
+      >
+        <LucideIcon name="layers" size={18} /> ~/categories
+      </a>
+      <a
+        href="/tags"
+        class={`pixel-btn px-3 py-2 flex items-center gap-3 text-lg ${
+          navActive === 'tags'
+            ? 'bg-blue-100 dark:bg-green-900/40 text-blue-600 dark:text-green-400 border-l-2 border-blue-500 dark:border-green-500'
+            : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+        }`}
+      >
+        <LucideIcon name="tag" size={18} /> ~/tags
+      </a>
+      <a
+        href="/about"
+        class={`pixel-btn px-3 py-2 flex items-center gap-3 text-lg ${
+          navActive === 'about'
+            ? 'bg-blue-100 dark:bg-green-900/40 text-blue-600 dark:text-green-400 border-l-2 border-blue-500 dark:border-green-500'
+            : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+        }`}
+      >
+        <LucideIcon name="user" size={18} /> ~/about
+      </a>
+    </div>
+  </div>
+
+  <div class="pixel-panel p-4 flex flex-col gap-3">
+    <h2 class="font-pixel text-sm text-gray-500 mb-1">NETWORK</h2>
+    <a
+      href="#"
+      class="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-green-400 flex items-center gap-3 text-lg transition-colors"
+    >
+      <LucideIcon name="github" size={18} /> github
+    </a>
+    <a
+      href="#"
+      class="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-green-400 flex items-center gap-3 text-lg transition-colors"
+    >
+      <LucideIcon name="twitter" size={18} /> twitter
+    </a>
+    <a
+      href="#"
+      class="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-green-400 flex items-center gap-3 text-lg transition-colors"
+    >
+      <LucideIcon name="mail" size={18} /> email
+    </a>
+  </div>
+
+  <div class="mt-auto text-xs text-gray-500 dark:text-gray-600 text-center font-pixel">
+    SYS.VER 1.0.4
+    <br />© 2026
+  </div>
+</div>

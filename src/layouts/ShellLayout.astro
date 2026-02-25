@@ -1,0 +1,59 @@
+---
+import ContentFrame from '@/components/shell/ContentFrame.astro';
+import Sidebar from '@/components/shell/Sidebar.astro';
+import TerminalPanel from '@/components/shell/TerminalPanel.astro';
+import TopBar from '@/components/shell/TopBar.astro';
+import Layout from '@/layouts/Layout.astro';
+
+interface Props {
+  route?: string;
+}
+
+const { route: routeProp } = Astro.props;
+
+const normalizedPathname = Astro.url.pathname.replace(/^\/|\/$/g, '');
+const route = routeProp ?? (normalizedPathname === '' ? 'home' : normalizedPathname);
+
+const navActiveBase = route === 'home' ? 'home' : route.split('/')[0];
+const navActive =
+  navActiveBase === 'post'
+    ? 'posts'
+    : navActiveBase === 'category'
+      ? 'categories'
+      : navActiveBase === 'tag'
+        ? 'tags'
+        : navActiveBase;
+
+const promptPath = () => {
+  if (route === 'home') return '~';
+  return `~/${route}`;
+};
+
+const headerPath = route === 'home' ? '~' : `~/${route}`;
+const promptPathValue = promptPath();
+---
+
+<Layout>
+  <div class="min-h-screen bg-gray-100 dark:bg-[#050505] text-gray-900 dark:text-[#e5e5e5] font-console p-2 md:p-6 flex items-center justify-center relative overflow-hidden crt-flicker">
+    <div class="scanlines" transition:name="scanlines"></div>
+
+    <div class="w-full max-w-7xl h-[95vh] flex flex-col md:flex-row gap-4 relative z-10">
+      <div transition:name="sidebar">
+        <Sidebar navActive={navActive} />
+      </div>
+      <div class="flex-1 pixel-panel flex flex-col overflow-hidden bg-white dark:bg-[#020202]">
+        <div transition:name="topbar">
+          <TopBar headerPath={headerPath} />
+        </div>
+        <div class="flex-1 flex flex-col overflow-hidden" transition:name="content">
+          <ContentFrame>
+            <slot />
+          </ContentFrame>
+        </div>
+        <div transition:name="terminal">
+          <TerminalPanel promptPath={promptPathValue} route={route} />
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>

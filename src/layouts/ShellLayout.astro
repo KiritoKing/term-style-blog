@@ -36,8 +36,8 @@ const promptPathValue = promptPath();
 const posts = await getAllPosts();
 const postIndex = posts.map((post) => ({
   id: post.id,
-  category: post.data.category,
-  tags: post.data.tags,
+  category: post.category,
+  tags: post.tags,
 }));
 ---
 

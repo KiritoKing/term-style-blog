@@ -7,6 +7,14 @@ import icon from "astro-icon";
 
 
 export default defineConfig({
+  image: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.amazonaws.com',
+      },
+    ],
+  },
   integrations: [
     react(),
     icon({

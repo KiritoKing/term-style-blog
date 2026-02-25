@@ -47,14 +47,13 @@ const latestPost = await getLatestPost();
 					href={`/posts/${latestPost.id}`}
 				>
 					<h3 class="text-2xl font-pixel text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-green-400 mb-2">
-						{latestPost.data.title}
+						{latestPost.title}
 					</h3>
 					<p class="text-gray-500 dark:text-gray-400 text-sm mb-2">
-						{formatDate(latestPost.data.date)} | {latestPost.data.category} |{' '}
-						{latestPost.data.tags.join(', ')}
+						{formatDate(latestPost.date)} | {latestPost.category} | {latestPost.tags.join(', ')}
 					</p>
 					<p class="text-gray-600 dark:text-gray-300 line-clamp-2">
-						{latestPost.data.description}
+						{latestPost.description}
 					</p>
 				</a>
 			</>

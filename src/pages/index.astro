@@ -1,6 +1,8 @@
 ---
 import ShellLayout from '@/layouts/ShellLayout.astro';
-import { LATEST_POST } from '@/data/posts';
+import { formatDate, getLatestPost } from '@/data/blog';
+
+const latestPost = await getLatestPost();
 ---
 
 <ShellLayout>
@@ -37,18 +39,25 @@ import { LATEST_POST } from '@/data/posts';
 			</div>
 		</div>
 
-		<p class="text-yellow-600 dark:text-yellow-400 mb-4 font-pixel">LATEST_POST.md</p>
-		<a
-			class="block border border-gray-300 dark:border-[#333] bg-white dark:bg-[#111] p-4 cursor-pointer hover:border-blue-500 dark:hover:border-green-500 transition-colors group"
-			href={`/posts/${LATEST_POST.id}`}
-		>
-			<h3 class="text-2xl font-pixel text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-green-400 mb-2">
-				{LATEST_POST.title}
-			</h3>
-			<p class="text-gray-500 dark:text-gray-400 text-sm mb-2">
-				{LATEST_POST.date} | {LATEST_POST.category} | {LATEST_POST.tags.join(', ')}
-			</p>
-			<p class="text-gray-600 dark:text-gray-300 line-clamp-2">{LATEST_POST.content}</p>
-		</a>
+		{latestPost && (
+			<>
+				<p class="text-yellow-600 dark:text-yellow-400 mb-4 font-pixel">LATEST_POST.md</p>
+				<a
+					class="block border border-gray-300 dark:border-[#333] bg-white dark:bg-[#111] p-4 cursor-pointer hover:border-blue-500 dark:hover:border-green-500 transition-colors group"
+					href={`/posts/${latestPost.id}`}
+				>
+					<h3 class="text-2xl font-pixel text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-green-400 mb-2">
+						{latestPost.data.title}
+					</h3>
+					<p class="text-gray-500 dark:text-gray-400 text-sm mb-2">
+						{formatDate(latestPost.data.date)} | {latestPost.data.category} |{' '}
+						{latestPost.data.tags.join(', ')}
+					</p>
+					<p class="text-gray-600 dark:text-gray-300 line-clamp-2">
+						{latestPost.data.description}
+					</p>
+				</a>
+			</>
+		)}
 	</div>
 </ShellLayout>

@@ -1,20 +1,29 @@
 ---
 import ShellLayout from '@/layouts/ShellLayout.astro';
-import { POSTS, type Post } from '@/data/posts';
+import { getCollection, getEntry, render } from 'astro:content';
+import { formatDate } from '@/data/blog';
 import LucideIcon from '@/components/icons/LucideIcon.astro';
 
-interface Props {
-  post: Post;
-}
-
-export function getStaticPaths() {
-  return POSTS.map((post) => ({
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({
     params: { id: post.id },
-    props: { post },
   }));
 }
 
-const { post } = Astro.props as Props;
+const { id } = Astro.params;
+
+if (!id) {
+  throw new Error('Post id is required.');
+}
+
+const post = await getEntry('blog', id);
+
+if (!post) {
+  throw new Error(`Post not found: ${id}`);
+}
+
+const { Content } = await render(post);
 ---
 
 <ShellLayout>
@@ -23,21 +32,21 @@ const { post } = Astro.props as Props;
     <div class="border border-gray-300 dark:border-[#333] bg-gray-50 dark:bg-[#0a0a0a] p-6 md:p-8 text-gray-700 dark:text-gray-300 relative">
       <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500/50 dark:from-green-500/50 to-transparent"></div>
       <h1 class="text-3xl md:text-5xl font-pixel text-gray-900 dark:text-white mb-4 text-glow-white">
-        {post.title}
+        {post.data.title}
       </h1>
       <div class="flex flex-wrap gap-4 text-sm text-gray-500 mb-8 border-b border-gray-300 dark:border-[#333] pb-4">
         <span class="bg-white dark:bg-[#111] px-2 py-1 rounded border border-gray-200 dark:border-[#222]">
-          DATE: {post.date}
+          DATE: {formatDate(post.data.date)}
         </span>
         <a
-          href={`/categories/${post.category.toLowerCase()}`}
+          href={`/categories/${post.data.category.toLowerCase()}`}
           class="bg-white dark:bg-[#111] px-2 py-1 rounded border border-gray-200 dark:border-[#222] cursor-pointer hover:border-blue-500 dark:hover:border-green-500 hover:text-blue-600 dark:hover:text-green-400 transition-colors"
         >
-          CATEGORY: {post.category}
+          CATEGORY: {post.data.category}
         </a>
         <span class="bg-white dark:bg-[#111] px-2 py-1 rounded border border-gray-200 dark:border-[#222] flex gap-1">
           TAGS:
-          {post.tags.map((tag, idx) => (
+          {post.data.tags.map((tag, idx) => (
             <span>
               <a
                 href={`/tags/${tag.toLowerCase()}`}
@@ -45,13 +54,13 @@ const { post } = Astro.props as Props;
               >
                 {tag}
               </a>
-              {idx < post.tags.length - 1 ? ', ' : ''}
+              {idx < post.data.tags.length - 1 ? ', ' : ''}
             </span>
           ))}
         </span>
       </div>
-      <div class="prose dark:prose-invert prose-p:font-console prose-headings:font-pixel max-w-none text-xl leading-relaxed whitespace-pre-wrap">
-        {post.content}
+      <div class="prose-terminal">
+        <Content />
       </div>
     </div>
     <a

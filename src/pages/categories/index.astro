@@ -1,9 +1,10 @@
 ---
 import ShellLayout from '@/layouts/ShellLayout.astro';
-import { getCategories, getPostsByCategory } from '@/data/posts';
+import { filterPostsByCategory, getAllPosts, getCategoriesFromPosts } from '@/data/blog';
 import LucideIcon from '@/components/icons/LucideIcon.astro';
 
-const categories = getCategories();
+const posts = await getAllPosts();
+const categories = getCategoriesFromPosts(posts);
 ---
 
 <ShellLayout>
@@ -17,7 +18,7 @@ const categories = getCategories();
         <span>NAME</span>
       </div>
       {categories.map((cat) => {
-        const count = getPostsByCategory(cat).length;
+        const count = filterPostsByCategory(posts, cat).length;
         return (
           <a
             href={`/categories/${cat}`}

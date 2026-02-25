@@ -1,9 +1,10 @@
 ---
 import ShellLayout from '@/layouts/ShellLayout.astro';
-import { getPostsByTag, getTags } from '@/data/posts';
+import { filterPostsByTag, getAllPosts, getTagsFromPosts } from '@/data/blog';
 import LucideIcon from '@/components/icons/LucideIcon.astro';
 
-const tags = getTags();
+const posts = await getAllPosts();
+const tags = getTagsFromPosts(posts);
 ---
 
 <ShellLayout>
@@ -17,7 +18,7 @@ const tags = getTags();
         <span>NAME</span>
       </div>
       {tags.map((tag) => {
-        const count = getPostsByTag(tag).length;
+        const count = filterPostsByTag(posts, tag).length;
         return (
           <a
             href={`/tags/${tag}`}

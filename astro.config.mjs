@@ -2,9 +2,19 @@ import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import tailwind from '@tailwindcss/vite';
 import path from 'node:path';
+import icon from "astro-icon";
+
+
 
 export default defineConfig({
-  integrations: [react()],
+  integrations: [
+    react(),
+    icon({
+      include: {
+        lucide: ["*"],
+      }
+    })
+  ],
   vite: {
     plugins: [tailwind()],
     resolve: {

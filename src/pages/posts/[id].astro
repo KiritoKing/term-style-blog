@@ -1,7 +1,7 @@
 ---
 import ShellLayout from '@/layouts/ShellLayout.astro';
 import { getCollection, getEntry, render } from 'astro:content';
-import { formatDate } from '@/data/blog';
+import { formatDate, normalizeBlogPost } from '@/data/blog';
 import LucideIcon from '@/components/icons/LucideIcon.astro';
 
 export async function getStaticPaths() {
@@ -24,6 +24,7 @@ if (!post) {
 }
 
 const { Content } = await render(post);
+const postMeta = normalizeBlogPost(post);
 ---
 
 <ShellLayout>
@@ -32,21 +33,21 @@ const { Content } = await render(post);
     <div class="border border-gray-300 dark:border-[#333] bg-gray-50 dark:bg-[#0a0a0a] p-6 md:p-8 text-gray-700 dark:text-gray-300 relative">
       <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500/50 dark:from-green-500/50 to-transparent"></div>
       <h1 class="text-3xl md:text-5xl font-pixel text-gray-900 dark:text-white mb-4 text-glow-white">
-        {post.data.title}
+        {postMeta.title}
       </h1>
       <div class="flex flex-wrap gap-4 text-sm text-gray-500 mb-8 border-b border-gray-300 dark:border-[#333] pb-4">
         <span class="bg-white dark:bg-[#111] px-2 py-1 rounded border border-gray-200 dark:border-[#222]">
-          DATE: {formatDate(post.data.date)}
+          DATE: {formatDate(postMeta.date)}
         </span>
         <a
-          href={`/categories/${post.data.category.toLowerCase()}`}
+          href={`/categories/${postMeta.category.toLowerCase()}`}
           class="bg-white dark:bg-[#111] px-2 py-1 rounded border border-gray-200 dark:border-[#222] cursor-pointer hover:border-blue-500 dark:hover:border-green-500 hover:text-blue-600 dark:hover:text-green-400 transition-colors"
         >
-          CATEGORY: {post.data.category}
+          CATEGORY: {postMeta.category}
         </a>
         <span class="bg-white dark:bg-[#111] px-2 py-1 rounded border border-gray-200 dark:border-[#222] flex gap-1">
           TAGS:
-          {post.data.tags.map((tag, idx) => (
+          {postMeta.tags.map((tag, idx) => (
             <span>
               <a
                 href={`/tags/${tag.toLowerCase()}`}
@@ -54,7 +55,7 @@ const { Content } = await render(post);
               >
                 {tag}
               </a>
-              {idx < post.data.tags.length - 1 ? ', ' : ''}
+              {idx < postMeta.tags.length - 1 ? ', ' : ''}
             </span>
           ))}
         </span>

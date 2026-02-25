@@ -1,0 +1,30 @@
+---
+import { lucideIconPaths, type LucideIconName } from '@/components/icons/lucide';
+
+interface Props {
+  name: LucideIconName;
+  size?: number;
+  class?: string;
+  strokeWidth?: number;
+  ariaLabel?: string;
+}
+
+const { name, size = 24, strokeWidth = 2, ariaLabel, class: className } = Astro.props;
+const paths = lucideIconPaths[name];
+---
+
+<svg
+  width={size}
+  height={size}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width={strokeWidth}
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  class={className}
+  aria-hidden={ariaLabel ? undefined : 'true'}
+  aria-label={ariaLabel}
+  role={ariaLabel ? 'img' : undefined}
+  set:html={paths}
+/>

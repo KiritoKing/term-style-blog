@@ -1,0 +1,21 @@
+# typography-rendering
+
+## Purpose
+
+定义 Markdown 内容的排版渲染与终端风格一致性规则，确保静态渲染的视觉呈现统一。
+
+## Requirements
+
+### 需求:Markdown 内容渲染
+系统必须使用 Astro 的 Markdown 渲染能力输出文章内容，并保证最终 HTML 在静态构建中生成。
+
+#### 场景:文章详情页渲染
+- **当** 用户访问某篇文章详情页
+- **那么** 页面必须渲染该文章的 Markdown 内容且不依赖客户端 JS
+
+### 需求:Typography 风格对齐
+系统必须使用 Tailwind Typography 作为 Markdown 排版基础，并通过主题定制确保整体视觉风格与现有终端风格一致。
+
+#### 场景:终端风格一致性
+- **当** Markdown 内容包含标题、列表、链接与代码块
+- **那么** 这些元素的排版与配色必须与现有站点风格保持一致

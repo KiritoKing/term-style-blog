@@ -1,17 +1,24 @@
 ---
 import ShellLayout from '@/layouts/ShellLayout.astro';
-import { getCategories, getPostsByCategory, type Post } from '@/data/posts';
+import {
+  filterPostsByCategory,
+  formatDate,
+  getAllPosts,
+  getCategoriesFromPosts,
+} from '@/data/blog';
 import LucideIcon from '@/components/icons/LucideIcon.astro';
 
 interface Props {
   slug: string;
-  posts: Post[];
+  posts: Awaited<ReturnType<typeof getAllPosts>>;
 }
 
-export function getStaticPaths() {
-  return getCategories().map((slug) => ({
+export async function getStaticPaths() {
+  const posts = await getAllPosts();
+  const categories = getCategoriesFromPosts(posts);
+  return categories.map((slug) => ({
     params: { slug },
-    props: { slug, posts: getPostsByCategory(slug) },
+    props: { slug, posts: filterPostsByCategory(posts, slug) },
   }));
 }
 
@@ -36,7 +43,7 @@ const { slug, posts } = Astro.props as Props;
           <div class="flex items-center gap-4 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">
             <span class="text-blue-500 dark:text-blue-400 w-24">-rw-r--r--</span>
             <span class="text-green-600 w-16">guest</span>
-            <span class="w-24">{post.date}</span>
+            <span class="w-24">{formatDate(post.data.date)}</span>
           </div>
           <div class="flex-1 flex flex-col md:flex-row md:items-center justify-between gap-2">
             <span class="text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-green-400 flex items-center gap-2 text-xl">
@@ -44,7 +51,7 @@ const { slug, posts } = Astro.props as Props;
               {post.id}.md
             </span>
             <span class="text-sm text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300 md:text-right">
-              # {post.title}
+              # {post.data.title}
             </span>
           </div>
         </a>

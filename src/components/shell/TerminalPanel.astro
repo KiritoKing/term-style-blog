@@ -4,9 +4,10 @@ import TerminalPanelInteractive from '@/components/react/TerminalPanel';
 interface Props {
   promptPath: string;
   route: string;
+  postIndex: { id: string; category: string; tags: string[] }[];
 }
 
-const { promptPath, route } = Astro.props;
+const { promptPath, route, postIndex } = Astro.props;
 ---
 
-<TerminalPanelInteractive client:load promptPath={promptPath} route={route} />
+<TerminalPanelInteractive client:load promptPath={promptPath} route={route} postIndex={postIndex} />

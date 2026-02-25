@@ -1,5 +1,39 @@
 import React from 'react';
-import { lucideIconPaths, type LucideIconName } from '@/components/icons/lucide';
+import {
+  Accessibility,
+  ChevronRight,
+  Command,
+  FileText,
+  Folder,
+  Github,
+  Layers,
+  Mail,
+  Moon,
+  Sun,
+  Tag,
+  Terminal,
+  Twitter,
+  User,
+  type LucideIcon,
+} from 'lucide-react';
+import type { LucideIconName } from '@/components/icons/lucide';
+
+const iconMap: Record<LucideIconName, LucideIcon> = {
+  accessibility: Accessibility,
+  command: Command,
+  moon: Moon,
+  sun: Sun,
+  folder: Folder,
+  github: Github,
+  layers: Layers,
+  mail: Mail,
+  tag: Tag,
+  terminal: Terminal,
+  twitter: Twitter,
+  user: User,
+  'chevron-right': ChevronRight,
+  'file-text': FileText,
+};
 
 interface Props {
   name: LucideIconName;
@@ -8,20 +42,15 @@ interface Props {
 }
 
 export default function LucideIcon({ name, size = 16, className }: Props) {
+  const IconComponent = iconMap[name];
+
   return (
-    <svg
+    <IconComponent
       className={className}
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      size={size}
+      strokeWidth={2}
       aria-hidden="true"
       focusable="false"
-      dangerouslySetInnerHTML={{ __html: lucideIconPaths[name] }}
     />
   );
 }

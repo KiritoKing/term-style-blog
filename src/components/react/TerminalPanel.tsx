@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { POSTS, getCategories, getTags } from '@/data/posts';
 
 type TerminalLineType = 'cmd' | 'out' | 'err';
 
@@ -11,6 +10,13 @@ interface TerminalLine {
 interface Props {
   promptPath: string;
   route: string;
+  postIndex: PostIndexItem[];
+}
+
+interface PostIndexItem {
+  id: string;
+  category: string;
+  tags: string[];
 }
 
 type RouteContext =
@@ -72,7 +78,7 @@ const persistState = (output: TerminalLine[], history: string[]) => {
 
 const commandList = ['ls', 'dir', 'cd', 'pwd', 'cat', 'clear', 'echo', 'whoami', 'date', 'help'];
 
-export default function TerminalPanel({ promptPath, route }: Props) {
+export default function TerminalPanel({ promptPath, route, postIndex }: Props) {
   const [input, setInput] = useState('');
   const [cmdHistory, setCmdHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
@@ -82,9 +88,17 @@ export default function TerminalPanel({ promptPath, route }: Props) {
 
   const terminalScrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const categories = useMemo(() => getCategories(), []);
-  const tags = useMemo(() => getTags(), []);
+  const categories = useMemo(
+    () => Array.from(new Set(postIndex.map((post) => post.category.toLowerCase()))),
+    [postIndex],
+  );
+  const tags = useMemo(
+    () =>
+      Array.from(
+        new Set(postIndex.flatMap((post) => post.tags.map((tag) => tag.toLowerCase()))),
+      ),
+    [postIndex],
+  );
   const routeContext = useMemo(() => parseRoute(route), [route]);
 
   useEffect(() => {
@@ -198,19 +212,19 @@ export default function TerminalPanel({ promptPath, route }: Props) {
         if (routeContext.section === 'home') {
           options = ['about.txt', 'welcome.sh'];
         } else if (routeContext.section === 'posts') {
-          options = POSTS.map((post) => `${post.id}.md`);
+          options = postIndex.map((post) => `${post.id}.md`);
         } else if (routeContext.section === 'category') {
-          options = POSTS.filter((post) => post.category.toLowerCase() === routeContext.slug).map(
-            (post) => `${post.id}.md`,
-          );
+          options = postIndex
+            .filter((post) => post.category.toLowerCase() === routeContext.slug)
+            .map((post) => `${post.id}.md`);
         } else if (routeContext.section === 'tag') {
-          options = POSTS.filter((post) =>
-            post.tags.map((tag) => tag.toLowerCase()).includes(routeContext.slug),
-          ).map((post) => `${post.id}.md`);
+          options = postIndex
+            .filter((post) => post.tags.map((tag) => tag.toLowerCase()).includes(routeContext.slug))
+            .map((post) => `${post.id}.md`);
         } else if (routeContext.section === 'about') {
           options = ['about.txt'];
         } else {
-          options = ['about.txt', 'welcome.sh', ...POSTS.map((post) => `${post.id}.md`)];
+          options = ['about.txt', 'welcome.sh', ...postIndex.map((post) => `${post.id}.md`)];
         }
       }
       const matches = options.filter((entry) => entry.startsWith(prefix));
@@ -300,19 +314,19 @@ export default function TerminalPanel({ promptPath, route }: Props) {
       if (routeContext.section === 'home') {
         outputText = 'posts/\ncategories/\ntags/\nabout.txt\nwelcome.sh';
       } else if (routeContext.section === 'posts') {
-        outputText = POSTS.map((post) => `${post.id}.md`).join('\n');
+        outputText = postIndex.map((post) => `${post.id}.md`).join('\n');
       } else if (routeContext.section === 'categories') {
         outputText = categories.map((entry) => `${entry}/`).join('\n');
       } else if (routeContext.section === 'tags') {
         outputText = tags.map((entry) => `${entry}/`).join('\n');
       } else if (routeContext.section === 'category') {
-        outputText = POSTS.filter((post) => post.category.toLowerCase() === routeContext.slug)
+        outputText = postIndex
+          .filter((post) => post.category.toLowerCase() === routeContext.slug)
           .map((post) => `${post.id}.md`)
           .join('\n');
       } else if (routeContext.section === 'tag') {
-        outputText = POSTS.filter((post) =>
-          post.tags.map((tag) => tag.toLowerCase()).includes(routeContext.slug),
-        )
+        outputText = postIndex
+          .filter((post) => post.tags.map((tag) => tag.toLowerCase()).includes(routeContext.slug))
           .map((post) => `${post.id}.md`)
           .join('\n');
       } else {
@@ -416,7 +430,7 @@ export default function TerminalPanel({ promptPath, route }: Props) {
         nextRoute = { section: 'home' };
         outputText = 'Executing welcome.sh...';
       } else {
-        const post = POSTS.find((entry) => entry.id === file);
+        const post = postIndex.find((entry) => entry.id === file);
         if (post) {
           nextRoute = { section: 'post', slug: post.id };
           outputText = `Reading ${post.id}.md...`;

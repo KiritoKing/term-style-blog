@@ -4,6 +4,7 @@ import Sidebar from '@/components/shell/Sidebar.astro';
 import TerminalPanel from '@/components/shell/TerminalPanel.astro';
 import TopBar from '@/components/shell/TopBar.astro';
 import Layout from '@/layouts/Layout.astro';
+import { getAllPosts } from '@/data/blog';
 
 interface Props {
   route?: string;
@@ -31,6 +32,13 @@ const promptPath = () => {
 
 const headerPath = route === 'home' ? '~' : `~/${route}`;
 const promptPathValue = promptPath();
+
+const posts = await getAllPosts();
+const postIndex = posts.map((post) => ({
+  id: post.id,
+  category: post.data.category,
+  tags: post.data.tags,
+}));
 ---
 
 <Layout>
@@ -51,7 +59,7 @@ const promptPathValue = promptPath();
           </ContentFrame>
         </div>
         <div transition:name="terminal" class="crt-flicker">
-          <TerminalPanel promptPath={promptPathValue} route={route} />
+          <TerminalPanel promptPath={promptPathValue} route={route} postIndex={postIndex} />
         </div>
       </div>
     </div>

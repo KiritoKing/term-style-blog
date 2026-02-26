@@ -1,6 +1,0 @@
-- [x] React 组件已拆分为可复用组件与 hooks，且无 any
-- [x] Astro 路由与 Layout 组织合理，页面结构不再全量交给 React
-- [x] 仅必要区域启用 client 指令，客户端 JS 最小化
-- [x] view transitions 生效且页面切换无明显闪烁
-- [x] UI 视觉与交互与改造前完全一致
-- [x] pnpm build 通过且无关键控制台错误

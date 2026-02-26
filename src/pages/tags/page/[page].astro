@@ -5,15 +5,30 @@ import LucideIcon from '@/components/icons/LucideIcon.astro';
 import Pagination from '@/components/Pagination.astro';
 import { paginate, PAGINATION } from '@/data/pagination';
 
+interface Props {
+  page: number;
+  tags: string[];
+  totalPages: number;
+}
+
+export async function getStaticPaths() {
+  const posts = await getAllPosts();
+  const tags = getTagsFromPosts(posts);
+  const { totalPages } = paginate(tags, { page: 1, perPage: PAGINATION.taxonomyPerPage });
+  const pages = Array.from({ length: totalPages }, (_, index) => index + 1).slice(1);
+  return pages.map((page) => {
+    const { items } = paginate(tags, { page, perPage: PAGINATION.taxonomyPerPage });
+    return { params: { page: String(page) }, props: { page, tags: items, totalPages } };
+  });
+}
+
+const { page, tags, totalPages } = Astro.props as Props;
 const posts = await getAllPosts();
-const tags = getTagsFromPosts(posts);
-const pagination = paginate(tags, { page: 1, perPage: PAGINATION.taxonomyPerPage });
-const pageTags = pagination.items;
 ---
 
 <ShellLayout>
   <div class="animate-in fade-in duration-300">
-    <p class="text-blue-600 dark:text-green-400 mb-6">$ ls -la ~/tags</p>
+    <p class="text-blue-600 dark:text-green-400 mb-6">$ ls -la ~/tags/page/{page}</p>
     <div class="flex flex-col gap-2">
       <div class="flex items-center gap-4 text-gray-500 border-b border-gray-300 dark:border-[#333] pb-2 mb-2 font-bold">
         <span class="w-24">PERMISSIONS</span>
@@ -21,7 +36,7 @@ const pageTags = pagination.items;
         <span class="w-24">ITEMS</span>
         <span>NAME</span>
       </div>
-      {pageTags.map((tag) => {
+      {tags.map((tag) => {
         const count = filterPostsByTag(posts, tag).length;
         return (
           <a
@@ -43,6 +58,6 @@ const pageTags = pagination.items;
         );
       })}
     </div>
-    <Pagination basePath="/tags" page={pagination.page} totalPages={pagination.totalPages} />
+    <Pagination basePath="/tags" page={page} totalPages={totalPages} />
   </div>
 </ShellLayout>

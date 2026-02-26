@@ -2,9 +2,13 @@
 import ShellLayout from '@/layouts/ShellLayout.astro';
 import { filterPostsByCategory, getAllPosts, getCategoriesFromPosts } from '@/data/blog';
 import LucideIcon from '@/components/icons/LucideIcon.astro';
+import Pagination from '@/components/Pagination.astro';
+import { paginate, PAGINATION } from '@/data/pagination';
 
 const posts = await getAllPosts();
 const categories = getCategoriesFromPosts(posts);
+const pagination = paginate(categories, { page: 1, perPage: PAGINATION.taxonomyPerPage });
+const pageCategories = pagination.items;
 ---
 
 <ShellLayout>
@@ -17,7 +21,7 @@ const categories = getCategoriesFromPosts(posts);
         <span class="w-24">ITEMS</span>
         <span>NAME</span>
       </div>
-      {categories.map((cat) => {
+      {pageCategories.map((cat) => {
         const count = filterPostsByCategory(posts, cat).length;
         return (
           <a
@@ -29,15 +33,20 @@ const categories = getCategoriesFromPosts(posts);
               <span class="text-green-600 w-16">guest</span>
               <span class="w-24">{count} items</span>
             </div>
-            <div class="flex-1 flex flex-col md:flex-row md:items-center justify-between gap-2">
-              <span class="text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-green-400 flex items-center gap-2 text-xl">
-                <LucideIcon name="folder" size={18} class="inline text-gray-500 group-hover:text-blue-600 dark:group-hover:text-green-400" />
-                {cat}/
+            <div class="flex-1 flex flex-col md:flex-row md:items-center justify-between gap-2 min-w-0">
+              <span class="text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-green-400 flex items-center gap-2 text-xl min-w-0">
+                <LucideIcon name="folder" size={18} class="inline text-gray-500 group-hover:text-blue-600 dark:group-hover:text-green-400 shrink-0" />
+                <span class="truncate" title={`${cat}/`}>{cat}/</span>
               </span>
             </div>
           </a>
         );
       })}
     </div>
+    <Pagination
+      basePath="/categories"
+      page={pagination.page}
+      totalPages={pagination.totalPages}
+    />
   </div>
 </ShellLayout>

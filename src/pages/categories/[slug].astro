@@ -7,22 +7,38 @@ import {
   getCategoriesFromPosts,
 } from '@/data/blog';
 import LucideIcon from '@/components/icons/LucideIcon.astro';
+import Pagination from '@/components/Pagination.astro';
+import { paginate, PAGINATION } from '@/data/pagination';
 
 interface Props {
   slug: string;
+  page: number;
   posts: Awaited<ReturnType<typeof getAllPosts>>;
+  totalPages: number;
 }
 
 export async function getStaticPaths() {
-  const posts = await getAllPosts();
-  const categories = getCategoriesFromPosts(posts);
+  const allPosts = await getAllPosts();
+  const categories = getCategoriesFromPosts(allPosts);
   return categories.map((slug) => ({
     params: { slug },
-    props: { slug, posts: filterPostsByCategory(posts, slug) },
+    props: (() => {
+      const filteredPosts = filterPostsByCategory(allPosts, slug);
+      const pagination = paginate(filteredPosts, {
+        page: 1,
+        perPage: PAGINATION.postsPerPage,
+      });
+      return {
+        slug,
+        page: pagination.page,
+        posts: pagination.items,
+        totalPages: pagination.totalPages,
+      };
+    })(),
   }));
 }
 
-const { slug, posts } = Astro.props as Props;
+const { slug, page, posts, totalPages } = Astro.props as Props;
 ---
 
 <ShellLayout>
@@ -45,18 +61,19 @@ const { slug, posts } = Astro.props as Props;
             <span class="text-green-600 w-16">guest</span>
             <span class="w-24">{formatDate(post.date)}</span>
           </div>
-          <div class="flex-1 flex flex-col md:flex-row md:items-center justify-between gap-2">
-            <span class="text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-green-400 flex items-center gap-2 text-xl">
-              <LucideIcon name="file-text" size={18} class="inline text-gray-500 group-hover:text-blue-600 dark:group-hover:text-green-400" />
-              {post.id}.md
+          <div class="flex-1 flex flex-col md:flex-row md:items-center justify-between gap-2 min-w-0">
+            <span class="text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-green-400 flex items-center gap-2 text-xl min-w-0">
+              <LucideIcon name="file-text" size={18} class="inline text-gray-500 group-hover:text-blue-600 dark:group-hover:text-green-400 shrink-0" />
+              <span class="truncate" title={`${post.title}.md`}>{post.title}.md</span>
             </span>
-            <span class="text-sm text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300 md:text-right">
-              # {post.title}
+            <span class="text-sm text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300 md:text-right truncate shrink-0 md:max-w-[50%]" title={post.title}>
+              # {post.description}
             </span>
           </div>
         </a>
       ))}
     </div>
+    <Pagination basePath={`/categories/${slug}`} page={page} totalPages={totalPages} />
     <a
       href="/categories"
       class="mt-6 text-blue-600 dark:text-green-500 hover:text-gray-900 dark:hover:text-white hover:bg-blue-100 dark:hover:bg-green-900/30 px-4 py-2 rounded flex items-center gap-2 transition-colors border border-transparent hover:border-blue-500/50 dark:hover:border-green-500/50 w-fit"

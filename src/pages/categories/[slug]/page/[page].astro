@@ -1,18 +1,47 @@
 ---
 import ShellLayout from '@/layouts/ShellLayout.astro';
-import { formatDate, getAllPosts } from '@/data/blog';
+import {
+  filterPostsByCategory,
+  formatDate,
+  getAllPosts,
+  getCategoriesFromPosts,
+} from '@/data/blog';
 import LucideIcon from '@/components/icons/LucideIcon.astro';
 import Pagination from '@/components/Pagination.astro';
 import { paginate, PAGINATION } from '@/data/pagination';
 
-const allPosts = await getAllPosts();
-const pagination = paginate(allPosts, { page: 1, perPage: PAGINATION.postsPerPage });
-const posts = pagination.items;
+interface Props {
+  slug: string;
+  page: number;
+  posts: Awaited<ReturnType<typeof getAllPosts>>;
+  totalPages: number;
+}
+
+export async function getStaticPaths() {
+  const allPosts = await getAllPosts();
+  const categories = getCategoriesFromPosts(allPosts);
+  const perPage = PAGINATION.postsPerPage;
+
+  return categories.flatMap((slug) => {
+    const filteredPosts = filterPostsByCategory(allPosts, slug);
+    const { totalPages } = paginate(filteredPosts, { page: 1, perPage });
+    const pages = Array.from({ length: totalPages }, (_, index) => index + 1).slice(1);
+    return pages.map((page) => {
+      const { items } = paginate(filteredPosts, { page, perPage });
+      return {
+        params: { slug, page: String(page) },
+        props: { slug, page, posts: items, totalPages },
+      };
+    });
+  });
+}
+
+const { slug, page, posts, totalPages } = Astro.props as Props;
 ---
 
 <ShellLayout>
   <div class="animate-in fade-in duration-300">
-    <p class="text-blue-600 dark:text-green-400 mb-6">$ ls -la ~/posts</p>
+    <p class="text-blue-600 dark:text-green-400 mb-6">$ ls -la ~/categories/{slug}/page/{page}</p>
     <div class="flex flex-col gap-2">
       <div class="flex items-center gap-4 text-gray-500 border-b border-gray-300 dark:border-[#333] pb-2 mb-2 font-bold">
         <span class="w-24">PERMISSIONS</span>
@@ -35,13 +64,19 @@ const posts = pagination.items;
               <LucideIcon name="file-text" size={18} class="inline text-gray-500 group-hover:text-blue-600 dark:group-hover:text-green-400 shrink-0" />
               <span class="truncate" title={`${post.title}.md`}>{post.title}.md</span>
             </span>
-            <span class="text-sm text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300 md:text-right truncate shrink-0 md:max-w-[50%]" title={post.description}>
+            <span class="text-sm text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300 md:text-right truncate shrink-0 md:max-w-[50%]" title={post.title}>
               # {post.description}
             </span>
           </div>
         </a>
       ))}
     </div>
-    <Pagination basePath="/posts" page={pagination.page} totalPages={pagination.totalPages} />
+    <Pagination basePath={`/categories/${slug}`} page={page} totalPages={totalPages} />
+    <a
+      href={`/categories/${slug}`}
+      class="mt-6 text-blue-600 dark:text-green-500 hover:text-gray-900 dark:hover:text-white hover:bg-blue-100 dark:hover:bg-green-900/30 px-4 py-2 rounded flex items-center gap-2 transition-colors border border-transparent hover:border-blue-500/50 dark:hover:border-green-500/50 w-fit"
+    >
+      <LucideIcon name="chevron-right" size={18} /> cd ../
+    </a>
   </div>
 </ShellLayout>

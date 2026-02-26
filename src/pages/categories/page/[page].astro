@@ -1,19 +1,37 @@
 ---
 import ShellLayout from '@/layouts/ShellLayout.astro';
-import { filterPostsByTag, getAllPosts, getTagsFromPosts } from '@/data/blog';
+import { filterPostsByCategory, getAllPosts, getCategoriesFromPosts } from '@/data/blog';
 import LucideIcon from '@/components/icons/LucideIcon.astro';
 import Pagination from '@/components/Pagination.astro';
 import { paginate, PAGINATION } from '@/data/pagination';
 
+interface Props {
+  page: number;
+  categories: string[];
+  totalPages: number;
+}
+
+export async function getStaticPaths() {
+  const posts = await getAllPosts();
+  const categories = getCategoriesFromPosts(posts);
+  const { totalPages } = paginate(categories, { page: 1, perPage: PAGINATION.taxonomyPerPage });
+  const pages = Array.from({ length: totalPages }, (_, index) => index + 1).slice(1);
+  return pages.map((page) => {
+    const { items } = paginate(categories, { page, perPage: PAGINATION.taxonomyPerPage });
+    return {
+      params: { page: String(page) },
+      props: { page, categories: items, totalPages },
+    };
+  });
+}
+
+const { page, categories, totalPages } = Astro.props as Props;
 const posts = await getAllPosts();
-const tags = getTagsFromPosts(posts);
-const pagination = paginate(tags, { page: 1, perPage: PAGINATION.taxonomyPerPage });
-const pageTags = pagination.items;
 ---
 
 <ShellLayout>
   <div class="animate-in fade-in duration-300">
-    <p class="text-blue-600 dark:text-green-400 mb-6">$ ls -la ~/tags</p>
+    <p class="text-blue-600 dark:text-green-400 mb-6">$ ls -la ~/categories/page/{page}</p>
     <div class="flex flex-col gap-2">
       <div class="flex items-center gap-4 text-gray-500 border-b border-gray-300 dark:border-[#333] pb-2 mb-2 font-bold">
         <span class="w-24">PERMISSIONS</span>
@@ -21,11 +39,11 @@ const pageTags = pagination.items;
         <span class="w-24">ITEMS</span>
         <span>NAME</span>
       </div>
-      {pageTags.map((tag) => {
-        const count = filterPostsByTag(posts, tag).length;
+      {categories.map((cat) => {
+        const count = filterPostsByCategory(posts, cat).length;
         return (
           <a
-            href={`/tags/${tag}`}
+            href={`/categories/${cat}`}
             class="group cursor-pointer flex flex-col md:flex-row md:items-center gap-2 md:gap-4 py-2 hover:bg-gray-200 dark:hover:bg-[#111] px-2 -mx-2 rounded transition-colors"
           >
             <div class="flex items-center gap-4 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">
@@ -36,13 +54,13 @@ const pageTags = pagination.items;
             <div class="flex-1 flex flex-col md:flex-row md:items-center justify-between gap-2 min-w-0">
               <span class="text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-green-400 flex items-center gap-2 text-xl min-w-0">
                 <LucideIcon name="folder" size={18} class="inline text-gray-500 group-hover:text-blue-600 dark:group-hover:text-green-400 shrink-0" />
-                <span class="truncate" title={`${tag}/`}>{tag}/</span>
+                <span class="truncate" title={`${cat}/`}>{cat}/</span>
               </span>
             </div>
           </a>
         );
       })}
     </div>
-    <Pagination basePath="/tags" page={pagination.page} totalPages={pagination.totalPages} />
+    <Pagination basePath="/categories" page={page} totalPages={totalPages} />
   </div>
 </ShellLayout>

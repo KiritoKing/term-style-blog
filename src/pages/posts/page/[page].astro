@@ -5,14 +5,28 @@ import LucideIcon from '@/components/icons/LucideIcon.astro';
 import Pagination from '@/components/Pagination.astro';
 import { paginate, PAGINATION } from '@/data/pagination';
 
-const allPosts = await getAllPosts();
-const pagination = paginate(allPosts, { page: 1, perPage: PAGINATION.postsPerPage });
-const posts = pagination.items;
+interface Props {
+  page: number;
+  posts: Awaited<ReturnType<typeof getAllPosts>>;
+  totalPages: number;
+}
+
+export async function getStaticPaths() {
+  const allPosts = await getAllPosts();
+  const { totalPages } = paginate(allPosts, { page: 1, perPage: PAGINATION.postsPerPage });
+  const pages = Array.from({ length: totalPages }, (_, index) => index + 1).slice(1);
+  return pages.map((page) => {
+    const { items } = paginate(allPosts, { page, perPage: PAGINATION.postsPerPage });
+    return { params: { page: String(page) }, props: { page, posts: items, totalPages } };
+  });
+}
+
+const { page, posts, totalPages } = Astro.props as Props;
 ---
 
 <ShellLayout>
   <div class="animate-in fade-in duration-300">
-    <p class="text-blue-600 dark:text-green-400 mb-6">$ ls -la ~/posts</p>
+    <p class="text-blue-600 dark:text-green-400 mb-6">$ ls -la ~/posts/page/{page}</p>
     <div class="flex flex-col gap-2">
       <div class="flex items-center gap-4 text-gray-500 border-b border-gray-300 dark:border-[#333] pb-2 mb-2 font-bold">
         <span class="w-24">PERMISSIONS</span>
@@ -42,6 +56,6 @@ const posts = pagination.items;
         </a>
       ))}
     </div>
-    <Pagination basePath="/posts" page={pagination.page} totalPages={pagination.totalPages} />
+    <Pagination basePath="/posts" page={page} totalPages={totalPages} />
   </div>
 </ShellLayout>

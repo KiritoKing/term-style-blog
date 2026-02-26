@@ -2,8 +2,12 @@
 import ShellLayout from '@/layouts/ShellLayout.astro';
 import { formatDate, getAllPosts } from '@/data/blog';
 import LucideIcon from '@/components/icons/LucideIcon.astro';
+import Pagination from '@/components/Pagination.astro';
+import { paginate, PAGINATION } from '@/data/pagination';
 
-const posts = await getAllPosts();
+const allPosts = await getAllPosts();
+const pagination = paginate(allPosts, { page: 1, perPage: PAGINATION.postsPerPage });
+const posts = pagination.items;
 ---
 
 <ShellLayout>
@@ -38,5 +42,6 @@ const posts = await getAllPosts();
         </a>
       ))}
     </div>
+    <Pagination basePath="/posts" page={pagination.page} totalPages={pagination.totalPages} />
   </div>
 </ShellLayout>

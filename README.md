@@ -1,7 +1,13 @@
 # Astro Starter Kit: Basics
 
-1. 更改图标方案，改成iconify，使用astro原生图标
-2. 修改博客加载方案，改成content layer方案
+- [x] 更改图标方案，改成iconify，使用astro原生图标
+- [x] 修改博客加载方案，改成content layer方案
+- [x] 增加分页功能
+- [ ] 增加正文目录功能
+- [ ] 增加代码高亮
+- [ ] 增加大图查看功能
+- [ ] 增加全文搜索功能
+- [ ] 增加评论功能
 
 ```sh
 pnpm create astro@latest -- --template basics

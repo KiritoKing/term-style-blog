@@ -23,7 +23,7 @@
 
 @layer components {
   .prose-terminal {
-    @apply prose dark:prose-invert max-w-none text-xl leading-relaxed prose-p:font-console prose-headings:font-pixel prose-a:text-blue-600 dark:prose-a:text-green-400 prose-strong:text-gray-900 dark:prose-strong:text-white prose-code:font-console prose-code:before:content-none prose-code:after:content-none prose-pre:bg-[#0b0b0b] dark:prose-pre:bg-black prose-pre:text-gray-100 prose-pre:border prose-pre:border-gray-300 dark:prose-pre:border-[#222] prose-pre:rounded;
+    @apply prose dark:prose-invert max-w-none text-xl leading-relaxed prose-p:font-console prose-headings:font-pixel prose-a:text-blue-600 dark:prose-a:text-green-400 prose-a:break-all prose-strong:text-gray-900 dark:prose-strong:text-white prose-code:font-console prose-code:before:content-none prose-code:after:content-none prose-pre:bg-[#0b0b0b] dark:prose-pre:bg-black prose-pre:text-gray-100 prose-pre:border prose-pre:border-gray-300 dark:prose-pre:border-[#222] prose-pre:rounded prose-pre:overflow-x-auto break-words;
   }
 }
 

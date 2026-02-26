@@ -1,0 +1,51 @@
+---
+interface Props {
+  page: number;
+  totalPages: number;
+  basePath: string;
+}
+
+const { page, totalPages, basePath } = Astro.props as Props;
+const normalizedBase = basePath.endsWith('/') ? basePath.slice(0, -1) : basePath;
+const pages = Array.from({ length: totalPages }, (_, index) => index + 1);
+const pageHref = (target: number) =>
+  target === 1 ? normalizedBase : `${normalizedBase}/page/${target}`;
+const prevPage = page > 1 ? page - 1 : null;
+const nextPage = page < totalPages ? page + 1 : null;
+---
+
+{totalPages > 1 && (
+  <nav class="mt-6 flex flex-wrap items-center gap-2 text-sm">
+    {prevPage && (
+      <a
+        href={pageHref(prevPage)}
+        class="px-3 py-1 rounded border border-transparent hover:border-blue-500/50 dark:hover:border-green-500/50 text-blue-600 dark:text-green-500 hover:text-gray-900 dark:hover:text-white hover:bg-blue-100 dark:hover:bg-green-900/30 transition-colors"
+      >
+        &larr; Prev
+      </a>
+    )}
+    <div class="flex flex-wrap items-center gap-2">
+      {pages.map((num) => (
+        <a
+          href={pageHref(num)}
+          class:list={[
+            'px-3 py-1 rounded border transition-colors',
+            num === page
+              ? 'border-blue-500/70 dark:border-green-500/70 text-gray-900 dark:text-white bg-blue-100 dark:bg-green-900/30'
+              : 'border-transparent text-gray-500 hover:text-gray-900 dark:hover:text-white hover:border-blue-500/50 dark:hover:border-green-500/50',
+          ]}
+        >
+          {num}
+        </a>
+      ))}
+    </div>
+    {nextPage && (
+      <a
+        href={pageHref(nextPage)}
+        class="px-3 py-1 rounded border border-transparent hover:border-blue-500/50 dark:hover:border-green-500/50 text-blue-600 dark:text-green-500 hover:text-gray-900 dark:hover:text-white hover:bg-blue-100 dark:hover:bg-green-900/30 transition-colors"
+      >
+        Next &rarr;
+      </a>
+    )}
+  </nav>
+)}

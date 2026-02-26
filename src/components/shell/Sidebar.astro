@@ -101,8 +101,46 @@ const { navActive } = Astro.props;
     </a>
   </div>
 
+  <div class="pixel-panel p-4 flex flex-col gap-3">
+    <h2 class="font-pixel text-sm text-gray-500 mb-1">SEARCH</h2>
+    <div class="flex items-center gap-2 border border-gray-300 dark:border-[#333] bg-white dark:bg-[#111] px-3 py-2">
+      <span class="text-blue-600 dark:text-green-500 font-bold shrink-0">$ grep</span>
+      <input
+        id="sidebar-grep-input"
+        type="text"
+        class="flex-1 bg-transparent outline-none text-gray-900 dark:text-white font-console min-w-0 text-lg"
+        placeholder="hello"
+        autocomplete="off"
+        spellcheck="false"
+        aria-label="Grep search input"
+      />
+    </div>
+  </div>
+
   <div class="mt-auto text-xs text-gray-500 dark:text-gray-600 text-center font-pixel">
     SYS.VER 1.0.4
     <br />© 2026
   </div>
 </div>
+
+<script is:inline>
+  const initSidebarGrep = () => {
+    const input = document.getElementById('sidebar-grep-input');
+    if (!(input instanceof HTMLInputElement)) return;
+    if (input.dataset.bound === 'true') return;
+    input.dataset.bound = 'true';
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get('q');
+    if (q) input.value = q;
+    input.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter') return;
+      const query = input.value.trim();
+      const next = query ? `/search?q=${encodeURIComponent(query)}` : '/search';
+      window.location.assign(next);
+    });
+  };
+
+  initSidebarGrep();
+  document.addEventListener('astro:page-load', initSidebarGrep);
+  document.addEventListener('astro:after-swap', initSidebarGrep);
+</script>

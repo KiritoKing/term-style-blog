@@ -25,6 +25,7 @@ type RouteContext =
   | { section: 'categories' }
   | { section: 'tags' }
   | { section: 'about' }
+  | { section: 'search' }
   | { section: 'post'; slug: string }
   | { section: 'category'; slug: string }
   | { section: 'tag'; slug: string };
@@ -41,6 +42,7 @@ const parseRoute = (route: string): RouteContext => {
   if (route === 'tags') return { section: 'tags' };
   if (route.startsWith('tags/')) return { section: 'tag', slug: route.replace('tags/', '') };
   if (route === 'about') return { section: 'about' };
+  if (route === 'search') return { section: 'search' };
   return { section: 'home' };
 };
 
@@ -76,7 +78,7 @@ const persistState = (output: TerminalLine[], history: string[]) => {
   window.localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
 };
 
-const commandList = ['ls', 'dir', 'cd', 'pwd', 'cat', 'clear', 'echo', 'whoami', 'date', 'help'];
+const commandList = ['ls', 'dir', 'cd', 'pwd', 'cat', 'clear', 'echo', 'whoami', 'date', 'help', 'grep'];
 
 export default function TerminalPanel({ promptPath, route, postIndex }: Props) {
   const [input, setInput] = useState('');
@@ -138,6 +140,8 @@ export default function TerminalPanel({ promptPath, route, postIndex }: Props) {
         return '/tags';
       case 'about':
         return '/about';
+      case 'search':
+        return '/search';
       case 'post':
         return `/posts/${targetRoute.slug}`;
       case 'category':
@@ -164,6 +168,13 @@ export default function TerminalPanel({ promptPath, route, postIndex }: Props) {
   const addEntry = (output: TerminalLine[], history: string[]) => {
     addOutput(output);
     persistState(output, history);
+  };
+
+  const navigateToPath = (path: string, output: TerminalLine[], history: string[]) => {
+    persistState(output, history);
+    window.setTimeout(() => {
+      window.location.assign(path);
+    }, 80);
   };
 
   const handleAutocomplete = () => {
@@ -441,7 +452,25 @@ export default function TerminalPanel({ promptPath, route, postIndex }: Props) {
       }
     } else if (cmdLower === 'help') {
       outputText =
-        'Available commands:\n  cd <dir>   - Change directory (home, posts, categories, tags, about, ..)\n  ls         - List directory contents\n  pwd        - Print working directory\n  cat <file> - Read a file\n  clear      - Clear terminal output\n  echo <txt> - Print text\n  whoami     - Print current user\n  date       - Print current date/time\n  help       - Show this help message';
+        'Available commands:\n  cd <dir>   - Change directory (home, posts, categories, tags, about, ..)\n  ls         - List directory contents\n  pwd        - Print working directory\n  cat <file> - Read a file\n  clear      - Clear terminal output\n  echo <txt> - Print text\n  whoami     - Print current user\n  date       - Print current date/time\n  grep <txt> - Search posts\n  help       - Show this help message';
+    } else if (cmdLower === 'grep') {
+      outputText = 'usage: grep <query>';
+      isError = true;
+    } else if (cmdLower.startsWith('grep ')) {
+      const query = cmd.substring(5).trim();
+      if (!query) {
+        outputText = 'usage: grep <query>';
+        isError = true;
+      } else {
+        outputText = `Searching for "${query}"...`;
+        nextOutput = [
+          ...nextOutput,
+          { type: 'out', text: outputText },
+        ];
+        addEntry(nextOutput, nextHistory);
+        navigateToPath(`/search?q=${encodeURIComponent(query)}`, nextOutput, nextHistory);
+        return;
+      }
     } else {
       outputText = `bash: ${cmd}: command not found`;
       isError = true;

@@ -1,0 +1,104 @@
+---
+import ShellLayout from '@/layouts/ShellLayout.astro';
+---
+
+<ShellLayout route="search">
+	<div class="animate-in fade-in duration-300 grep-search">
+		<div class="grep-command" id="grep-command">$ grep -n "&lt;query&gt;" ~/posts/*.md</div>
+		<div class="grep-results" id="grep-results"></div>
+	</div>
+	<script type="module">
+		const resultsEl = document.querySelector('#grep-results');
+		const commandEl = document.querySelector('#grep-command');
+
+		const setCommand = (query) => {
+			if (!commandEl) return;
+			const label = query ? `$ grep -n "${query}" ~/posts/*.md` : '$ grep -n "<query>" ~/posts/*.md';
+			commandEl.textContent = label;
+		};
+
+		const renderMessage = (message) => {
+			if (!resultsEl) return;
+			resultsEl.innerHTML = '';
+			const line = document.createElement('div');
+			line.className = 'grep-line grep-line-muted';
+			line.textContent = message;
+			resultsEl.appendChild(line);
+		};
+
+		const normalizePath = (url) => {
+			try {
+				const pathname = new URL(url, window.location.origin).pathname;
+				if (pathname.startsWith('/posts/')) {
+					const slug = pathname.replace('/posts/', '').replace(/\/$/, '');
+					return `posts/${slug}.md`;
+				}
+				return pathname.replace(/^\//, '');
+			} catch {
+				return url;
+			}
+		};
+
+		const renderResults = (items, query) => {
+			if (!resultsEl) return;
+			resultsEl.innerHTML = '';
+			if (items.length === 0) {
+				renderMessage(`grep: no matches found for "${query}"`);
+				return;
+			}
+
+			items.forEach((item) => {
+				const url = item?.meta?.url || item?.url || '';
+				const title = item?.meta?.title || '';
+				const excerpt = item?.excerpt || '';
+
+				const card = document.createElement('a');
+				card.className = 'grep-card';
+				card.href = url || '#';
+
+				const pathEl = document.createElement('div');
+				pathEl.className = 'grep-card-path';
+				pathEl.textContent = normalizePath(url);
+
+				const titleEl = document.createElement('div');
+				titleEl.className = 'grep-card-title';
+				titleEl.textContent = title;
+
+				const excerptEl = document.createElement('div');
+				excerptEl.className = 'grep-card-excerpt grep-excerpt';
+				excerptEl.innerHTML = excerpt;
+
+				card.append(pathEl, titleEl, excerptEl);
+				resultsEl.appendChild(card);
+			});
+		};
+
+		const runSearch = async () => {
+			const query = new URLSearchParams(window.location.search).get('q')?.trim() ?? '';
+			setCommand(query);
+			if (!query) {
+				renderMessage('usage: grep <query>');
+				return;
+			}
+
+			let pagefind;
+			try {
+				pagefind = await import('/pagefind/pagefind.js');
+			} catch {
+				renderMessage('search index not found, run pagefind after build');
+				return;
+			}
+
+			if (!pagefind?.search) {
+				renderMessage('search index not found, run pagefind after build');
+				return;
+			}
+
+			const searchResult = await pagefind.search(query);
+			const data = await Promise.all(searchResult.results.map((result) => result.data()));
+			renderResults(data, query);
+		};
+
+		runSearch();
+	</script>
+</ShellLayout>

@@ -10,13 +10,14 @@
     "postbuild": "pagefind --site dist"
   },
   "dependencies": {
-    "@astrojs/react": "^4.2.1",
     "@astro-notion/loader": "0.0.0-beta-f188e6e",
+    "@astrojs/react": "^4.2.1",
     "@shikijs/rehype": "^3.23.0",
     "astro": "^5.17.1",
     "lucide-react": "^0.546.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "sharp": "^0.34.5"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.6",

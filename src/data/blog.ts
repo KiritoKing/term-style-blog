@@ -4,6 +4,7 @@ export type BlogPost = CollectionEntry<'blog'>;
 
 export type BlogMeta = {
   id: string;
+  slug?: string;
   title: string;
   date: Date;
   category: string;
@@ -15,6 +16,7 @@ type NotionProperty = { type: string } & Record<string, unknown>;
 
 const propertyNames = {
   title: ['Title', 'Name', 'title', 'name'],
+  slug: ['Slug', 'slug'],
   date: ['Date', 'date', 'Published', 'published'],
   category: ['Category', 'category'],
   tags: ['Tags', 'tags'],
@@ -94,6 +96,14 @@ const getDescription = (properties: Record<string, unknown>): string => {
   return '';
 };
 
+const getSlug = (properties: Record<string, unknown>): string | undefined => {
+  const prop = getProperty(properties, propertyNames.slug);
+  if (prop?.type === 'rich_text') {
+    return getPlainText(prop.rich_text);
+  }
+  return undefined;
+};
+
 export const normalizeBlogPost = (post: BlogPost): BlogMeta => {
   const properties =
     isRecord(post.data) && isRecord(post.data.properties) ? post.data.properties : {};
@@ -102,7 +112,8 @@ export const normalizeBlogPost = (post: BlogPost): BlogMeta => {
   const category = getCategory(properties) || 'general';
   const tags = getTags(properties);
   const description = getDescription(properties);
-  return { id: post.id, title, date, category, tags, description };
+  const slug = getSlug(properties);
+  return { id: post.id, slug, title, date, category, tags, description };
 };
 
 const sortPosts = (posts: BlogMeta[]) =>

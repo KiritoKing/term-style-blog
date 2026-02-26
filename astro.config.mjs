@@ -14,6 +14,12 @@ export default defineConfig({
         hostname: '**.amazonaws.com',
       },
     ],
+    service: {
+      entrypoint: 'astro/assets/services/sharp',
+      config: {
+        limitInputPixels: false, // 禁用输入大小限制
+      },
+    },
   },
   integrations: [
     react(),

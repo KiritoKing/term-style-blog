@@ -1,0 +1,74 @@
+:root {
+  color-scheme: light;
+  --color-canvas-default: #ffffff;
+  --color-canvas-subtle: #f8fafc;
+  --color-canvas-overlay: #f3f4f6;
+  --color-border-default: #d1d5db;
+  --color-border-muted: #e5e7eb;
+  --color-fg-default: #111827;
+  --color-fg-muted: #6b7280;
+  --color-accent-fg: #2563eb;
+  --color-accent-emphasis: #2563eb;
+  --color-btn-text: #111827;
+  --color-btn-bg: #f3f4f6;
+  --color-btn-border: #d1d5db;
+  --color-btn-hover-bg: #e5e7eb;
+  --color-btn-primary-text: #ffffff;
+  --color-btn-primary-bg: #2563eb;
+  --color-btn-primary-border: #1d4ed8;
+  --color-btn-primary-hover-bg: #1d4ed8;
+  --color-success-fg: #16a34a;
+  --color-attention-fg: #f59e0b;
+  --color-danger-fg: #dc2626;
+  --color-diff-blob-addition-bg: #dcfce7;
+  --color-diff-blob-deletion-bg: #fee2e2;
+  --color-neutral-muted: rgba(17, 24, 39, 0.08);
+  --color-neutral-subtle: rgba(17, 24, 39, 0.04);
+}
+
+body {
+  font-family: "VT323", "DotGothic16", monospace;
+}
+
+.gsc-comment-box,
+.gsc-comment,
+.gsc-reply,
+.gsc-comment-box textarea,
+.gsc-comment-box input,
+.gsc-comment-box button {
+  border-radius: 0;
+}
+
+.gsc-comment-box textarea,
+.gsc-comment-box input,
+.gsc-comment-box .form-control {
+  border: 1px solid var(--color-border-default);
+}
+
+.gsc-comment-box button,
+.gsc-comment-box .btn {
+  border: 2px solid var(--color-border-default);
+  box-shadow: inset 0 0 0 1px #cccccc;
+}
+
+.gsc-comment-box button:hover,
+.gsc-comment-box .btn:hover {
+  background: var(--color-btn-hover-bg);
+}
+
+.gsc-comment,
+.gsc-reply {
+  border: 1px solid var(--color-border-default);
+  box-shadow: inset 0 0 0 1px #e5e7eb;
+}
+
+.gsc-header,
+.gsc-footer,
+.gsc-timeline {
+  border-color: var(--color-border-default);
+}
+
+.gsc-comment a,
+.gsc-reply a {
+  color: var(--color-accent-fg);
+}

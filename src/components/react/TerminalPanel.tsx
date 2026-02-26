@@ -511,7 +511,7 @@ export default function TerminalPanel({ promptPath, route, postIndex }: Props) {
           </div>
         ))}
       </div>
-      <div className="px-4 md:px-6 pb-4 md:pb-6 flex items-center gap-2 text-xl">
+      <div className="px-4 md:px-6 pb-4 md:pb-6 flex items-center gap-2 text-lg">
         <span className="text-blue-600 dark:text-green-500 font-bold shrink-0">
           guest@server:{promptPath} $
         </span>

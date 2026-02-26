@@ -1,12 +1,12 @@
 import { defineCollection, z } from 'astro:content';
-import type { Loader } from 'astro/loaders';
-import { notionLoader } from '@ntcho/notion-astro-loader';
+import { notionLoader } from '@astro-notion/loader';
+import rehypeShiki from '@shikijs/rehype';
 
 
 const blog = defineCollection({
 loader: notionLoader({
     auth: import.meta.env.NOTION_TOKEN,
-    database_id: import.meta.env.NOTION_DATABASE_ID,
+    data_source_id: import.meta.env.NOTION_DATABASE_ID,
     // Use Notion sorting and filtering
     filter: {
       property: 'status',
@@ -14,6 +14,14 @@ loader: notionLoader({
         equals: 'Published',
       },
     },
+    rehypePlugins: [
+      [
+        rehypeShiki,
+        {
+          theme: 'dracula-soft',
+        },
+      ],
+    ],
     sorts: [{ property: 'date', direction: 'descending' }],
   }),
 });

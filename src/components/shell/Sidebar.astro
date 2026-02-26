@@ -28,7 +28,7 @@ const { navActive } = Astro.props;
     <div class="flex flex-col w-full text-left gap-1 mt-2">
       <a
         href="/"
-        class={`pixel-btn px-3 py-2 flex items-center gap-3 text-lg ${
+        class={`pixel-btn px-3 py-2 flex items-center gap-3 text-base ${
           navActive === 'home'
             ? 'bg-blue-100 dark:bg-green-900/40 text-blue-600 dark:text-green-400 border-l-2 border-blue-500 dark:border-green-500'
             : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
@@ -38,7 +38,7 @@ const { navActive } = Astro.props;
       </a>
       <a
         href="/posts"
-        class={`pixel-btn px-3 py-2 flex items-center gap-3 text-lg ${
+        class={`pixel-btn px-3 py-2 flex items-center gap-3 text-base ${
           navActive === 'posts'
             ? 'bg-blue-100 dark:bg-green-900/40 text-blue-600 dark:text-green-400 border-l-2 border-blue-500 dark:border-green-500'
             : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
@@ -48,7 +48,7 @@ const { navActive } = Astro.props;
       </a>
       <a
         href="/categories"
-        class={`pixel-btn px-3 py-2 flex items-center gap-3 text-lg ${
+        class={`pixel-btn px-3 py-2 flex items-center gap-3 text-base ${
           navActive === 'categories'
             ? 'bg-blue-100 dark:bg-green-900/40 text-blue-600 dark:text-green-400 border-l-2 border-blue-500 dark:border-green-500'
             : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
@@ -58,7 +58,7 @@ const { navActive } = Astro.props;
       </a>
       <a
         href="/tags"
-        class={`pixel-btn px-3 py-2 flex items-center gap-3 text-lg ${
+        class={`pixel-btn px-3 py-2 flex items-center gap-3 text-base ${
           navActive === 'tags'
             ? 'bg-blue-100 dark:bg-green-900/40 text-blue-600 dark:text-green-400 border-l-2 border-blue-500 dark:border-green-500'
             : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
@@ -68,7 +68,7 @@ const { navActive } = Astro.props;
       </a>
       <a
         href="/about"
-        class={`pixel-btn px-3 py-2 flex items-center gap-3 text-lg ${
+        class={`pixel-btn px-3 py-2 flex items-center gap-3 text-base ${
           navActive === 'about'
             ? 'bg-blue-100 dark:bg-green-900/40 text-blue-600 dark:text-green-400 border-l-2 border-blue-500 dark:border-green-500'
             : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
@@ -83,19 +83,19 @@ const { navActive } = Astro.props;
     <h2 class="font-pixel text-sm text-gray-500 mb-1">NETWORK</h2>
     <a
       href="#"
-      class="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-green-400 flex items-center gap-3 text-lg transition-colors"
+      class="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-green-400 flex items-center gap-3 text-base transition-colors"
     >
       <LucideIcon name="github" size={18} /> github
     </a>
     <a
       href="#"
-      class="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-green-400 flex items-center gap-3 text-lg transition-colors"
+      class="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-green-400 flex items-center gap-3 text-base transition-colors"
     >
       <LucideIcon name="twitter" size={18} /> twitter
     </a>
     <a
       href="#"
-      class="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-green-400 flex items-center gap-3 text-lg transition-colors"
+      class="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-green-400 flex items-center gap-3 text-base transition-colors"
     >
       <LucideIcon name="mail" size={18} /> email
     </a>
@@ -108,7 +108,7 @@ const { navActive } = Astro.props;
       <input
         id="sidebar-grep-input"
         type="text"
-        class="flex-1 bg-transparent outline-none text-gray-900 dark:text-white font-console min-w-0 text-lg"
+        class="flex-1 bg-transparent outline-none text-gray-900 dark:text-white font-console min-w-0 text-base"
         placeholder="hello"
         autocomplete="off"
         spellcheck="false"

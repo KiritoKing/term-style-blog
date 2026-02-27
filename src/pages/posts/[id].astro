@@ -1,15 +1,20 @@
 ---
 import ShellLayout from '@/layouts/ShellLayout.astro';
-import { getCollection, getEntry, render } from 'astro:content';
-import { formatDate, normalizeBlogPost } from '@/data/blog';
+import { render } from 'astro:content';
+import {
+  formatDate,
+  getAllPosts,
+  getPostEntryBySlugOrId,
+  getPostPathSegment,
+  normalizeBlogPost,
+} from '@/data/blog';
 import LucideIcon from '@/components/icons/LucideIcon.astro';
 import Comments from '@/components/react/Comments';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('blog');
-  const postsMeta = posts.map(normalizeBlogPost)
-  return postsMeta.map((post) => ({
-    params: { id: post.id },
+  const posts = await getAllPosts();
+  return posts.map((post) => ({
+    params: { id: getPostPathSegment(post) },
   }));
 }
 
@@ -19,7 +24,7 @@ if (!id) {
   throw new Error('Post id is required.');
 }
 
-const post = await getEntry('blog', id);
+const post = await getPostEntryBySlugOrId(id);
 
 if (!post) {
   throw new Error(`Post not found: ${id}`);
@@ -27,6 +32,7 @@ if (!post) {
 
 const { Content, headings } = await render(post);
 const postMeta = normalizeBlogPost(post);
+const postPath = getPostPathSegment(postMeta);
 const hasToc = headings.length > 0;
 const minDepth = hasToc ? Math.min(...headings.map((heading) => heading.depth)) : 0;
 const tocItems = hasToc
@@ -48,7 +54,7 @@ const giscusConfig = {
 
 <ShellLayout>
   <div class="animate-in fade-in duration-300">
-    <p class="text-blue-600 dark:text-green-400 mb-6">$ cat ~/posts/{post.id}.md</p>
+    <p class="text-blue-600 dark:text-green-400 mb-6">$ cat ~/posts/{postPath}.md</p>
     <div class="relative">
         <div class="border border-gray-300 dark:border-[#333] bg-gray-50 dark:bg-[#0a0a0a] p-6 md:p-8 text-gray-700 dark:text-gray-300 relative">
           <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500/50 dark:from-green-500/50 to-transparent"></div>

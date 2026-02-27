@@ -1,8 +1,17 @@
 ---
 import ShellLayout from '@/layouts/ShellLayout.astro';
 import { formatDate, getLatestPost } from '@/data/blog';
+import SystemInfo from '@/components/react/SystemInfo';
 
 const latestPost = await getLatestPost();
+const systemInfoFallback = [
+  { label: 'OS', value: 'Unknown' },
+  { label: 'Browser', value: 'Unknown' },
+  { label: 'Uptime', value: '0m' },
+  { label: 'Screen', value: 'Unknown' },
+  { label: 'Memory', value: 'Unknown' },
+  { label: 'Cores', value: 'Unknown' },
+];
 ---
 
 <ShellLayout>
@@ -12,31 +21,8 @@ const latestPost = await getLatestPost();
 		<p class="text-gray-600 dark:text-gray-300 mb-2">Welcome to my personal server.</p>
 		<p class="text-gray-500 dark:text-gray-400 mb-6">Type 'help' or click around to navigate.</p>
 
-		<div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-base max-w-2xl mb-8 p-4 border border-gray-300 dark:border-[#333] bg-gray-50 dark:bg-[#0a0a0a]">
-			<div class="flex">
-				<span class="text-gray-500 w-24">OS:</span>
-				<span class="text-blue-600 dark:text-green-300">Debian GNU/Linux 12</span>
-			</div>
-			<div class="flex">
-				<span class="text-gray-500 w-24">Kernel:</span>
-				<span class="text-blue-600 dark:text-green-300">6.1.0-18-amd64</span>
-			</div>
-			<div class="flex">
-				<span class="text-gray-500 w-24">Uptime:</span>
-				<span class="text-blue-600 dark:text-green-300">94 days, 12:34</span>
-			</div>
-			<div class="flex">
-				<span class="text-gray-500 w-24">Packages:</span>
-				<span class="text-blue-600 dark:text-green-300">1423 (dpkg)</span>
-			</div>
-			<div class="flex">
-				<span class="text-gray-500 w-24">Shell:</span>
-				<span class="text-blue-600 dark:text-green-300">zsh 5.9</span>
-			</div>
-			<div class="flex">
-				<span class="text-gray-500 w-24">Terminal:</span>
-				<span class="text-blue-600 dark:text-green-300">xterm-256color</span>
-			</div>
+		<div class="text-base max-w-2xl mb-8 p-4 border border-gray-300 dark:border-[#333] bg-gray-50 dark:bg-[#0a0a0a]">
+			<SystemInfo client:load fallback={systemInfoFallback} />
 		</div>
 
 		{latestPost && (

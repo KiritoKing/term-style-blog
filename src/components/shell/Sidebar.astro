@@ -1,5 +1,6 @@
 ---
 import LucideIcon from '@/components/icons/LucideIcon.astro';
+import { networkLinks } from '@/data/network';
 
 interface Props {
   navActive: string;
@@ -79,27 +80,19 @@ const { navActive } = Astro.props;
     </div>
   </div>
 
-  <div class="pixel-panel p-4 flex flex-col gap-3">
-    <h2 class="font-pixel text-sm text-gray-500 mb-1">NETWORK</h2>
-    <a
-      href="#"
-      class="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-green-400 flex items-center gap-3 text-base transition-colors"
-    >
-      <LucideIcon name="github" size={18} /> github
-    </a>
-    <a
-      href="#"
-      class="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-green-400 flex items-center gap-3 text-base transition-colors"
-    >
-      <LucideIcon name="twitter" size={18} /> twitter
-    </a>
-    <a
-      href="#"
-      class="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-green-400 flex items-center gap-3 text-base transition-colors"
-    >
-      <LucideIcon name="mail" size={18} /> email
-    </a>
-  </div>
+  {networkLinks.length > 0 && (
+    <div class="pixel-panel p-4 flex flex-col gap-3">
+      <h2 class="font-pixel text-sm text-gray-500 mb-1">NETWORK</h2>
+      {networkLinks.map((link) => (
+        <a
+          href={link.href}
+          class="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-green-400 flex items-center gap-3 text-base transition-colors"
+        >
+          <LucideIcon name={link.icon} size={18} /> {link.label}
+        </a>
+      ))}
+    </div>
+  )}
 
   <div class="pixel-panel p-4 flex flex-col gap-3">
     <h2 class="font-pixel text-sm text-gray-500 mb-1">SEARCH</h2>

@@ -1,6 +1,6 @@
 ---
 import ShellLayout from '@/layouts/ShellLayout.astro';
-import { formatDate, getAllPosts } from '@/data/blog';
+import { formatDate, getAllPosts, getPostPath } from '@/data/blog';
 import LucideIcon from '@/components/icons/LucideIcon.astro';
 import Pagination from '@/components/Pagination.astro';
 import { paginate, PAGINATION } from '@/data/pagination';
@@ -22,7 +22,7 @@ const posts = pagination.items;
       </div>
       {posts.map((post) => (
         <a
-          href={`/posts/${post.id}`}
+          href={getPostPath(post)}
           class="group cursor-pointer flex flex-col md:flex-row md:items-center gap-2 md:gap-4 py-2 hover:bg-gray-200 dark:hover:bg-[#111] px-2 -mx-2 rounded transition-colors"
         >
           <div class="flex items-center gap-4 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">

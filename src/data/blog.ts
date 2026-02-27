@@ -116,6 +116,13 @@ export const normalizeBlogPost = (post: BlogPost): BlogMeta => {
   return { id: post.id, slug, title, date, category, tags, description };
 };
 
+export const getPostPathSegment = (post: BlogMeta): string => {
+  const slug = post.slug?.trim();
+  return slug && slug.length > 0 ? slug : post.id;
+};
+
+export const getPostPath = (post: BlogMeta): string => `/posts/${getPostPathSegment(post)}`;
+
 const sortPosts = (posts: BlogMeta[]) =>
   posts.slice().sort((a, b) => b.date.getTime() - a.date.getTime());
 
@@ -131,6 +138,22 @@ export const getLatestPost = async (): Promise<BlogMeta | null> => {
 
 export const getPostEntryById = async (id: string): Promise<BlogPost | undefined> =>
   getEntry('blog', id);
+
+export const getPostEntryBySlugOrId = async (
+  slugOrId: string,
+): Promise<BlogPost | undefined> => {
+  const entry = await getEntry('blog', slugOrId);
+  if (entry) return entry;
+  const posts = await getCollection('blog');
+  for (const post of posts) {
+    const meta = normalizeBlogPost(post);
+    const slug = meta.slug?.trim();
+    if (slug && slug === slugOrId) {
+      return post;
+    }
+  }
+  return undefined;
+};
 
 export const getPostById = async (id: string): Promise<BlogMeta | null> => {
   const post = await getPostEntryById(id);

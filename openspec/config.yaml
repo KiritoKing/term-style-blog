@@ -8,19 +8,22 @@ context: |
   客户端交互：优先 Astro 静态渲染，React 仅用于必要交互区域
   路径别名：@ -> src
   需求背景：终端风格博客页面迁移至 Astro，并对齐 Astro 最佳实践
-  现有规范：.trae/specs/embed-terminal-ui-astro 与 .trae/specs/align-astro-best-practices
+  现有规范：openspec/specs 下的 active specs 是行为契约，openspec/changes 下的未归档 change 是待同步/归档的规格增量
   风格要求：保持 UI 视觉一致，最小化客户端 JS，避免全页面 React 渲染
+  工作区工具约束：默认 coding agent 为 Codex；默认 skills 目录为 .agents/skills；默认规则/上下文文件为 AGENTS.md；不得保留 .codex/skills、.trae 或其他 coding-agent 工具目录
 
 rules:
   proposal:
     - 必须说明 Why/What Changes/Capabilities/Impact
-    - Capabilities 中需列出 kebab-case 新增功能
+    - Capabilities 中必须区分 New Capabilities 与 Modified Capabilities，并使用现有或新增的 kebab-case capability 名称
   design:
     - 解释系统结构与关键交互流
     - 标注关键文件/目录与职责
   specs:
-    - 必须说明 Why/What Changes/Impact
-    - 必须包含新增/修改/移除需求区块
+    - 变更规格必须使用 ## ADDED Requirements / ## MODIFIED Requirements / ## REMOVED Requirements / ## RENAMED Requirements
+    - 每条需求必须使用 ### Requirement: 标题，正文必须包含 SHALL 或 MUST
+    - 每个场景必须使用 #### Scenario: 标题，并使用 WHEN/THEN 步骤描述可验证行为
   tasks:
     - 任务需与 specs 需求一一对应
+    - 每个任务必须使用 - [ ] 或 - [x] checkbox 格式
     - 按依赖顺序编排任务

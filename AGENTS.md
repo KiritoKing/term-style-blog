@@ -6,6 +6,13 @@
   - [Astro 官方文档](https://docs.astro.build/llms.txt)
 - 若你的工具中包含了Context7 MCP或其他的文档类型MCP，也可以使用该工具进行API文档查询
 
+## 工作区工具约束
+- 默认 coding agent 为 Codex
+- 默认 skills 目录为 `.agents/skills`
+- 默认规则/上下文文件为 `AGENTS.md`
+- Codex skills 必须统一放在 `.agents/skills`，不得保留 `.codex/skills`
+- 禁止保留 Trae 或其他 coding-agent 工具目录
+
 ## 基础规范
 - 包管理使用 pnpm（以 pnpm-lock.yaml 为准）
 - TypeScript 严格模式（extends astro/tsconfigs/strict）

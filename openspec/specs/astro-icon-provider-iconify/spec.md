@@ -6,23 +6,23 @@
 
 ## Requirements
 
-### 需求:Astro 图标渲染使用 Iconify 提供商
-在 Astro 渲染环境中，系统必须使用 Iconify 作为图标提供商完成图标渲染，且不得依赖 lucide-react。
+### Requirement: Astro 图标渲染使用 Iconify 提供商
+在 Astro 渲染环境中，系统 MUST 使用 Iconify 作为图标提供商完成图标渲染，且不得依赖 lucide-react。
 
-#### 场景:渲染 Astro 图标
-- **当** Astro 页面或 Astro 组件请求渲染一个 lucide 图标
-- **那么** 系统通过 Iconify 提供商渲染该图标
+#### Scenario: 渲染 Astro 图标
+- **WHEN** Astro 页面或 Astro 组件请求渲染一个 lucide 图标
+- **THEN** 系统通过 Iconify 提供商渲染该图标
 
-### 需求:Astro 图标集来源保持为 lucide
-在 Astro 渲染环境中，系统必须继续使用 lucide 作为图标集来源，不得替换为其他图标集。
+### Requirement: Astro 图标集来源保持为 lucide
+在 Astro 渲染环境中，系统 MUST 继续使用 lucide 作为图标集来源，不得替换为其他图标集。
 
-#### 场景:使用 lucide 图标名称
-- **当** 传入的图标名称属于 lucide 图标集
-- **那么** 系统渲染与该 lucide 图标名称一致的图形
+#### Scenario: 使用 lucide 图标名称
+- **WHEN** 传入的图标名称属于 lucide 图标集
+- **THEN** 系统渲染与该 lucide 图标名称一致的图形
 
-### 需求:Astro 图标渲染结果可用于静态输出
-在 Astro 静态渲染与构建输出中，图标渲染必须在服务端完成，且不得要求全局客户端脚本才能显示图标。
+### Requirement: Astro 图标渲染结果可用于静态输出
+在 Astro 静态渲染与构建输出中，图标渲染 MUST 在服务端完成，且不得要求全局客户端脚本才能显示图标。
 
-#### 场景:构建后的页面展示图标
-- **当** 站点完成构建并以静态资源方式部署
-- **那么** 页面在未执行任何额外客户端初始化脚本的情况下仍能显示图标
+#### Scenario: 构建后的页面展示图标
+- **WHEN** 站点完成构建并以静态资源方式部署
+- **THEN** 页面在未执行任何额外客户端初始化脚本的情况下仍能显示图标

@@ -61,6 +61,18 @@
 - worker 会话只能处理一个任务；开始前必须确认任务 ID、依赖状态、允许编辑范围、文件锁、相关规格、测试要求和验收命令。
 - reviewer 会话不实现功能，只读取 worker report、git diff、相关规格和验收命令并输出验收结论。
 
+### `/goal RXX` 端到端执行协议
+- 当用户输入 `/goal RXX`、`/goal RXX <目标>` 或只给出明确需求序号时，默认目标是把该需求推进到最终可归档状态，而不是只执行当前阶段。
+- agent 必须自动完成完整 OpenSpec 迭代：只读恢复检查 → 定位任务 → propose（若缺失）→ apply → 验证 → sync specs → archive → 写回 `.agent` 状态。
+- 若对应 OpenSpec change 不存在，agent 必须自动创建 proposal、design、delta specs 与 tasks，并先运行 `openspec validate <change> --strict`。
+- 若 change 已存在但未完成，agent 必须读取 `openspec instructions apply --change "<change>" --json`，按 pending tasks 继续实现并逐项勾选。
+- 若 tasks 和验收命令全部通过，agent 必须同步 delta specs 到 `openspec/specs`，再归档到 `openspec/changes/archive/YYYY-MM-DD-<change>/`。
+- 每个阶段都必须写回 `.agent/tasks.yaml`、对应 worker report、对应 handoff 和 supervisor handoff；不得只在聊天中说明进度。
+- 完成后任务状态必须落到 `done`；若等待独立 reviewer，则先进入 `review`，但在用户明确要求“归档需求”或 `/goal` 端到端完成时，主管会话应基于验收证据完成归档并把状态推进到 `done`。
+- agent 不应要求用户手动说出 “propose / apply / archive” 才继续；这些是 `/goal RXX` 的默认内置步骤。
+- 只有以下情况才能停下来询问用户：需求序号无法从计划或注册表可靠定位、依赖或文件锁冲突无法由当前会话解除、必须越过 `allowed_paths`、验收失败且自动修复后仍无法判断正确方案、或继续会破坏仓库状态。
+- 该协议不授权 agent 自主创建后台会话、后台调度任务或引入额外多 agent 框架；用户仍然手动发起 Codex 会话，agent 只在当前会话内端到端推进目标。
+
 ### 写回要求
 - 主管会话在派发、阻塞解除、验收通过、延期或调整依赖时，必须更新 `.agent/tasks.yaml` 和 `.agent/handoffs/supervisor.md`。
 - worker 会话在结束前必须更新 `.agent/reports/Rxx-change-name.md` 与 `.agent/handoffs/Rxx-change-name.md`；若任务未完成，也必须写明当前进度、已改文件、失败命令、阻塞原因和下一步。

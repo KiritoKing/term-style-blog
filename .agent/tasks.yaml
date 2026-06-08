@@ -1,5 +1,5 @@
 version: 1
-last_updated: "2026-06-09T00:14:23+0800"
+last_updated: "2026-06-09T00:22:44+0800"
 source_documents:
   - AGENTS.md
   - docs/ai-agent-delivery-plan.md
@@ -444,6 +444,7 @@ tasks:
       - "tests/**"
     relevant_specs:
       - openspec/specs/blog-post-pages/spec.md
+      - openspec/specs/post-route-preference/spec.md
     required_tests:
       - redirect_tests
       - build_validation
@@ -459,7 +460,7 @@ tasks:
       - R8
       - phase-gate:R0-R6
     unblock_when: Content contract, SEO metadata, and Day 1 baseline are accepted.
-    last_updated: "2026-06-09T00:12:52+0800"
+    last_updated: "2026-06-09T00:22:44+0800"
 
   - id: R11
     change: add-playwright-e2e-layer
@@ -604,6 +605,7 @@ tasks:
       - "tests/**"
     relevant_specs:
       - openspec/specs/blog-post-pages/spec.md
+      - openspec/specs/post-route-preference/spec.md
       - openspec/specs/list-pagination/spec.md
     required_tests:
       - navigation_unit
@@ -619,7 +621,7 @@ tasks:
       - R1
       - phase-gate:P1
     unblock_when: Content contract and P1 baseline are accepted.
-    last_updated: "2026-06-09T00:12:52+0800"
+    last_updated: "2026-06-09T00:22:44+0800"
 
   - id: R15
     change: code-copy-and-reading-metadata

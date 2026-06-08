@@ -2,8 +2,8 @@
 
 Status: active
 Owner: codex
-Branch: detached-head
-Last updated: 2026-06-08T23:57:18+0800
+Branch: main
+Last updated: 2026-06-09T00:06:48+0800
 
 Objective:
 Maintain repository-backed agent task state for manual Codex supervisor, worker, and reviewer sessions.
@@ -17,6 +17,12 @@ Global state:
 
 Dispatch decision:
 Dispatch one P0 task at a time. The recommended next worker is R0, followed by R1 and R2. Do not run P0 tasks in parallel unless the supervisor updates `.agent/tasks.yaml` with explicit non-conflicting locks.
+
+Post-merge review:
+- R19.0 was pulled and reviewed after merge at `ddc0da2`.
+- Review status: pass.
+- Review report: `.agent/reports/R19.0-bootstrap-agent-state-registry-post-merge-review.md`.
+- Note: the PR changed `AGENTS.md` but the R19.0 worker report/handoff did not list that file; future reports must include all changed files and any scope expansion.
 
 Ready tasks:
 - R0 `archive-completed-spec-changes`: no dependencies; resolves completed-but-unarchived OpenSpec drift.
@@ -43,10 +49,12 @@ Blocked tasks:
 - R19 waits for R2, R6, and R11.
 
 Files changed:
+- `AGENTS.md`
 - `.agent/tasks.yaml`
 - `.agent/handoffs/supervisor.md`
 - `.agent/handoffs/R19.0-bootstrap-agent-state-registry.md`
 - `.agent/reports/R19.0-bootstrap-agent-state-registry.md`
+- `.agent/reports/R19.0-bootstrap-agent-state-registry-post-merge-review.md`
 - `openspec/specs/agent-state-registry/spec.md`
 - `openspec/changes/archive/2026-06-08-bootstrap-agent-state-registry/proposal.md`
 - `openspec/changes/archive/2026-06-08-bootstrap-agent-state-registry/design.md`
@@ -54,12 +62,18 @@ Files changed:
 - `openspec/changes/archive/2026-06-08-bootstrap-agent-state-registry/tasks.md`
 
 Commands run:
+- `git pull --ff-only`
 - `openspec status --change "bootstrap-agent-state-registry" --json`
 - `openspec instructions apply --change "bootstrap-agent-state-registry" --json`
 - `openspec list --json`
 - `git status --short`
+- `ruby -e 'require "yaml"; YAML.load_file(".agent/tasks.yaml")'`
+- `openspec validate agent-state-registry --strict`
+- `openspec validate --all --strict`
+- `git diff --check`
 
 Command results:
+- Pull fast-forwarded `main` to `ddc0da2`.
 - OpenSpec apply context is ready with 14 pending tasks at implementation start.
 - Registry bootstrap files have been created.
 - `ruby -e 'require "yaml"; YAML.load_file(".agent/tasks.yaml")'` passed.

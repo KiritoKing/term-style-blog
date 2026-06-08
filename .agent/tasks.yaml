@@ -1,0 +1,877 @@
+version: 1
+last_updated: "2026-06-08T23:57:18+0800"
+source_documents:
+  - AGENTS.md
+  - docs/ai-agent-delivery-plan.md
+  - openspec/specs/agent-state-registry/spec.md
+  - openspec/changes/archive/2026-06-08-bootstrap-agent-state-registry/proposal.md
+  - openspec/changes/archive/2026-06-08-bootstrap-agent-state-registry/design.md
+  - openspec/changes/archive/2026-06-08-bootstrap-agent-state-registry/specs/agent-state-registry/spec.md
+status_values:
+  - blocked
+  - ready
+  - in_progress
+  - review
+  - fix_requested
+  - done
+  - deferred
+shared_lock_policy:
+  p0_serial: true
+  shared_paths_require_supervisor_approval:
+    - AGENTS.md
+    - openspec/config.yaml
+    - src/content.config.ts
+    - astro.config.mjs
+    - package.json
+    - pnpm-lock.yaml
+    - "src/layouts/**"
+    - "tests/**"
+tasks:
+  - id: R0
+    change: archive-completed-spec-changes
+    priority: P0
+    objective: Archive or sync completed active OpenSpec changes so main specs stop lagging implementation.
+    deps: []
+    status: ready
+    owner_session: null
+    branch: codex/R0-archive-completed-spec-changes
+    allowed_paths:
+      - "openspec/changes/**"
+      - "openspec/specs/**"
+      - ".agent/**"
+    locked_paths:
+      - "openspec/changes/**"
+      - "openspec/specs/**"
+    relevant_specs:
+      - openspec/changes/route-logic-slug-path
+      - openspec/changes/update-home-system-info-and-configs
+      - openspec/specs/blog-post-pages/spec.md
+      - openspec/specs/blog-toc/spec.md
+    required_tests:
+      - openspec_validation
+      - diff_review
+    acceptance_commands:
+      - openspec list --json
+      - openspec validate --all --strict
+      - git diff --check
+    report: .agent/reports/R0-archive-completed-spec-changes.md
+    handoff: .agent/handoffs/R0-archive-completed-spec-changes.md
+    blocked_by: []
+    unblock_when: Dependencies are already satisfied; dispatch serially before other P0 work if OpenSpec drift blocks planning.
+    last_updated: "2026-06-08T23:54:18+0800"
+
+  - id: R1
+    change: reconcile-content-source-contract
+    priority: P0
+    objective: Reconcile Notion and Markdown content-layer contracts into one explicit content-source strategy.
+    deps: []
+    status: ready
+    owner_session: null
+    branch: codex/R1-reconcile-content-source-contract
+    allowed_paths:
+      - "openspec/changes/**"
+      - "openspec/specs/content-layer-markdown/spec.md"
+      - "openspec/specs/notion-content-layer/spec.md"
+      - "src/content.config.ts"
+      - "src/lib/**"
+      - "src/data/**"
+      - ".agent/**"
+    locked_paths:
+      - "src/content.config.ts"
+      - "openspec/specs/content-layer-markdown/spec.md"
+      - "openspec/specs/notion-content-layer/spec.md"
+    relevant_specs:
+      - openspec/specs/content-layer-markdown/spec.md
+      - openspec/specs/notion-content-layer/spec.md
+    required_tests:
+      - content_contract_tests
+      - openspec_validation
+    acceptance_commands:
+      - openspec validate --all --strict
+      - pnpm astro check
+      - git diff --check
+    report: .agent/reports/R1-reconcile-content-source-contract.md
+    handoff: .agent/handoffs/R1-reconcile-content-source-contract.md
+    blocked_by: []
+    unblock_when: Dependencies are already satisfied; coordinate with R0 and R2 because P0 work is serial by default.
+    last_updated: "2026-06-08T23:51:08+0800"
+
+  - id: R2
+    change: establish-tdd-governance
+    priority: P0
+    objective: Add repository and OpenSpec governance requiring test strategy and test tasks for new changes.
+    deps: []
+    status: ready
+    owner_session: null
+    branch: codex/R2-establish-tdd-governance
+    allowed_paths:
+      - AGENTS.md
+      - openspec/config.yaml
+      - "openspec/changes/**"
+      - "openspec/specs/**"
+      - "docs/**"
+      - ".agent/**"
+    locked_paths:
+      - AGENTS.md
+      - openspec/config.yaml
+      - "openspec/**"
+    relevant_specs:
+      - openspec/config.yaml
+      - docs/ai-agent-delivery-plan.md
+    required_tests:
+      - openspec_validation
+      - governance_review
+    acceptance_commands:
+      - openspec validate --all --strict
+      - git diff --check
+    report: .agent/reports/R2-establish-tdd-governance.md
+    handoff: .agent/handoffs/R2-establish-tdd-governance.md
+    blocked_by: []
+    unblock_when: Dependencies are already satisfied; coordinate with R0 and R1 because P0 work is serial by default.
+    last_updated: "2026-06-08T23:51:08+0800"
+
+  - id: R3
+    change: create-test-harness-and-fixtures
+    priority: P0
+    objective: Create fixtures, environment mocks, and Notion fallback harness so local checks do not require real credentials.
+    deps:
+      - R1
+      - R2
+    status: blocked
+    owner_session: null
+    branch: codex/R3-create-test-harness-and-fixtures
+    allowed_paths:
+      - "openspec/changes/**"
+      - "tests/**"
+      - "src/test/**"
+      - "src/fixtures/**"
+      - "src/lib/**"
+      - ".env.example"
+      - ".agent/**"
+    locked_paths:
+      - "tests/**"
+      - "src/content.config.ts"
+      - ".env.example"
+    relevant_specs:
+      - openspec/specs/content-layer-markdown/spec.md
+      - openspec/specs/notion-content-layer/spec.md
+    required_tests:
+      - fixture_validation
+      - env_mock_validation
+    acceptance_commands:
+      - pnpm astro check
+      - git diff --check
+    report: .agent/reports/R3-create-test-harness-and-fixtures.md
+    handoff: .agent/handoffs/R3-create-test-harness-and-fixtures.md
+    blocked_by:
+      - R1
+      - R2
+    unblock_when: R1 resolves the content-source contract and R2 establishes test governance.
+    last_updated: "2026-06-08T23:51:08+0800"
+
+  - id: R4
+    change: add-vitest-unit-layer
+    priority: P0
+    objective: Add the Vitest unit layer for pagination, route helpers, content normalization, and terminal command logic.
+    deps:
+      - R2
+      - R3
+    status: blocked
+    owner_session: null
+    branch: codex/R4-add-vitest-unit-layer
+    allowed_paths:
+      - package.json
+      - pnpm-lock.yaml
+      - "vitest.config.*"
+      - "tests/**"
+      - "src/**/*.test.ts"
+      - "src/**/*.spec.ts"
+      - "src/lib/**"
+      - "src/components/**"
+      - ".agent/**"
+    locked_paths:
+      - package.json
+      - pnpm-lock.yaml
+      - "tests/**"
+    relevant_specs:
+      - openspec/specs/list-pagination/spec.md
+      - openspec/specs/blog-post-pages/spec.md
+      - openspec/specs/terminal-command-ui/spec.md
+    required_tests:
+      - vitest_unit
+    acceptance_commands:
+      - pnpm test:unit
+      - git diff --check
+    report: .agent/reports/R4-add-vitest-unit-layer.md
+    handoff: .agent/handoffs/R4-add-vitest-unit-layer.md
+    blocked_by:
+      - R2
+      - R3
+    unblock_when: R2 and R3 are accepted so unit tests have governance and stable fixtures.
+    last_updated: "2026-06-08T23:51:08+0800"
+
+  - id: R5
+    change: stabilize-build-and-env-validation
+    priority: P0
+    objective: Stabilize Astro check, build, and environment validation with clear local failure modes.
+    deps:
+      - R1
+      - R3
+    status: blocked
+    owner_session: null
+    branch: codex/R5-stabilize-build-and-env-validation
+    allowed_paths:
+      - astro.config.mjs
+      - src/content.config.ts
+      - package.json
+      - pnpm-lock.yaml
+      - ".env.example"
+      - "src/lib/**"
+      - "tools/**"
+      - ".agent/**"
+    locked_paths:
+      - astro.config.mjs
+      - src/content.config.ts
+      - package.json
+      - pnpm-lock.yaml
+    relevant_specs:
+      - openspec/specs/notion-content-layer/spec.md
+      - openspec/specs/content-layer-markdown/spec.md
+    required_tests:
+      - env_validation
+      - build_validation
+    acceptance_commands:
+      - pnpm astro check
+      - pnpm build
+      - git diff --check
+    report: .agent/reports/R5-stabilize-build-and-env-validation.md
+    handoff: .agent/handoffs/R5-stabilize-build-and-env-validation.md
+    blocked_by:
+      - R1
+      - R3
+    unblock_when: Content-source contract and harness are accepted.
+    last_updated: "2026-06-08T23:51:08+0800"
+
+  - id: R6
+    change: add-ci-quality-gates
+    priority: P1
+    objective: Add CI gates for install, check, unit, and build, with e2e added later.
+    deps:
+      - R2
+      - R4
+      - R5
+    status: blocked
+    owner_session: null
+    branch: codex/R6-add-ci-quality-gates
+    allowed_paths:
+      - ".github/**"
+      - package.json
+      - pnpm-lock.yaml
+      - "docs/**"
+      - ".agent/**"
+    locked_paths:
+      - package.json
+      - pnpm-lock.yaml
+      - ".github/**"
+    relevant_specs:
+      - docs/ai-agent-delivery-plan.md
+    required_tests:
+      - ci_dry_run_or_equivalent
+      - unit
+      - build
+    acceptance_commands:
+      - pnpm install --frozen-lockfile
+      - pnpm astro check
+      - pnpm test:unit
+      - pnpm build
+      - git diff --check
+    report: .agent/reports/R6-add-ci-quality-gates.md
+    handoff: .agent/handoffs/R6-add-ci-quality-gates.md
+    blocked_by:
+      - R2
+      - R4
+      - R5
+    unblock_when: Governance, unit tests, and stable build checks are accepted.
+    last_updated: "2026-06-08T23:51:08+0800"
+
+  - id: R7
+    change: readability-accessibility-mode
+    priority: P1
+    objective: Extend readability and accessibility controls for motion, scanlines, pixel font, and keyboard use.
+    deps: []
+    status: blocked
+    owner_session: null
+    branch: codex/R7-readability-accessibility-mode
+    allowed_paths:
+      - "src/components/**"
+      - "src/layouts/**"
+      - "src/styles/**"
+      - "tests/**"
+      - ".agent/**"
+    locked_paths:
+      - "src/layouts/**"
+      - "src/styles/**"
+      - "tests/**"
+    relevant_specs:
+      - openspec/specs/shell-layout/spec.md
+      - openspec/specs/typography-rendering/spec.md
+      - openspec/specs/terminal-command-ui/spec.md
+    required_tests:
+      - component_or_unit
+      - playwright
+      - axe_smoke
+    acceptance_commands:
+      - pnpm test:unit
+      - pnpm test:e2e -- --grep accessibility
+      - pnpm astro check
+      - git diff --check
+    report: .agent/reports/R7-readability-accessibility-mode.md
+    handoff: .agent/handoffs/R7-readability-accessibility-mode.md
+    blocked_by:
+      - phase-gate:R0-R6
+    unblock_when: Day 1 baseline R0-R6 is accepted, then dispatch with P1 scope.
+    last_updated: "2026-06-08T23:51:08+0800"
+
+  - id: R8
+    change: site-metadata-and-seo-baseline
+    priority: P1
+    objective: Add dynamic title, description, Open Graph, Twitter, and JSON-LD metadata.
+    deps:
+      - R1
+    status: blocked
+    owner_session: null
+    branch: codex/R8-site-metadata-and-seo-baseline
+    allowed_paths:
+      - "src/layouts/**"
+      - "src/pages/**"
+      - "src/lib/**"
+      - "src/data/**"
+      - "tests/**"
+      - "openspec/changes/**"
+      - ".agent/**"
+    locked_paths:
+      - "src/layouts/**"
+      - "tests/**"
+    relevant_specs:
+      - openspec/specs/blog-post-pages/spec.md
+      - openspec/specs/taxonomy-browsing/spec.md
+      - openspec/specs/notion-content-layer/spec.md
+    required_tests:
+      - metadata_unit_or_dom
+      - build_validation
+    acceptance_commands:
+      - pnpm test:unit
+      - pnpm astro check
+      - pnpm build
+      - git diff --check
+    report: .agent/reports/R8-site-metadata-and-seo-baseline.md
+    handoff: .agent/handoffs/R8-site-metadata-and-seo-baseline.md
+    blocked_by:
+      - R1
+      - phase-gate:R0-R6
+    unblock_when: Content-source contract and Day 1 baseline are accepted.
+    last_updated: "2026-06-08T23:51:08+0800"
+
+  - id: R9
+    change: rss-sitemap-robots
+    priority: P1
+    objective: Add RSS, sitemap, and robots publishing infrastructure.
+    deps:
+      - R1
+      - R8
+    status: blocked
+    owner_session: null
+    branch: codex/R9-rss-sitemap-robots
+    allowed_paths:
+      - astro.config.mjs
+      - package.json
+      - pnpm-lock.yaml
+      - "src/pages/**"
+      - "src/lib/**"
+      - "public/**"
+      - "tests/**"
+      - "openspec/changes/**"
+      - ".agent/**"
+    locked_paths:
+      - astro.config.mjs
+      - package.json
+      - pnpm-lock.yaml
+      - "src/pages/**"
+    relevant_specs:
+      - openspec/specs/notion-content-layer/spec.md
+      - openspec/specs/blog-post-pages/spec.md
+    required_tests:
+      - route_output_tests
+      - build_validation
+    acceptance_commands:
+      - pnpm test:unit
+      - pnpm astro check
+      - pnpm build
+      - git diff --check
+    report: .agent/reports/R9-rss-sitemap-robots.md
+    handoff: .agent/handoffs/R9-rss-sitemap-robots.md
+    blocked_by:
+      - R1
+      - R8
+      - phase-gate:R0-R6
+    unblock_when: SEO metadata and Day 1 baseline are accepted.
+    last_updated: "2026-06-08T23:51:08+0800"
+
+  - id: R10
+    change: migration-url-redirects
+    priority: P1
+    objective: Add legacy URL redirects to new post paths with tests.
+    deps:
+      - R0
+      - R1
+      - R8
+    status: blocked
+    owner_session: null
+    branch: codex/R10-migration-url-redirects
+    allowed_paths:
+      - astro.config.mjs
+      - "src/pages/**"
+      - "src/lib/**"
+      - "tests/**"
+      - "openspec/changes/**"
+      - ".agent/**"
+    locked_paths:
+      - astro.config.mjs
+      - "src/pages/**"
+      - "tests/**"
+    relevant_specs:
+      - openspec/specs/blog-post-pages/spec.md
+    required_tests:
+      - redirect_tests
+      - build_validation
+    acceptance_commands:
+      - pnpm test:unit
+      - pnpm test:e2e -- --grep redirects
+      - pnpm astro check
+      - git diff --check
+    report: .agent/reports/R10-migration-url-redirects.md
+    handoff: .agent/handoffs/R10-migration-url-redirects.md
+    blocked_by:
+      - R0
+      - R1
+      - R8
+      - phase-gate:R0-R6
+    unblock_when: OpenSpec archive/sync, content contract, SEO metadata, and Day 1 baseline are accepted.
+    last_updated: "2026-06-08T23:51:08+0800"
+
+  - id: R11
+    change: add-playwright-e2e-layer
+    priority: P1
+    objective: Add Playwright e2e coverage for core routes, terminal navigation, and accessibility mode.
+    deps:
+      - R2
+      - R3
+      - R7
+    status: blocked
+    owner_session: null
+    branch: codex/R11-add-playwright-e2e-layer
+    allowed_paths:
+      - package.json
+      - pnpm-lock.yaml
+      - "playwright.config.*"
+      - "tests/e2e/**"
+      - "tests/**"
+      - ".agent/**"
+    locked_paths:
+      - package.json
+      - pnpm-lock.yaml
+      - "tests/**"
+    relevant_specs:
+      - openspec/specs/shell-layout/spec.md
+      - openspec/specs/terminal-command-ui/spec.md
+      - openspec/specs/pagefind-search-ui/spec.md
+    required_tests:
+      - playwright
+      - axe_smoke
+    acceptance_commands:
+      - pnpm test:e2e
+      - pnpm astro check
+      - git diff --check
+    report: .agent/reports/R11-add-playwright-e2e-layer.md
+    handoff: .agent/handoffs/R11-add-playwright-e2e-layer.md
+    blocked_by:
+      - R2
+      - R3
+      - R7
+      - phase-gate:R0-R6
+    unblock_when: Test governance, harness, readability mode, and Day 1 baseline are accepted.
+    last_updated: "2026-06-08T23:51:08+0800"
+
+  - id: R12
+    change: post-cover-image-pipeline
+    priority: P2
+    objective: Support post cover images and stable Notion image handling in lists and detail pages.
+    deps:
+      - R1
+    status: blocked
+    owner_session: null
+    branch: codex/R12-post-cover-image-pipeline
+    allowed_paths:
+      - src/content.config.ts
+      - "src/components/**"
+      - "src/pages/**"
+      - "src/lib/**"
+      - "tests/**"
+      - "public/**"
+      - "openspec/changes/**"
+      - ".agent/**"
+    locked_paths:
+      - src/content.config.ts
+      - "src/components/**"
+      - "tests/**"
+    relevant_specs:
+      - openspec/specs/notion-content-layer/spec.md
+      - openspec/specs/blog-post-pages/spec.md
+    required_tests:
+      - image_model_tests
+      - build_validation
+    acceptance_commands:
+      - pnpm test:unit
+      - pnpm astro check
+      - pnpm build
+      - git diff --check
+    report: .agent/reports/R12-post-cover-image-pipeline.md
+    handoff: .agent/handoffs/R12-post-cover-image-pipeline.md
+    blocked_by:
+      - R1
+      - phase-gate:P1
+    unblock_when: Content contract and P1 launch baseline are accepted.
+    last_updated: "2026-06-08T23:51:08+0800"
+
+  - id: R13
+    change: image-lightbox-viewer
+    priority: P2
+    objective: Add keyboard-accessible image lightbox viewing for body images and covers.
+    deps:
+      - R12
+    status: blocked
+    owner_session: null
+    branch: codex/R13-image-lightbox-viewer
+    allowed_paths:
+      - "src/components/**"
+      - "src/styles/**"
+      - "tests/**"
+      - "openspec/changes/**"
+      - ".agent/**"
+    locked_paths:
+      - "src/components/**"
+      - "tests/**"
+    relevant_specs:
+      - openspec/specs/blog-post-pages/spec.md
+      - openspec/specs/typography-rendering/spec.md
+    required_tests:
+      - component_or_e2e
+      - keyboard_accessibility
+    acceptance_commands:
+      - pnpm test:unit
+      - pnpm test:e2e -- --grep lightbox
+      - pnpm astro check
+      - git diff --check
+    report: .agent/reports/R13-image-lightbox-viewer.md
+    handoff: .agent/handoffs/R13-image-lightbox-viewer.md
+    blocked_by:
+      - R12
+      - phase-gate:P1
+    unblock_when: Cover image pipeline and P1 launch baseline are accepted.
+    last_updated: "2026-06-08T23:51:08+0800"
+
+  - id: R14
+    change: post-navigation-and-archive
+    priority: P2
+    objective: Add previous/next post navigation and a year-grouped archive page.
+    deps:
+      - R0
+      - R1
+    status: blocked
+    owner_session: null
+    branch: codex/R14-post-navigation-and-archive
+    allowed_paths:
+      - "src/pages/**"
+      - "src/components/**"
+      - "src/lib/**"
+      - "tests/**"
+      - "openspec/changes/**"
+      - ".agent/**"
+    locked_paths:
+      - "src/pages/**"
+      - "tests/**"
+    relevant_specs:
+      - openspec/specs/blog-post-pages/spec.md
+      - openspec/specs/list-pagination/spec.md
+    required_tests:
+      - navigation_unit
+      - route_e2e
+    acceptance_commands:
+      - pnpm test:unit
+      - pnpm test:e2e -- --grep archive
+      - pnpm astro check
+      - git diff --check
+    report: .agent/reports/R14-post-navigation-and-archive.md
+    handoff: .agent/handoffs/R14-post-navigation-and-archive.md
+    blocked_by:
+      - R0
+      - R1
+      - phase-gate:P1
+    unblock_when: Route spec archive/sync, content contract, and P1 baseline are accepted.
+    last_updated: "2026-06-08T23:51:08+0800"
+
+  - id: R15
+    change: code-copy-and-reading-metadata
+    priority: P2
+    objective: Add code block copy controls, reading time, word count, and post summary metadata.
+    deps:
+      - R1
+    status: blocked
+    owner_session: null
+    branch: codex/R15-code-copy-and-reading-metadata
+    allowed_paths:
+      - "src/components/**"
+      - "src/lib/**"
+      - "src/styles/**"
+      - "tests/**"
+      - "openspec/changes/**"
+      - ".agent/**"
+    locked_paths:
+      - "src/components/**"
+      - "tests/**"
+    relevant_specs:
+      - openspec/specs/blog-post-pages/spec.md
+      - openspec/specs/typography-rendering/spec.md
+      - openspec/specs/notion-content-layer/spec.md
+    required_tests:
+      - metadata_unit
+      - interaction_e2e
+    acceptance_commands:
+      - pnpm test:unit
+      - pnpm test:e2e -- --grep code-copy
+      - pnpm astro check
+      - git diff --check
+    report: .agent/reports/R15-code-copy-and-reading-metadata.md
+    handoff: .agent/handoffs/R15-code-copy-and-reading-metadata.md
+    blocked_by:
+      - R1
+      - phase-gate:P1
+    unblock_when: Content contract and P1 baseline are accepted.
+    last_updated: "2026-06-08T23:51:08+0800"
+
+  - id: R16
+    change: markdown-extension-rendering
+    priority: P3
+    objective: Add richer Markdown expression support such as KaTeX, admonitions, GitHub cards, and heading anchors.
+    deps:
+      - R1
+    status: blocked
+    owner_session: null
+    branch: codex/R16-markdown-extension-rendering
+    allowed_paths:
+      - astro.config.mjs
+      - package.json
+      - pnpm-lock.yaml
+      - "src/components/**"
+      - "src/lib/**"
+      - "src/styles/**"
+      - "tests/**"
+      - "openspec/changes/**"
+      - ".agent/**"
+    locked_paths:
+      - astro.config.mjs
+      - package.json
+      - pnpm-lock.yaml
+      - "tests/**"
+    relevant_specs:
+      - openspec/specs/content-layer-markdown/spec.md
+      - openspec/specs/typography-rendering/spec.md
+    required_tests:
+      - rendering_unit
+      - build_validation
+    acceptance_commands:
+      - pnpm test:unit
+      - pnpm astro check
+      - pnpm build
+      - git diff --check
+    report: .agent/reports/R16-markdown-extension-rendering.md
+    handoff: .agent/handoffs/R16-markdown-extension-rendering.md
+    blocked_by:
+      - R1
+      - phase-gate:P2
+    unblock_when: Content contract and P2 reading experience baseline are accepted.
+    last_updated: "2026-06-08T23:51:08+0800"
+
+  - id: R17
+    change: comments-and-search-hardening
+    priority: P3
+    objective: Harden Giscus origin handling, search metadata, and empty states.
+    deps: []
+    status: blocked
+    owner_session: null
+    branch: codex/R17-comments-and-search-hardening
+    allowed_paths:
+      - "src/components/**"
+      - "src/pages/search.astro"
+      - "public/pagefind/**"
+      - "tools/**"
+      - "tests/**"
+      - "openspec/changes/**"
+      - ".agent/**"
+    locked_paths:
+      - "src/components/**"
+      - "tests/**"
+    relevant_specs:
+      - openspec/specs/giscus-comments/spec.md
+      - openspec/specs/giscus-terminal-theme/spec.md
+      - openspec/specs/pagefind-indexing/spec.md
+      - openspec/specs/pagefind-search-ui/spec.md
+    required_tests:
+      - search_dom_tests
+      - comment_config_review
+    acceptance_commands:
+      - pnpm test:unit
+      - pnpm test:e2e -- --grep search
+      - pnpm astro check
+      - git diff --check
+    report: .agent/reports/R17-comments-and-search-hardening.md
+    handoff: .agent/handoffs/R17-comments-and-search-hardening.md
+    blocked_by:
+      - phase-gate:P2
+    unblock_when: P2 reading experience baseline is accepted or supervisor explicitly pulls this stretch task forward.
+    last_updated: "2026-06-08T23:51:08+0800"
+
+  - id: R18
+    change: e2e-and-migration-tests
+    priority: P3
+    objective: Add full regression coverage for migration URLs, search, comments load boundaries, image behavior, and accessibility mode.
+    deps:
+      - R8
+      - R9
+      - R10
+      - R11
+      - R12
+      - R13
+      - R14
+      - R15
+      - R16
+      - R17
+    status: blocked
+    owner_session: null
+    branch: codex/R18-e2e-and-migration-tests
+    allowed_paths:
+      - "tests/e2e/**"
+      - "tests/**"
+      - "playwright.config.*"
+      - ".agent/**"
+    locked_paths:
+      - "tests/**"
+      - "playwright.config.*"
+    relevant_specs:
+      - openspec/specs/blog-post-pages/spec.md
+      - openspec/specs/pagefind-search-ui/spec.md
+      - openspec/specs/giscus-comments/spec.md
+      - openspec/specs/shell-layout/spec.md
+    required_tests:
+      - playwright_regression
+      - axe_smoke
+    acceptance_commands:
+      - pnpm test:e2e
+      - pnpm astro check
+      - git diff --check
+    report: .agent/reports/R18-e2e-and-migration-tests.md
+    handoff: .agent/handoffs/R18-e2e-and-migration-tests.md
+    blocked_by:
+      - R8
+      - R9
+      - R10
+      - R11
+      - R12
+      - R13
+      - R14
+      - R15
+      - R16
+      - R17
+    unblock_when: All upstream launch, reading experience, and hardening tasks are accepted or explicitly deferred with supervisor approval.
+    last_updated: "2026-06-08T23:51:08+0800"
+
+  - id: R19
+    change: agent-control-plane-template
+    priority: P0
+    objective: Complete the supervisor dispatch, result collection, and reviewer reporting control-plane template.
+    deps:
+      - R2
+      - R6
+      - R11
+    status: blocked
+    owner_session: null
+    branch: codex/R19-agent-control-plane-template
+    allowed_paths:
+      - "docs/**"
+      - ".agent/**"
+      - "scripts/agent/**"
+      - "openspec/changes/**"
+      - "openspec/specs/**"
+    locked_paths:
+      - ".agent/tasks.yaml"
+      - ".agent/handoffs/supervisor.md"
+      - "scripts/agent/**"
+    relevant_specs:
+      - openspec/specs/agent-state-registry/spec.md
+      - docs/ai-agent-delivery-plan.md
+    required_tests:
+      - registry_validation
+      - reviewer_workflow_validation
+    acceptance_commands:
+      - ruby -e 'require "yaml"; YAML.load_file(".agent/tasks.yaml")'
+      - openspec validate --all --strict
+      - git diff --check
+    report: .agent/reports/R19-agent-control-plane-template.md
+    handoff: .agent/handoffs/R19-agent-control-plane-template.md
+    blocked_by:
+      - R2
+      - R6
+      - R11
+    unblock_when: TDD governance, CI quality gates, and Playwright e2e layer are accepted.
+    last_updated: "2026-06-08T23:51:08+0800"
+
+  - id: R19.0
+    parent: R19
+    change: bootstrap-agent-state-registry
+    priority: P0
+    objective: Bootstrap the repository-backed task registry, supervisor handoff, and R19.0 report/handoff files.
+    deps: []
+    status: done
+    owner_session: codex
+    branch: detached-head
+    allowed_paths:
+      - ".agent/**"
+      - "openspec/changes/archive/2026-06-08-bootstrap-agent-state-registry/**"
+      - "openspec/specs/agent-state-registry/spec.md"
+    locked_paths:
+      - ".agent/tasks.yaml"
+      - ".agent/handoffs/supervisor.md"
+      - ".agent/handoffs/R19.0-bootstrap-agent-state-registry.md"
+      - ".agent/reports/R19.0-bootstrap-agent-state-registry.md"
+      - "openspec/changes/archive/2026-06-08-bootstrap-agent-state-registry/**"
+      - "openspec/specs/agent-state-registry/spec.md"
+    relevant_specs:
+      - openspec/specs/agent-state-registry/spec.md
+      - openspec/changes/archive/2026-06-08-bootstrap-agent-state-registry/proposal.md
+      - openspec/changes/archive/2026-06-08-bootstrap-agent-state-registry/design.md
+      - openspec/changes/archive/2026-06-08-bootstrap-agent-state-registry/specs/agent-state-registry/spec.md
+      - openspec/changes/archive/2026-06-08-bootstrap-agent-state-registry/tasks.md
+    required_tests:
+      - yaml_parse
+      - openspec_validation
+      - diff_check
+    acceptance_commands:
+      - ruby -e 'require "yaml"; YAML.load_file(".agent/tasks.yaml")'
+      - openspec validate agent-state-registry --strict
+      - openspec validate --all --strict
+      - git diff --check
+    report: .agent/reports/R19.0-bootstrap-agent-state-registry.md
+    handoff: .agent/handoffs/R19.0-bootstrap-agent-state-registry.md
+    blocked_by: []
+    unblock_when: Accepted and archived; no unblock action required.
+    last_updated: "2026-06-08T23:57:18+0800"

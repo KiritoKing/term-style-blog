@@ -5,6 +5,7 @@ import {
   isLocalContentValidationCommand,
   notionContentLoader,
 } from '@/data/notionContentLoader';
+import { localContentLoader } from '@/data/localContentLoader';
 
 const notionPagePropertySchema = z
   .object({

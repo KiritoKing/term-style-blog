@@ -261,11 +261,13 @@ const DEFAULT_FALLBACK: SystemInfoItem[] = [
 ];
 
 const getUAData = (): UAData | undefined => {
+  if (typeof navigator === 'undefined') return undefined;
   const withUAData = navigator as Navigator & { userAgentData?: UAData };
   return withUAData.userAgentData;
 };
 
 const getOSName = (): string => {
+  if (typeof navigator === 'undefined') return 'Unknown';
   const uaData = getUAData();
   if (uaData?.platform) return uaData.platform;
   const ua = navigator.userAgent;
@@ -278,6 +280,7 @@ const getOSName = (): string => {
 };
 
 const getBrowserName = (): string => {
+  if (typeof navigator === 'undefined') return 'Unknown';
   const ua = navigator.userAgent;
   const edge = ua.match(/Edg\/([\d.]+)/);
   if (edge) return `Edge ${edge[1]}`;

@@ -11,6 +11,8 @@
     "postbuild": "pagefind --site dist",
     "check": "astro check",
     "validate:local": "astro check",
+    "validate:production": "node tools/validate-notion.mjs",
+    "validate:production-env": "node tools/validate-notion.mjs --env",
     "test:fixtures": "vitest run src/test/fixtures.test.ts",
     "test:env-mock": "vitest run src/test/env-mock.test.ts",
     "test": "vitest run"

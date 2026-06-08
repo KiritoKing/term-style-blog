@@ -1,5 +1,5 @@
 version: 1
-last_updated: "2026-06-08T23:57:18+0800"
+last_updated: "2026-06-09T00:14:23+0800"
 source_documents:
   - AGENTS.md
   - docs/ai-agent-delivery-plan.md
@@ -32,8 +32,8 @@ tasks:
     priority: P0
     objective: Archive or sync completed active OpenSpec changes so main specs stop lagging implementation.
     deps: []
-    status: ready
-    owner_session: null
+    status: done
+    owner_session: codex
     branch: codex/R0-archive-completed-spec-changes
     allowed_paths:
       - "openspec/changes/**"
@@ -43,10 +43,13 @@ tasks:
       - "openspec/changes/**"
       - "openspec/specs/**"
     relevant_specs:
-      - openspec/changes/route-logic-slug-path
-      - openspec/changes/update-home-system-info-and-configs
+      - openspec/changes/archive/2026-06-09-route-logic-slug-path
+      - openspec/changes/archive/2026-06-09-update-home-system-info-and-configs
       - openspec/specs/blog-post-pages/spec.md
-      - openspec/specs/blog-toc/spec.md
+      - openspec/specs/post-route-preference/spec.md
+      - openspec/specs/configurable-about-data/spec.md
+      - openspec/specs/configurable-network-links/spec.md
+      - openspec/specs/dynamic-system-info/spec.md
     required_tests:
       - openspec_validation
       - diff_review
@@ -57,8 +60,8 @@ tasks:
     report: .agent/reports/R0-archive-completed-spec-changes.md
     handoff: .agent/handoffs/R0-archive-completed-spec-changes.md
     blocked_by: []
-    unblock_when: Dependencies are already satisfied; dispatch serially before other P0 work if OpenSpec drift blocks planning.
-    last_updated: "2026-06-08T23:54:18+0800"
+    unblock_when: Accepted and archived; R10 and R14 no longer wait on R0.
+    last_updated: "2026-06-09T00:14:23+0800"
 
   - id: R1
     change: reconcile-content-source-contract
@@ -452,12 +455,11 @@ tasks:
     report: .agent/reports/R10-migration-url-redirects.md
     handoff: .agent/handoffs/R10-migration-url-redirects.md
     blocked_by:
-      - R0
       - R1
       - R8
       - phase-gate:R0-R6
-    unblock_when: OpenSpec archive/sync, content contract, SEO metadata, and Day 1 baseline are accepted.
-    last_updated: "2026-06-08T23:51:08+0800"
+    unblock_when: Content contract, SEO metadata, and Day 1 baseline are accepted.
+    last_updated: "2026-06-09T00:12:52+0800"
 
   - id: R11
     change: add-playwright-e2e-layer
@@ -614,11 +616,10 @@ tasks:
     report: .agent/reports/R14-post-navigation-and-archive.md
     handoff: .agent/handoffs/R14-post-navigation-and-archive.md
     blocked_by:
-      - R0
       - R1
       - phase-gate:P1
-    unblock_when: Route spec archive/sync, content contract, and P1 baseline are accepted.
-    last_updated: "2026-06-08T23:51:08+0800"
+    unblock_when: Content contract and P1 baseline are accepted.
+    last_updated: "2026-06-09T00:12:52+0800"
 
   - id: R15
     change: code-copy-and-reading-metadata

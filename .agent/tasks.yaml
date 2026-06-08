@@ -68,8 +68,8 @@ tasks:
     priority: P0
     objective: Reconcile Notion and Markdown content-layer contracts into one explicit content-source strategy.
     deps: []
-    status: ready
-    owner_session: null
+    status: done
+    owner_session: codex-goal-019ea808-5b4a-7180-8ebe-dc2dd054f8ba
     branch: codex/R1-reconcile-content-source-contract
     allowed_paths:
       - "openspec/changes/**"
@@ -86,6 +86,7 @@ tasks:
     relevant_specs:
       - openspec/specs/content-layer-markdown/spec.md
       - openspec/specs/notion-content-layer/spec.md
+      - openspec/changes/archive/2026-06-09-reconcile-content-source-contract
     required_tests:
       - content_contract_tests
       - openspec_validation
@@ -96,8 +97,8 @@ tasks:
     report: .agent/reports/R1-reconcile-content-source-contract.md
     handoff: .agent/handoffs/R1-reconcile-content-source-contract.md
     blocked_by: []
-    unblock_when: Dependencies are already satisfied; coordinate with R0 and R2 because P0 work is serial by default.
-    last_updated: "2026-06-08T23:51:08+0800"
+    unblock_when: Accepted, synced, and archived; R3, R5, R8, R9, R10, R12, R14, R15, and R16 no longer wait on R1.
+    last_updated: "2026-06-09T00:33:20+0800"
 
   - id: R2
     change: establish-tdd-governance
@@ -130,7 +131,7 @@ tasks:
     report: .agent/reports/R2-establish-tdd-governance.md
     handoff: .agent/handoffs/R2-establish-tdd-governance.md
     blocked_by: []
-    unblock_when: Dependencies are already satisfied; coordinate with R0 and R1 because P0 work is serial by default.
+    unblock_when: Dependencies are already satisfied; coordinate with P0 serial policy before dispatch.
     last_updated: "2026-06-08T23:51:08+0800"
 
   - id: R3
@@ -167,10 +168,9 @@ tasks:
     report: .agent/reports/R3-create-test-harness-and-fixtures.md
     handoff: .agent/handoffs/R3-create-test-harness-and-fixtures.md
     blocked_by:
-      - R1
       - R2
-    unblock_when: R1 resolves the content-source contract and R2 establishes test governance.
-    last_updated: "2026-06-08T23:51:08+0800"
+    unblock_when: R2 establishes test governance.
+    last_updated: "2026-06-09T00:33:20+0800"
 
   - id: R4
     change: add-vitest-unit-layer
@@ -250,10 +250,9 @@ tasks:
     report: .agent/reports/R5-stabilize-build-and-env-validation.md
     handoff: .agent/handoffs/R5-stabilize-build-and-env-validation.md
     blocked_by:
-      - R1
       - R3
-    unblock_when: Content-source contract and harness are accepted.
-    last_updated: "2026-06-08T23:51:08+0800"
+    unblock_when: Harness is accepted.
+    last_updated: "2026-06-09T00:33:20+0800"
 
   - id: R6
     change: add-ci-quality-gates
@@ -370,10 +369,9 @@ tasks:
     report: .agent/reports/R8-site-metadata-and-seo-baseline.md
     handoff: .agent/handoffs/R8-site-metadata-and-seo-baseline.md
     blocked_by:
-      - R1
       - phase-gate:R0-R6
-    unblock_when: Content-source contract and Day 1 baseline are accepted.
-    last_updated: "2026-06-08T23:51:08+0800"
+    unblock_when: Day 1 baseline is accepted.
+    last_updated: "2026-06-09T00:33:20+0800"
 
   - id: R9
     change: rss-sitemap-robots
@@ -414,11 +412,10 @@ tasks:
     report: .agent/reports/R9-rss-sitemap-robots.md
     handoff: .agent/handoffs/R9-rss-sitemap-robots.md
     blocked_by:
-      - R1
       - R8
       - phase-gate:R0-R6
     unblock_when: SEO metadata and Day 1 baseline are accepted.
-    last_updated: "2026-06-08T23:51:08+0800"
+    last_updated: "2026-06-09T00:33:20+0800"
 
   - id: R10
     change: migration-url-redirects
@@ -455,11 +452,10 @@ tasks:
     report: .agent/reports/R10-migration-url-redirects.md
     handoff: .agent/handoffs/R10-migration-url-redirects.md
     blocked_by:
-      - R1
       - R8
       - phase-gate:R0-R6
-    unblock_when: Content contract, SEO metadata, and Day 1 baseline are accepted.
-    last_updated: "2026-06-09T00:12:52+0800"
+    unblock_when: SEO metadata and Day 1 baseline are accepted.
+    last_updated: "2026-06-09T00:33:20+0800"
 
   - id: R11
     change: add-playwright-e2e-layer
@@ -540,10 +536,9 @@ tasks:
     report: .agent/reports/R12-post-cover-image-pipeline.md
     handoff: .agent/handoffs/R12-post-cover-image-pipeline.md
     blocked_by:
-      - R1
       - phase-gate:P1
-    unblock_when: Content contract and P1 launch baseline are accepted.
-    last_updated: "2026-06-08T23:51:08+0800"
+    unblock_when: P1 launch baseline is accepted.
+    last_updated: "2026-06-09T00:33:20+0800"
 
   - id: R13
     change: image-lightbox-viewer
@@ -616,10 +611,9 @@ tasks:
     report: .agent/reports/R14-post-navigation-and-archive.md
     handoff: .agent/handoffs/R14-post-navigation-and-archive.md
     blocked_by:
-      - R1
       - phase-gate:P1
-    unblock_when: Content contract and P1 baseline are accepted.
-    last_updated: "2026-06-09T00:12:52+0800"
+    unblock_when: P1 baseline is accepted.
+    last_updated: "2026-06-09T00:33:20+0800"
 
   - id: R15
     change: code-copy-and-reading-metadata
@@ -655,10 +649,9 @@ tasks:
     report: .agent/reports/R15-code-copy-and-reading-metadata.md
     handoff: .agent/handoffs/R15-code-copy-and-reading-metadata.md
     blocked_by:
-      - R1
       - phase-gate:P1
-    unblock_when: Content contract and P1 baseline are accepted.
-    last_updated: "2026-06-08T23:51:08+0800"
+    unblock_when: P1 baseline is accepted.
+    last_updated: "2026-06-09T00:33:20+0800"
 
   - id: R16
     change: markdown-extension-rendering
@@ -698,10 +691,9 @@ tasks:
     report: .agent/reports/R16-markdown-extension-rendering.md
     handoff: .agent/handoffs/R16-markdown-extension-rendering.md
     blocked_by:
-      - R1
       - phase-gate:P2
-    unblock_when: Content contract and P2 reading experience baseline are accepted.
-    last_updated: "2026-06-08T23:51:08+0800"
+    unblock_when: P2 reading experience baseline is accepted.
+    last_updated: "2026-06-09T00:33:20+0800"
 
   - id: R17
     change: comments-and-search-hardening

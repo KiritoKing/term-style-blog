@@ -83,6 +83,14 @@
 - 若验收通过，agent 在最终回复中必须说明通过的命令、剩余风险和下一步应发起的任务；若验收失败，必须给出 findings、阻塞状态和修复任务。
 - 用户不需要重复说明“请拉取、review、更新状态、告诉我下一步”；这些都是 `RXX done` 的默认内置步骤。
 
+### 计划演进审视协议
+- 每次 post-merge review 时，supervisor 不只验收该任务是否完成，还必须审视该变更对整体计划、依赖图、优先级、验收门禁和后续任务边界的影响。
+- supervisor 必须主动寻找计划漂移信号：新发现的遗漏需求、原计划假设失效、依赖顺序需要调整、后续任务被阻塞、验收门禁不足、文件锁冲突扩大、或某项变更能明显提升整体交付质量。
+- 若发现计划可能需要改进，supervisor 必须在最终回复中单独列出“计划调整建议”，说明触发原因、建议修改的文件、影响的任务、收益、风险和不调整的后果。
+- 未经用户确认，supervisor 不得直接修改 `docs/ai-agent-delivery-plan.md`、`.agent/tasks.yaml` 中的任务优先级/依赖/范围，或新增、删除、重排计划任务；只能记录观察与建议。
+- 用户确认计划调整后，supervisor 才能把改动写入计划文档、任务注册表、handoff/report 和必要的 OpenSpec artifacts，并重新运行相关验证。
+- 如果 review 未发现需要调整计划，也必须在最终回复中明确说明“暂无计划调整建议”，避免隐性跳过该检查。
+
 ### 写回要求
 - 主管会话在派发、阻塞解除、验收通过、延期或调整依赖时，必须更新 `.agent/tasks.yaml` 和 `.agent/handoffs/supervisor.md`。
 - worker 会话在结束前必须更新 `.agent/reports/Rxx-change-name.md` 与 `.agent/handoffs/Rxx-change-name.md`；若任务未完成，也必须写明当前进度、已改文件、失败命令、阻塞原因和下一步。

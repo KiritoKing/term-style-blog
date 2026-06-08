@@ -3,7 +3,7 @@
 Status: active
 Owner: codex
 Branch: main
-Last updated: 2026-06-09T00:18:41+0800
+Last updated: 2026-06-09T00:22:44+0800
 
 Objective:
 Maintain repository-backed agent task state for manual Codex supervisor, worker, and reviewer sessions.
@@ -26,7 +26,7 @@ Post-merge review:
 - R0 was pulled and reviewed after merge at `4ec6bd6`.
 - Review status: pass.
 - Review report: `.agent/reports/R0-archive-completed-spec-changes-post-merge-review.md`.
-- Plan adjustment candidate: add `post-route-preference` as a relevant spec for R10 and R14 after user confirmation.
+- Plan adjustment applied: `post-route-preference` is now a relevant spec for R10 and R14.
 
 Ready tasks:
 - R1 `reconcile-content-source-contract`: no dependencies; resolves Notion/Markdown contract conflict.
@@ -96,6 +96,9 @@ Commands run:
 - `openspec validate --all --strict`
 - `openspec list --json`
 - `git branch --show-current`
+- `ruby -e 'require "yaml"; YAML.load_file(".agent/tasks.yaml")'`
+- `openspec validate --all --strict`
+- `git diff --check`
 
 Command results:
 - Pull fast-forwarded `main` to `ddc0da2`.
@@ -113,6 +116,7 @@ Command results:
 - Archived the two completed changes to `openspec/changes/archive/2026-06-09-route-logic-slug-path/` and `openspec/changes/archive/2026-06-09-update-home-system-info-and-configs/`.
 - After R0 archive, `openspec list --json` returned no active changes and `openspec validate --all --strict` passed with 21/21 items.
 - Post-merge review confirmed current branch is `main`.
+- User approved the R0 plan adjustment, and `.agent/tasks.yaml` now points R10 and R14 to `openspec/specs/post-route-preference/spec.md`.
 
 Risks:
 - The registry is intentionally conservative; downstream task statuses must be updated as reports and reviews land.

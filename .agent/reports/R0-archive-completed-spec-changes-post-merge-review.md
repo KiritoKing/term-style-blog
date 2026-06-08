@@ -38,7 +38,8 @@ Plan adjustment recommendation:
 - Reason: R0 introduced `post-route-preference` as the canonical slug/id path rule, and R10/R14 will generate or test post URLs.
 - Benefit: future workers will explicitly read the canonical route preference spec before implementing redirects or post navigation links.
 - Risk if unchanged: workers may rely only on `blog-post-pages` and miss id-to-slug canonical path edge cases.
-- Requires user confirmation before updating the plan.
+- Approved by user and applied at 2026-06-09T00:22:44+0800.
+- Updated `.agent/tasks.yaml` so R10 and R14 both list `openspec/specs/post-route-preference/spec.md` in `relevant_specs`.
 
 Next action:
 - Dispatch R1 `reconcile-content-source-contract` next.

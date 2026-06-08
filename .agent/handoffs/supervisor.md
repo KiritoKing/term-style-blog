@@ -2,8 +2,8 @@
 
 Status: active
 Owner: codex
-Branch: HEAD (detached)
-Last updated: 2026-06-09T00:14:23+0800
+Branch: main
+Last updated: 2026-06-09T00:18:41+0800
 
 Objective:
 Maintain repository-backed agent task state for manual Codex supervisor, worker, and reviewer sessions.
@@ -23,6 +23,10 @@ Post-merge review:
 - Review status: pass.
 - Review report: `.agent/reports/R19.0-bootstrap-agent-state-registry-post-merge-review.md`.
 - Note: the PR changed `AGENTS.md` but the R19.0 worker report/handoff did not list that file; future reports must include all changed files and any scope expansion.
+- R0 was pulled and reviewed after merge at `4ec6bd6`.
+- Review status: pass.
+- Review report: `.agent/reports/R0-archive-completed-spec-changes-post-merge-review.md`.
+- Plan adjustment candidate: add `post-route-preference` as a relevant spec for R10 and R14 after user confirmation.
 
 Ready tasks:
 - R1 `reconcile-content-source-contract`: no dependencies; resolves Notion/Markdown contract conflict.
@@ -71,6 +75,7 @@ Files changed:
 - `openspec/changes/archive/2026-06-09-update-home-system-info-and-configs/`
 - `.agent/handoffs/R0-archive-completed-spec-changes.md`
 - `.agent/reports/R0-archive-completed-spec-changes.md`
+- `.agent/reports/R0-archive-completed-spec-changes-post-merge-review.md`
 
 Commands run:
 - `git pull --ff-only`
@@ -90,6 +95,7 @@ Commands run:
 - `openspec validate update-home-system-info-and-configs --strict`
 - `openspec validate --all --strict`
 - `openspec list --json`
+- `git branch --show-current`
 
 Command results:
 - Pull fast-forwarded `main` to `ddc0da2`.
@@ -106,11 +112,12 @@ Command results:
 - Synced slug-preferred post routes into `blog-post-pages`, added main specs for `post-route-preference`, `configurable-about-data`, `configurable-network-links`, and `dynamic-system-info`.
 - Archived the two completed changes to `openspec/changes/archive/2026-06-09-route-logic-slug-path/` and `openspec/changes/archive/2026-06-09-update-home-system-info-and-configs/`.
 - After R0 archive, `openspec list --json` returned no active changes and `openspec validate --all --strict` passed with 21/21 items.
+- Post-merge review confirmed current branch is `main`.
 
 Risks:
 - The registry is intentionally conservative; downstream task statuses must be updated as reports and reviews land.
 - R19 full control-plane automation remains blocked until R2, R6, and R11 complete.
-- The repository is on detached HEAD in this worktree; no branch switch was performed.
+- The R0 worker report records `HEAD (detached)`, but this supervisor review is on `main`.
 
 Open questions:
 - Should a later change add a strict schema validator under `scripts/agent/`?

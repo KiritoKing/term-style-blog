@@ -144,9 +144,9 @@ tasks:
     deps:
       - R1
       - R2
-    status: ready
-    owner_session: null
-    branch: codex/R3-create-test-harness-and-fixtures
+    status: done
+    owner_session: hermes
+    branch: hermes/R3-create-test-harness-and-fixtures
     allowed_paths:
       - "openspec/changes/**"
       - "tests/**"
@@ -163,20 +163,23 @@ tasks:
       - openspec/specs/content-layer-markdown/spec.md
       - openspec/specs/notion-content-layer/spec.md
       - openspec/specs/tdd-governance/spec.md
+      - openspec/specs/test-harness-and-fixtures/spec.md
     required_tests:
       - fixture_validation
       - env_mock_validation
       - markdown_fixture_source
       - no_notion_network_local_validation
     acceptance_commands:
-      - pnpm validate:local
-      - env NOTION_TOKEN=*** NOTION_DATABASE_ID=invalid pnpm validate:local
+      - pnpm test:fixtures
+      - pnpm test:env-mock
+      - pnpm astro check
+      - env NOTION_TOKEN=*** NOTION_DATABASE_ID=invalid pnpm astro check
       - git diff --check
     report: .agent/reports/R3-create-test-harness-and-fixtures.md
     handoff: .agent/handoffs/R3-create-test-harness-and-fixtures.md
     blocked_by: []
-    unblock_when: R1 and R2 are both done; R3 is now ready.
-    last_updated: "2026-06-09T00:57:00+0800"
+    unblock_when: R3 complete; R4, R5, R11 no longer wait on R3.
+    last_updated: "2026-06-09T01:20:00+0800"
 
   - id: R4
     change: add-vitest-unit-layer
@@ -185,7 +188,7 @@ tasks:
     deps:
       - R2
       - R3
-    status: blocked
+    status: ready
     owner_session: null
     branch: codex/R4-add-vitest-unit-layer
     allowed_paths:
@@ -226,7 +229,7 @@ tasks:
     deps:
       - R1
       - R3
-    status: blocked
+    status: ready
     owner_session: null
     branch: codex/R5-stabilize-build-and-env-validation
     allowed_paths:

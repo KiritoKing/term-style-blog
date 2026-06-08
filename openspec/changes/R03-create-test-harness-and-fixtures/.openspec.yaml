@@ -1,0 +1,12 @@
+schema: spec-driven
+
+context: |
+  Change ID: R03-create-test-harness-and-fixtures
+  Task: Create Markdown fixture source, environment mocks, and harness checks
+  Priority: P0
+  Dependencies: R1 (reconcile-content-source-contract), R2 (establish-tdd-governance)
+
+specs:
+  - openspec/specs/content-layer-markdown/spec.md
+  - openspec/specs/notion-content-layer/spec.md
+  - openspec/specs/tdd-governance/spec.md

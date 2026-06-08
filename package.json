@@ -5,9 +5,15 @@
   "scripts": {
     "astro": "astro",
     "build": "astro build",
+    "build:local": "astro build",
     "dev": "astro dev",
     "preview": "astro preview",
-    "postbuild": "pagefind --site dist"
+    "postbuild": "pagefind --site dist",
+    "check": "astro check",
+    "validate:local": "astro check",
+    "test:fixtures": "vitest run src/test/fixtures.test.ts",
+    "test:env-mock": "vitest run src/test/env-mock.test.ts",
+    "test": "vitest run"
   },
   "dependencies": {
     "@astro-notion/loader": "0.0.0-beta-f188e6e",
@@ -29,6 +35,7 @@
     "astro-icon": "^1.1.5",
     "pagefind": "^1.4.0",
     "tailwindcss": "^4.1.14",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^3.1.4"
   }
 }

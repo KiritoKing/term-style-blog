@@ -73,6 +73,16 @@
 - 只有以下情况才能停下来询问用户：需求序号无法从计划或注册表可靠定位、依赖或文件锁冲突无法由当前会话解除、必须越过 `allowed_paths`、验收失败且自动修复后仍无法判断正确方案、或继续会破坏仓库状态。
 - 该协议不授权 agent 自主创建后台会话、后台调度任务或引入额外多 agent 框架；用户仍然手动发起 Codex 会话，agent 只在当前会话内端到端推进目标。
 
+### 简短完成指令协议
+- 当用户只说 `RXX done`、`RXX 已完成`、`RXX merged` 或类似短句时，agent 必须将其解释为“该任务的 PR 已合并，请执行合并后主管验收流程”。
+- agent 必须先确认工作树状态，再执行 `git pull --ff-only`；若存在未提交改动或无法快进，必须先报告阻塞并避免覆盖用户改动。
+- 拉取后必须按恢复流程读取 `AGENTS.md`、`.agent/tasks.yaml`、`.agent/handoffs/supervisor.md`、对应 task handoff/report、相关 OpenSpec specs/changes 和 `git status --short`。
+- agent 必须复跑该任务 report 中列出的可重复验收命令；若命令不存在、已过期或不适用于当前状态，必须说明替代验证。
+- agent 必须以 reviewer 立场检查 diff、report、handoff、OpenSpec 同步/归档状态、文件锁边界、任务状态与下一步依赖解锁情况。
+- review 结果必须写入对应 report 或独立 post-merge review report，并在需要时更新 `.agent/tasks.yaml` 与 `.agent/handoffs/supervisor.md`。
+- 若验收通过，agent 在最终回复中必须说明通过的命令、剩余风险和下一步应发起的任务；若验收失败，必须给出 findings、阻塞状态和修复任务。
+- 用户不需要重复说明“请拉取、review、更新状态、告诉我下一步”；这些都是 `RXX done` 的默认内置步骤。
+
 ### 写回要求
 - 主管会话在派发、阻塞解除、验收通过、延期或调整依赖时，必须更新 `.agent/tasks.yaml` 和 `.agent/handoffs/supervisor.md`。
 - worker 会话在结束前必须更新 `.agent/reports/Rxx-change-name.md` 与 `.agent/handoffs/Rxx-change-name.md`；若任务未完成，也必须写明当前进度、已改文件、失败命令、阻塞原因和下一步。

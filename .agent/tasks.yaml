@@ -1,5 +1,5 @@
 version: 1
-last_updated: "2026-06-09T00:38:22+0800"
+last_updated: "2026-06-09T00:43:20+0800"
 source_documents:
   - AGENTS.md
   - docs/ai-agent-delivery-plan.md
@@ -103,7 +103,7 @@ tasks:
   - id: R2
     change: establish-tdd-governance
     priority: P0
-    objective: Add repository and OpenSpec governance requiring test strategy and test tasks for new changes.
+    objective: Add repository and OpenSpec governance requiring test strategy, test tasks, and local validation that uses Markdown fixtures without reading Notion.
     deps: []
     status: ready
     owner_session: null
@@ -120,6 +120,7 @@ tasks:
       - openspec/config.yaml
       - "openspec/**"
     relevant_specs:
+      - AGENTS.md
       - openspec/config.yaml
       - docs/ai-agent-delivery-plan.md
     required_tests:
@@ -137,7 +138,7 @@ tasks:
   - id: R3
     change: create-test-harness-and-fixtures
     priority: P0
-    objective: Create fixtures, environment mocks, and Notion fallback harness so local checks do not require real credentials.
+    objective: Create Markdown fixture source, environment mocks, and harness checks so local validation never reads Notion or requires real credentials.
     deps:
       - R1
       - R2
@@ -162,15 +163,18 @@ tasks:
     required_tests:
       - fixture_validation
       - env_mock_validation
+      - markdown_fixture_source
+      - no_notion_network_local_validation
     acceptance_commands:
-      - pnpm astro check
+      - pnpm validate:local
+      - env NOTION_TOKEN=invalid NOTION_DATABASE_ID=invalid pnpm validate:local
       - git diff --check
     report: .agent/reports/R3-create-test-harness-and-fixtures.md
     handoff: .agent/handoffs/R3-create-test-harness-and-fixtures.md
     blocked_by:
       - R2
-    unblock_when: R2 establishes test governance.
-    last_updated: "2026-06-09T00:33:20+0800"
+    unblock_when: R2 establishes test governance and local validation source rules.
+    last_updated: "2026-06-09T00:43:20+0800"
 
   - id: R4
     change: add-vitest-unit-layer
@@ -216,7 +220,7 @@ tasks:
   - id: R5
     change: stabilize-build-and-env-validation
     priority: P0
-    objective: Stabilize Astro check, build, and environment validation with clear local failure modes.
+    objective: Stabilize local check/build and production environment validation, keeping local commands on Markdown fixtures and isolating Notion reads to explicit production validation.
     deps:
       - R1
       - R3
@@ -243,21 +247,24 @@ tasks:
     required_tests:
       - env_validation
       - build_validation
+      - local_markdown_fixture_validation
+      - production_notion_preflight
     acceptance_commands:
-      - pnpm astro check
-      - pnpm build
+      - pnpm validate:local
+      - pnpm build:local
+      - pnpm validate:production-env
       - git diff --check
     report: .agent/reports/R5-stabilize-build-and-env-validation.md
     handoff: .agent/handoffs/R5-stabilize-build-and-env-validation.md
     blocked_by:
       - R3
-    unblock_when: Harness is accepted.
-    last_updated: "2026-06-09T00:33:20+0800"
+    unblock_when: Markdown fixture harness is accepted.
+    last_updated: "2026-06-09T00:43:20+0800"
 
   - id: R6
     change: add-ci-quality-gates
     priority: P1
-    objective: Add CI gates for install, check, unit, and build, with e2e added later.
+    objective: Add CI gates for install, local validation, unit, and local build, with e2e added later and no Notion reads in default CI.
     deps:
       - R2
       - R4
@@ -280,12 +287,13 @@ tasks:
     required_tests:
       - ci_dry_run_or_equivalent
       - unit
-      - build
+      - local_build
+      - no_notion_network_local_validation
     acceptance_commands:
       - pnpm install --frozen-lockfile
-      - pnpm astro check
+      - pnpm validate:local
       - pnpm test:unit
-      - pnpm build
+      - pnpm build:local
       - git diff --check
     report: .agent/reports/R6-add-ci-quality-gates.md
     handoff: .agent/handoffs/R6-add-ci-quality-gates.md

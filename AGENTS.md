@@ -97,6 +97,13 @@
 - `计划调整建议` 必须单独列出已应用的计划调整、待用户确认的计划调整，或明确写 `暂无计划调整建议`。
 - `下一步执行` 必须只放推荐发起的下一项任务或阻塞解除动作，避免和 review 结论混写。
 
+### 本地验证内容源协议
+- 本地测试、类型检查、Astro check、fixture validation、CI dry run 和本地 build 验证默认必须使用 Markdown fixture source，不得连接 Notion 或依赖真实 Notion 凭据。
+- 任何本地验证命令即使存在 `NOTION_TOKEN` 或 `NOTION_DATABASE_ID` 环境变量，也不得尝试读取 Notion；这些环境变量只能被显式的 production/Notion 集成验证命令使用。
+- 允许读取 Notion 的命令必须在任务报告中明确标记为 production validation 或 Notion integration validation，并说明是否需要真实凭据。
+- 若本地验证输出包含 Notion API 请求、`API token is invalid`、`@notionhq/client` 请求失败，默认视为本地验证策略失败，除非该命令本身就是显式 Notion 集成验证。
+- R3/R5/R6 及后续测试相关任务必须优先建立和使用 Markdown fixture source，再处理生产 Notion 凭据校验。
+
 ### 写回要求
 - 主管会话在派发、阻塞解除、验收通过、延期或调整依赖时，必须更新 `.agent/tasks.yaml` 和 `.agent/handoffs/supervisor.md`。
 - worker 会话在结束前必须更新 `.agent/reports/Rxx-change-name.md` 与 `.agent/handoffs/Rxx-change-name.md`；若任务未完成，也必须写明当前进度、已改文件、失败命令、阻塞原因和下一步。

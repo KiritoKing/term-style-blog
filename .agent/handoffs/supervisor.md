@@ -3,7 +3,7 @@
 Status: active
 Owner: codex
 Branch: codex/R1-reconcile-content-source-contract
-Last updated: 2026-06-09T00:38:22+0800
+Last updated: 2026-06-09T00:43:20+0800
 
 Objective:
 Maintain repository-backed agent task state for manual Codex supervisor, worker, and reviewer sessions.
@@ -27,6 +27,11 @@ Post-merge review:
 - Review status: pass.
 - Review report: `.agent/reports/R0-archive-completed-spec-changes-post-merge-review.md`.
 - Plan adjustment applied: `post-route-preference` is now a relevant spec for R10 and R14.
+- R1 was pulled and reviewed after merge at `f9b95ad`.
+- Review status: pass.
+- Review report: `.agent/reports/R1-reconcile-content-source-contract-post-merge-review.md`.
+- Finding: invalid local Notion env still triggers a Notion request before fallback; future local validation must use Markdown fixture source and avoid Notion entirely.
+- Plan adjustment applied: AGENTS plus R2/R3/R5/R6 now require Markdown fixture source for local validation and explicit separation of production Notion validation.
 
 Ready tasks:
 - R2 `establish-tdd-governance`: no dependencies; makes testing rules explicit before broader implementation.
@@ -61,6 +66,7 @@ Files changed:
 - `.agent/handoffs/supervisor.md`
 - `.agent/handoffs/R1-reconcile-content-source-contract.md`
 - `.agent/reports/R1-reconcile-content-source-contract.md`
+- `.agent/reports/R1-reconcile-content-source-contract-post-merge-review.md`
 - `.agent/reports/R0-archive-completed-spec-changes-post-merge-review.md`
 - `openspec/specs/content-layer-markdown/spec.md`
 - `openspec/specs/notion-content-layer/spec.md`
@@ -71,6 +77,7 @@ Files changed:
 - `src/data/notionContentLoader.ts`
 
 Commands run:
+- `git pull --ff-only`
 - `git fetch origin`
 - `git merge --no-ff --no-commit origin/main`
 - `openspec validate --all --strict`
@@ -79,6 +86,8 @@ Commands run:
 - `git diff --check`
 - `ruby -e 'require "yaml"; YAML.load_file(".agent/tasks.yaml")'`
 - `git status --short`
+- `env -u NOTION_TOKEN -u NOTION_DATABASE_ID corepack pnpm astro check`
+- `env NOTION_TOKEN=invalid NOTION_DATABASE_ID=invalid corepack pnpm astro check`
 
 Command results:
 - Merged current `origin/main` into the R1 branch and resolved conflicts in `.agent/tasks.yaml` plus `.agent/handoffs/supervisor.md`.
@@ -88,10 +97,11 @@ Command results:
 - `openspec validate --all --strict` passed before merge conflict resolution with 21/21 items.
 - `corepack pnpm astro check` passed before merge conflict resolution with 0 errors, 1 warning, and 7 hints.
 - `corepack pnpm build` failed with Notion `API token is invalid`, which is expected until R5 adds production env validation or real credentials are provided.
+- Post-merge review confirmed invalid local Notion env triggers a Notion request before fallback; local validation policy is updated so future local checks use Markdown fixtures instead.
 
 Risks:
-- Production build remains blocked without valid Notion credentials; this is now an explicit R5 concern, not an R1 contract conflict.
-- R3's original wording includes Notion fallback harness work; supervisor should avoid duplicating the minimal empty validation fallback already delivered in R1.
+- Production build remains blocked without valid Notion credentials; this is now an explicit R5 production validation concern.
+- R3 must replace local test/check behavior with Markdown fixture source instead of extending the empty Notion fallback.
 
 Open questions:
 - Should R3 be narrowed to fixtures/mock content data and harness assertions now that R1 owns the minimal empty validation fallback?

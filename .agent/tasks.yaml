@@ -278,9 +278,10 @@ tasks:
   - R2
   - R4
   - R5
-  status: ready
-  owner_session: null
-  branch: codex/R6-add-ci-quality-gates
+<<<<<<< HEAD
+  status: in_progress
+  owner_session: hermes
+  branch: hermes/R6-clean
   allowed_paths:
   - .github/**
   - package.json

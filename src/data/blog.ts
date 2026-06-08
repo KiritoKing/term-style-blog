@@ -1,4 +1,5 @@
 import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
+import { notionBlogPropertyAliases } from '@/data/contentSource';
 
 export type BlogPost = CollectionEntry<'blog'>;
 
@@ -14,21 +15,12 @@ export type BlogMeta = {
 
 type NotionProperty = { type: string } & Record<string, unknown>;
 
-const propertyNames = {
-  title: ['Title', 'Name', 'title', 'name'],
-  slug: ['Slug', 'slug'],
-  date: ['Date', 'date', 'Published', 'published'],
-  category: ['Category', 'category'],
-  tags: ['Tags', 'tags'],
-  description: ['Description', 'description', 'Summary', 'summary'],
-};
-
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null;
 
 const getProperty = (
   properties: Record<string, unknown>,
-  names: string[],
+  names: readonly string[],
 ): NotionProperty | undefined => {
   for (const name of names) {
     const value = properties[name];
@@ -52,7 +44,7 @@ const getSelectName = (value: unknown): string =>
   isRecord(value) && typeof value.name === 'string' ? value.name : '';
 
 const getTitle = (properties: Record<string, unknown>): string => {
-  const prop = getProperty(properties, propertyNames.title);
+  const prop = getProperty(properties, notionBlogPropertyAliases.title);
   if (prop?.type === 'title') {
     return getPlainText(prop.title);
   }
@@ -60,7 +52,7 @@ const getTitle = (properties: Record<string, unknown>): string => {
 };
 
 const getDate = (properties: Record<string, unknown>): Date => {
-  const prop = getProperty(properties, propertyNames.date);
+  const prop = getProperty(properties, notionBlogPropertyAliases.date);
   if (prop?.type === 'date' && isRecord(prop.date) && typeof prop.date.start === 'string') {
     return new Date(prop.date.start);
   }
@@ -68,7 +60,7 @@ const getDate = (properties: Record<string, unknown>): Date => {
 };
 
 const getCategory = (properties: Record<string, unknown>): string => {
-  const prop = getProperty(properties, propertyNames.category);
+  const prop = getProperty(properties, notionBlogPropertyAliases.category);
   if (prop?.type === 'select') {
     return getSelectName(prop.select);
   }
@@ -79,7 +71,7 @@ const getCategory = (properties: Record<string, unknown>): string => {
 };
 
 const getTags = (properties: Record<string, unknown>): string[] => {
-  const prop = getProperty(properties, propertyNames.tags);
+  const prop = getProperty(properties, notionBlogPropertyAliases.tags);
   if (prop?.type === 'multi_select' && Array.isArray(prop.multi_select)) {
     return prop.multi_select
       .map((item) => (isRecord(item) && typeof item.name === 'string' ? item.name : ''))
@@ -89,7 +81,7 @@ const getTags = (properties: Record<string, unknown>): string[] => {
 };
 
 const getDescription = (properties: Record<string, unknown>): string => {
-  const prop = getProperty(properties, propertyNames.description);
+  const prop = getProperty(properties, notionBlogPropertyAliases.description);
   if (prop?.type === 'rich_text') {
     return getPlainText(prop.rich_text);
   }
@@ -97,7 +89,7 @@ const getDescription = (properties: Record<string, unknown>): string => {
 };
 
 const getSlug = (properties: Record<string, unknown>): string | undefined => {
-  const prop = getProperty(properties, propertyNames.slug);
+  const prop = getProperty(properties, notionBlogPropertyAliases.slug);
   if (prop?.type === 'rich_text') {
     return getPlainText(prop.rich_text);
   }

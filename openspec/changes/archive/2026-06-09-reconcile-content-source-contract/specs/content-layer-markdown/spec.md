@@ -1,10 +1,4 @@
-# content-layer-markdown
-
-## Purpose
-
-定义 Astro 内容层在 Markdown 博客中的历史数据模型边界，确保当前生产内容源契约不再与 Notion 内容层冲突。
-
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: 博客内容层模型
 系统 MUST 在 Astro content layer 中定义博客集合与字段约束，并生成可用于构建期查询的类型安全 API；该模型的生产内容源必须与 Notion 内容源契约保持一致。

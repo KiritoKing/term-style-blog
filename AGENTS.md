@@ -104,6 +104,14 @@
 - 若本地验证输出包含 Notion API 请求、`API token is invalid`、`@notionhq/client` 请求失败，默认视为本地验证策略失败，除非该命令本身就是显式 Notion 集成验证。
 - R3/R5/R6 及后续测试相关任务必须优先建立和使用 Markdown fixture source，再处理生产 Notion 凭据校验。
 
+### TDD 约束
+- **测试前置原则**：每个 OpenSpec change 在开始实现前，worker 必须先完成测试设计，写明测试类型、覆盖的规格点和使用的 fixture。
+- **测试任务必须性**：每个 change 的 `tasks.md` 必须包含 `- [ ]` 格式的测试任务 checkbox，数量不得少于相关规格点的 50%。
+- **测试分层**：按以下层次组织测试——unit（Vitest）、component（Vitest + Testing Library）、e2e（Playwright）、axe_smoke（Playwright + axe）、fixture_validation、openspec_validation。
+- **本地验证约束**：CI 和本地开发时的验证命令不得发起 Notion API 请求，不得因缺少 Notion 凭据而报错，必须使用 Markdown fixture source。
+- **测试 fixture 规范**：fixture 存放于 `src/fixtures/` 或 `tests/fixtures/`，不得依赖外部 API 响应，应覆盖正常路径和已知边界情况。
+- **验收命令必须性**：每个任务必须在 `tasks.yaml` 中声明 `acceptance_commands`，且命令必须在本地可复现执行。
+
 ### 写回要求
 - 主管会话在派发、阻塞解除、验收通过、延期或调整依赖时，必须更新 `.agent/tasks.yaml` 和 `.agent/handoffs/supervisor.md`。
 - worker 会话在结束前必须更新 `.agent/reports/Rxx-change-name.md` 与 `.agent/handoffs/Rxx-change-name.md`；若任务未完成，也必须写明当前进度、已改文件、失败命令、阻塞原因和下一步。

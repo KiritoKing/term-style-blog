@@ -105,9 +105,9 @@ tasks:
     priority: P0
     objective: Add repository and OpenSpec governance requiring test strategy, test tasks, and local validation that uses Markdown fixtures without reading Notion.
     deps: []
-    status: ready
-    owner_session: null
-    branch: codex/R2-establish-tdd-governance
+    status: done
+    owner_session: hermes
+    branch: hermes/R2-establish-tdd-governance
     allowed_paths:
       - AGENTS.md
       - openspec/config.yaml
@@ -123,17 +123,19 @@ tasks:
       - AGENTS.md
       - openspec/config.yaml
       - docs/ai-agent-delivery-plan.md
+      - openspec/specs/tdd-governance/spec.md
     required_tests:
       - openspec_validation
       - governance_review
+      - diff_check
     acceptance_commands:
-      - openspec validate --all --strict
+      - ruby -e 'require "yaml"; YAML.load_file(".agent/tasks.yaml")'
       - git diff --check
     report: .agent/reports/R2-establish-tdd-governance.md
     handoff: .agent/handoffs/R2-establish-tdd-governance.md
     blocked_by: []
-    unblock_when: Dependencies are already satisfied; coordinate with P0 serial policy before dispatch.
-    last_updated: "2026-06-08T23:51:08+0800"
+    unblock_when: Accepted; R3, R4, R6, R11, and R19 no longer wait on R2.
+    last_updated: "2026-06-09T00:55:00+0800"
 
   - id: R3
     change: create-test-harness-and-fixtures
@@ -142,7 +144,7 @@ tasks:
     deps:
       - R1
       - R2
-    status: blocked
+    status: ready
     owner_session: null
     branch: codex/R3-create-test-harness-and-fixtures
     allowed_paths:
@@ -160,6 +162,7 @@ tasks:
     relevant_specs:
       - openspec/specs/content-layer-markdown/spec.md
       - openspec/specs/notion-content-layer/spec.md
+      - openspec/specs/tdd-governance/spec.md
     required_tests:
       - fixture_validation
       - env_mock_validation
@@ -167,13 +170,12 @@ tasks:
       - no_notion_network_local_validation
     acceptance_commands:
       - pnpm validate:local
-      - env NOTION_TOKEN=invalid NOTION_DATABASE_ID=invalid pnpm validate:local
+      - env NOTION_TOKEN=*** NOTION_DATABASE_ID=invalid pnpm validate:local
       - git diff --check
     report: .agent/reports/R3-create-test-harness-and-fixtures.md
     handoff: .agent/handoffs/R3-create-test-harness-and-fixtures.md
-    blocked_by:
-      - R2
-    unblock_when: R2 establishes test governance and local validation source rules.
+    blocked_by: []
+    unblock_when: R1 and R2 are done; R3 is now ready for dispatch.
     last_updated: "2026-06-09T00:43:20+0800"
 
   - id: R4

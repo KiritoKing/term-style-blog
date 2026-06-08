@@ -91,6 +91,12 @@
 - 用户确认计划调整后，supervisor 才能把改动写入计划文档、任务注册表、handoff/report 和必要的 OpenSpec artifacts，并重新运行相关验证。
 - 如果 review 未发现需要调整计划，也必须在最终回复中明确说明“暂无计划调整建议”，避免隐性跳过该检查。
 
+### Supervisor 回复结构
+- post-merge review 或任务验收后的最终回复必须使用清晰分区，至少包含：`Review 结果`、`计划调整建议`、`下一步执行`。
+- `Review 结果` 必须列出 pass/fix_requested/blocked、关键验证命令和主要 findings。
+- `计划调整建议` 必须单独列出已应用的计划调整、待用户确认的计划调整，或明确写 `暂无计划调整建议`。
+- `下一步执行` 必须只放推荐发起的下一项任务或阻塞解除动作，避免和 review 结论混写。
+
 ### 写回要求
 - 主管会话在派发、阻塞解除、验收通过、延期或调整依赖时，必须更新 `.agent/tasks.yaml` 和 `.agent/handoffs/supervisor.md`。
 - worker 会话在结束前必须更新 `.agent/reports/Rxx-change-name.md` 与 `.agent/handoffs/Rxx-change-name.md`；若任务未完成，也必须写明当前进度、已改文件、失败命令、阻塞原因和下一步。

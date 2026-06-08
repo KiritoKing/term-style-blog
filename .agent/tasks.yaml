@@ -1,5 +1,5 @@
 version: 1
-last_updated: "2026-06-09T00:14:23+0800"
+last_updated: "2026-06-09T00:38:22+0800"
 source_documents:
   - AGENTS.md
   - docs/ai-agent-delivery-plan.md
@@ -441,6 +441,7 @@ tasks:
       - "tests/**"
     relevant_specs:
       - openspec/specs/blog-post-pages/spec.md
+      - openspec/specs/post-route-preference/spec.md
     required_tests:
       - redirect_tests
       - build_validation
@@ -599,6 +600,7 @@ tasks:
       - "tests/**"
     relevant_specs:
       - openspec/specs/blog-post-pages/spec.md
+      - openspec/specs/post-route-preference/spec.md
       - openspec/specs/list-pagination/spec.md
     required_tests:
       - navigation_unit

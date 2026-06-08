@@ -175,8 +175,8 @@ tasks:
     report: .agent/reports/R3-create-test-harness-and-fixtures.md
     handoff: .agent/handoffs/R3-create-test-harness-and-fixtures.md
     blocked_by: []
-    unblock_when: R1 and R2 are done; R3 is now ready for dispatch.
-    last_updated: "2026-06-09T00:43:20+0800"
+    unblock_when: R1 and R2 are both done; R3 is now ready.
+    last_updated: "2026-06-09T00:57:00+0800"
 
   - id: R4
     change: add-vitest-unit-layer

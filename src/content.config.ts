@@ -19,29 +19,35 @@ const notionBlogEntrySchema = z
   })
   .passthrough();
 
+// Determine which loader to use based on the current command
+// Local validation mode uses local Markdown fixtures instead of Notion
+const useLocalLoader = isLocalContentValidationCommand();
+
 const blog = defineCollection({
-  // Production blog content is Notion-only; Markdown files are non-production examples/fixtures.
-  loader: notionContentLoader({
-    auth: import.meta.env.NOTION_TOKEN,
-    data_source_id: import.meta.env.NOTION_DATABASE_ID,
-    allowEmptyFallback: isLocalContentValidationCommand(),
-    // Use Notion sorting and filtering
-    filter: {
-      property: 'status',
-      select: {
-        equals: 'Published',
-      },
-    },
-    rehypePlugins: [
-      [
-        rehypeShiki,
-        {
-          theme: 'dracula-soft',
+  // Production blog content uses Notion; local/e2e mode uses Markdown fixtures.
+  loader: useLocalLoader
+    ? localContentLoader()
+    : notionContentLoader({
+        auth: import.meta.env.NOTION_TOKEN,
+        data_source_id: import.meta.env.NOTION_DATABASE_ID,
+        allowEmptyFallback: false,
+        // Use Notion sorting and filtering
+        filter: {
+          property: 'status',
+          select: {
+            equals: 'Published',
+          },
         },
-      ],
-    ],
-    sorts: [{ property: 'date', direction: 'descending' }],
-  }),
+        rehypePlugins: [
+          [
+            rehypeShiki,
+            {
+              theme: 'dracula-soft',
+            },
+          ],
+        ],
+        sorts: [{ property: 'date', direction: 'descending' }],
+      }),
   schema: notionBlogEntrySchema,
 });
 

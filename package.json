@@ -16,7 +16,8 @@
     "test:fixtures": "vitest run src/test/fixtures.test.ts",
     "test:env-mock": "vitest run src/test/env-mock.test.ts",
     "test": "vitest run",
-    "test:unit": "vitest run"
+    "test:unit": "vitest run",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@astro-notion/loader": "0.0.0-beta-f188e6e",

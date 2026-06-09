@@ -332,11 +332,8 @@ const buildSystemInfo = (startMs: number): SystemInfoItem[] => {
 export default function SystemInfo({ fallback }: Props) {
   const initialItems =
     fallback && fallback.length > 0 ? fallback : DEFAULT_FALLBACK;
-  const initialOS =
-    initialItems.find((item) => item.label === 'OS')?.value ?? 'Unknown';
-  const initialLogoKey = detectLogoKey(initialOS, navigator.userAgent);
   const [items, setItems] = useState<SystemInfoItem[]>(initialItems);
-  const [logo, setLogo] = useState<string>(NEOFETCH_LOGOS[initialLogoKey]);
+  const [logo, setLogo] = useState<string>(NEOFETCH_LOGOS.windows);
 
   useEffect(() => {
     const startMs = performance.now();

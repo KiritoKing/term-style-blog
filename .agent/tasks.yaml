@@ -137,7 +137,7 @@ tasks:
   handoff: .agent/handoffs/R2-establish-tdd-governance.md
   blocked_by: []
   unblock_when: Accepted; R3, R4, R6, R11, and R19 no longer wait on R2.
-  last_updated: 2026-06-09T00:55:00+0800
+  last_updated: 2026-06-09T11:51:00+0800
 - id: R3
   change: create-test-harness-and-fixtures
   priority: P0
@@ -162,6 +162,10 @@ tasks:
   - src/content.config.ts
   - .env.example
   relevant_specs:
+  - openspec/changes/archive/2026-06-09-establish-tdd-governance
+  - openspec/changes/archive/2026-06-09-create-test-harness-and-fixtures
+  - openspec/changes/archive/2026-06-09-add-vitest-unit-layer
+  - openspec/changes/archive/2026-06-09-stabilize-build-and-env-validation
   - openspec/specs/content-layer-markdown/spec.md
   - openspec/specs/notion-content-layer/spec.md
   - openspec/specs/tdd-governance/spec.md
@@ -181,7 +185,7 @@ tasks:
   handoff: .agent/handoffs/R3-create-test-harness-and-fixtures.md
   blocked_by: []
   unblock_when: R3 complete; R4, R5, R11 no longer wait on R3.
-  last_updated: 2026-06-09T01:20:00+0800
+  last_updated: 2026-06-09T11:52:00+0800
 - id: R4
   change: add-vitest-unit-layer
   priority: P0
@@ -220,7 +224,7 @@ tasks:
   handoff: .agent/handoffs/R4-add-vitest-unit-layer.md
   blocked_by: []
   unblock_when: R2 and R3 are accepted so unit tests have governance and stable fixtures.
-  last_updated: 2026-06-08T23:51:08+0800
+  last_updated: 2026-06-09T11:52:00+0800
 - id: R5
   change: stabilize-build-and-env-validation
   priority: P0
@@ -264,7 +268,7 @@ tasks:
   handoff: .agent/handoffs/R05-stabilize-build-and-env-validation.md
   blocked_by: []
   unblock_when: Markdown fixture harness is accepted.
-  last_updated: 2026-06-09T00:43:20+0800
+  last_updated: 2026-06-09T11:52:00+0800
 - id: R6
   change: add-ci-quality-gates
   priority: P1
@@ -274,7 +278,7 @@ tasks:
   - R2
   - R4
   - R5
-  status: blocked
+  status: ready
   owner_session: null
   branch: codex/R6-add-ci-quality-gates
   allowed_paths:
@@ -304,7 +308,7 @@ tasks:
   handoff: .agent/handoffs/R6-add-ci-quality-gates.md
   blocked_by: []
   unblock_when: Governance, unit tests, and stable build checks are accepted.
-  last_updated: 2026-06-08T23:51:08+0800
+  last_updated: 2026-06-09T11:52:00+0800
 - id: R7
   change: readability-accessibility-mode
   priority: P1

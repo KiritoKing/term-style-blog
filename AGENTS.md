@@ -170,3 +170,12 @@ Follow-ups:
 - 主管只派发依赖已满足、状态为 `ready` 且无文件锁冲突的任务。
 - 派发包必须包含：任务 ID、目标、依赖完成状态、相关 OpenSpec 文件、允许编辑范围、文件锁、必须新增/更新的测试、验收命令、报告路径和交接路径。
 - 子任务完成后，主管必须基于 report、diff、OpenSpec 一致性和验收命令决定 `done`、`fix_requested`、`blocked` 或 `deferred`。
+
+### OpenSpec 归档规范
+- **归档时机**：每个 OpenSpec change 在 `done` 状态后必须立即归档，不得留在 `openspec/changes/` 根目录。
+- **归档路径**：`openspec/changes/archive/YYYY-MM-DD-<change>/`（日期为归档日期，非创建日期）。
+- **归档内容**：完整的 proposal.md、design.md、tasks.md、specs/ 目录及所有相关文件。
+- **归档前检查**：归档前必须确认 delta specs 已同步到 `openspec/specs/` 对应路径。
+- **归档后清理**：归档完成后必须删除 `openspec/changes/` 根目录下的原始 change 目录。
+- **tasks.yaml 更新**：归档后同步更新 `relevant_specs` 指向归档路径，并更新 `last_updated`。
+- **禁止状态**：任何已完成的 change不得长期以 active状态留在 `openspec/changes/` 根目录；supervisor 发现此类情况应主动清理并记录。

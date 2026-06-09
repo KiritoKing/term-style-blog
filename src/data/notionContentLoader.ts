@@ -61,11 +61,11 @@ export const isLocalContentValidationCommand = (): boolean => {
     // Also use local mode if credentials look like placeholders
     // These are common patterns for invalid/placeholder tokens
     const tokenValue = process.env.NOTION_TOKEN || '';
-    const isPlaceholder = 
+    const isPlaceholder =
       tokenValue === 'invalid' ||
       tokenValue === 'your_notion_token' ||
-      tokenValue.startsWith('secret_') === false && tokenValue.includes('...') ||
-      tokenValue === '***';
+      tokenValue === '***' ||
+      (tokenValue.startsWith('secret_') === false && tokenValue.includes('...'));
     
     const dbIdValue = process.env.NOTION_DATABASE_ID || '';
     const isDbIdPlaceholder =

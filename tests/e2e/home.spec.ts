@@ -9,7 +9,7 @@ test.describe('Home Page', () => {
   test('page has visible terminal UI elements', async ({ page }) => {
     await page.goto('/');
     // Check for system online heading
-    const heading = page.locator('h1');
+    const heading = page.locator('h1').first();
     await expect(heading).toBeVisible();
   });
 

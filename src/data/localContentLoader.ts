@@ -5,8 +5,7 @@
  * Used as fallback when Notion credentials are unavailable.
  */
 
-import type { Loader } from 'astro/loaders';
-import { readFile } from 'node:fs/promises';
+import type { Loader } from 'astro/content/loaders';
 import { join } from 'node:path';
 
 export interface LocalBlogEntry {
@@ -43,29 +42,70 @@ function parseFrontmatter(content: string): { data: Record<string, unknown>; bod
 
   const [, frontmatter, body] = match;
   const data: Record<string, unknown> = {};
+  const lines = frontmatter.split('\n');
+  let currentKey: string | null = null;
+  let lastKeyWithEmptyValue: string | null = null;
 
   // Simple YAML parser for our flat frontmatter format
-  for (const line of frontmatter.split('\n')) {
-    const colonIdx = line.indexOf(':');
-    if (colonIdx === -1) continue;
-    const key = line.slice(0, colonIdx).trim();
-    const value = line.slice(colonIdx + 1).trim();
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed) continue;
 
-    if (value.startsWith('"') && value.endsWith('"')) {
+    // Check for array continuation (lines starting with -)
+    if (trimmed.startsWith('-')) {
+      const value = trimmed.slice(1).trim().replace(/^['"]|['"]$/g, '');
+      // Check if this is a continuation of an array (either inline array started or empty value array started)
+      if (currentKey && Array.isArray(data[currentKey])) {
+        (data[currentKey] as string[]).push(value);
+        continue;
+      } else if (lastKeyWithEmptyValue && Array.isArray(data[lastKeyWithEmptyValue])) {
+        (data[lastKeyWithEmptyValue] as string[]).push(value);
+        lastKeyWithEmptyValue = null;
+        continue;
+      }
+    }
+
+    const colonIdx = trimmed.indexOf(':');
+    if (colonIdx === -1) continue;
+    const key = trimmed.slice(0, colonIdx).trim();
+    const value = trimmed.slice(colonIdx + 1).trim();
+
+    if (!key) continue;
+
+    if (value === '' && trimmed.endsWith(':')) {
+      // This is the start of an array (either empty value or multi-line array)
+      currentKey = key;
+      lastKeyWithEmptyValue = key;
+      data[key] = [];
+    } else if (value.startsWith('"') && value.endsWith('"')) {
       data[key] = value.slice(1, -1);
+      currentKey = key;
+      lastKeyWithEmptyValue = null;
     } else if (value.startsWith("'") && value.endsWith("'")) {
       data[key] = value.slice(1, -1);
+      currentKey = key;
+      lastKeyWithEmptyValue = null;
     } else if (value === 'true') {
       data[key] = true;
+      currentKey = key;
+      lastKeyWithEmptyValue = null;
     } else if (value === 'false') {
       data[key] = false;
+      currentKey = key;
+      lastKeyWithEmptyValue = null;
     } else if (!isNaN(Number(value)) && value !== '') {
       data[key] = Number(value);
+      currentKey = key;
+      lastKeyWithEmptyValue = null;
     } else if (value.startsWith('-')) {
-      // Multi-line array
-      data[key] = value.replace(/^-\s*/, '').split(',').map((s) => s.trim());
+      // Inline array: " - item1, item2"
+      data[key] = value.replace(/^-\s*/, '').split(',').map((s) => s.trim().replace(/^['"]|['"]$/g, ''));
+      currentKey = key;
+      lastKeyWithEmptyValue = null;
     } else {
       data[key] = value;
+      currentKey = key;
+      lastKeyWithEmptyValue = null;
     }
   }
 
@@ -82,22 +122,18 @@ export function localContentLoader(): Loader {
   return {
     name: 'local-content-loader',
     async load({ store, logger }) {
-      // Dynamically import glob to avoid issues when not in Node context
-      const { glob } = await import('astro/loaders');
-      const base = process.cwd();
-      const globLoader = glob({ base, pattern: `**/*.md`, dir: FIXTURE_DIR });
-
-      // Load all fixture files
       const entries: LocalBlogEntry[] = [];
+
+      const base = join(process.cwd(), FIXTURE_DIR);
 
       try {
         const { readdir, readFile: fsRead } = await import('node:fs/promises');
-        const files = await readdir(join(base, FIXTURE_DIR));
+        const files = await readdir(base);
 
         for (const file of files) {
           if (!file.endsWith('.md')) continue;
 
-          const raw = await fsRead(join(base, FIXTURE_DIR, file), 'utf-8');
+          const raw = await fsRead(join(base, file), 'utf-8');
           const { data, body } = parseFrontmatter(raw);
 
           const id = (data.id as string) || file.replace('.md', '');

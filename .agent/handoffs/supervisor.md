@@ -112,3 +112,12 @@ B06 makes repository dispatch default to an immutable manual noindex preview and
 ## 2026-09-09 Root accepted B06
 
 B06 manual-preview policy is done, strict delta synced/archived and locks released. Root independently verified 21 deployment tests and reviewed the complete diff. User authorized autonomous completion after acceptance; proceed to exact-SHA CI and merge, then connect Hermes dispatch to preview only. Production variables remain false/manual and online Access-protected preview acceptance remains pending. Root's README documents the final command flags and policy. No render implementation or real article change occurred in B06.
+
+## 2026-09-09 B07 ready for review
+
+B07 fixes the real exporter-v1 consumer mismatch without changing producer or snapshot hashes. An actual Deno-exported synthetic golden produced RED `FILE_SET_MISMATCH` for `a.md`/`a/child.md` and RED `TREE_HASH_MISMATCH` for schema-v1 property order; the bounded consumer fix makes all 23 deployment tests pass. The exact immutable 54-file content SHA `524b6709...` now validates manifest `047cfc5b...` and tree `4daf6157...` with 4 publish/50 published. Vitest 112/112 and Astro check pass. Real content remains only in owned `/tmp`; B06 production stays false/manual. No Git or remote mutation occurred.
+
+
+## 2026-09-09 Root accepted B07
+
+B07 is done, synced/archived and unlocked. Root independently passed the 23 deployment tests and exact failed 54-file immutable snapshot. Next: latest-SHA CI, merge and a fresh add/update/delete automatic preview E2E. First-round synthetic source has been deleted and its tree returned to the 53-file baseline; no production cutover occurred.

@@ -480,3 +480,7 @@ B01 在独立 worktree 合并处理本次必要能力：Obsidian Markdown 生产
 ## 2026-09-09 B06 人工预览发布策略
 
 仓库 dispatch 默认只构建和部署不可变 noindex 预览。Cloudflare 部署成功后，在线人工验收仍记录为 pending；工作流不会抓取受 Access 保护的 URL 并把登录页当作博客通过证据。生产默认关闭，只有 `PUBLICATION_PRODUCTION_ENABLED=true` 且 `PUBLICATION_PREVIEW_REVIEW=automatic` 时，既有在线页面验证与生产链路才可启用。人工 `production-retry` 服从相同的双重门禁。人工预览同时保存无秘密部署记录，将框架与内容 SHA、manifest 和 source tree hash、Cloudflare deployment id 与 URL 绑定，供验收下载核对。
+
+## 2026-09-09 B07 exporter-v1 hash 兼容
+
+发布消费者必须沿用 exporter schema v1 已部署的树哈希协议：文件按全局相对路径排序，每个 JSON 对象按 `slug,status,title,path,bytes,sha256` 构造。测试基线来自真实 Deno exporter 生成的纯合成 golden snapshot；producer、已有 manifest 和远端 snapshot hash 均不改写。消费者继续在构建前拒绝 manifest、文件字节、metadata 和不可变输入不一致。

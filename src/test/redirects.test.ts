@@ -22,6 +22,13 @@ describe('historical redirects', () => {
     expect(keepass.some((rule) => rule.from === '/post/technology/keepass')).toBe(true);
   });
 
+  it('maps renamed historical articles to their current publication slugs', () => {
+    const rules = compileRedirectRules(map);
+    expect(rules.find(rule => rule.from === '/20岁随笔')?.to).toBe('/posts/birthday-20th');
+    expect(rules.find(rule => rule.from === '/评好逸恶劳大学生')?.to)
+      .toBe('/posts/评-不能继续助长部分中国大学生的好逸恶劳思潮');
+  });
+
   it('normalizes inherited aliases to leading-slash paths', () => {
     const rules = compileRedirectRules({ slug: ['2024/01/01/Tech/slug'] });
     expect(rules).toEqual([{ from: '/2024/01/01/Tech/slug', to: '/posts/slug', status: 301 }]);

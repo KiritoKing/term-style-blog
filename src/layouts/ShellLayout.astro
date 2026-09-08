@@ -62,7 +62,7 @@ const postIndex = posts.map((post) => ({
         <div transition:name="topbar" class="crt-flicker">
           <TopBar headerPath={headerPath} />
         </div>
-        <div class="flex-1 flex flex-col overflow-hidden" transition:name="content">
+        <div class="flex-1 min-w-0 flex flex-col overflow-hidden" transition:name="content">
           <ContentFrame>
             <slot />
           </ContentFrame>
@@ -81,3 +81,45 @@ const postIndex = posts.map((post) => ({
     </div>
   </div>
 </Layout>
+
+<script>
+  const makeWideMermaidDiagramsReadable = () => {
+    document.querySelectorAll<HTMLElement>('.prose-terminal .mermaid').forEach((container) => {
+      if (container.dataset.blogMermaidComplete !== 'true') return;
+      const svg = container.querySelector<SVGSVGElement>(':scope > svg[viewBox]');
+      if (!svg) return;
+
+      if (container.dataset.mermaidScrollable === 'true') {
+        svg.style.removeProperty('width');
+        delete container.dataset.mermaidScrollable;
+      }
+
+      const naturalWidth = svg.viewBox.baseVal.width;
+      if (!Number.isFinite(naturalWidth) || naturalWidth <= container.clientWidth + 1) return;
+
+      svg.style.width = `${Math.ceil(naturalWidth)}px`;
+      container.dataset.mermaidScrollable = 'true';
+    });
+  };
+
+  const installMermaidReadability = () => {
+    if (document.documentElement.dataset.mermaidReadabilityInstalled === 'true') return;
+
+    document.documentElement.dataset.mermaidReadabilityInstalled = 'true';
+    let scheduled = false;
+    const scheduleRefresh = () => {
+      if (scheduled) return;
+      scheduled = true;
+      requestAnimationFrame(() => {
+        scheduled = false;
+        makeWideMermaidDiagramsReadable();
+      });
+    };
+
+    document.addEventListener('blog:mermaid-rendered', scheduleRefresh);
+    window.addEventListener('resize', scheduleRefresh, { passive: true });
+    document.addEventListener('astro:page-load', scheduleRefresh);
+  };
+
+  installMermaidReadability();
+</script>

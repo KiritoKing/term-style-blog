@@ -919,3 +919,60 @@ tasks:
   blocked_by: []
   unblock_when: B01 accepted and files unlocked; already satisfied
   last_updated: 2026-09-09T02:14:41+0800
+
+- id: B03
+  change: blog-visual-metadata-gates
+  priority: P1
+  objective: render-overflow-repair
+  deps: [B01, B02]
+  status: done
+  owner_session: null
+  branch: codex/obsidian-blog-cutover
+  allowed_paths: ['src/components/**', 'src/layouts/**', 'src/styles/**', 'tests/e2e/**', 'src/pages/posts/[id].astro', 'src/pages/posts/index.astro', 'src/pages/posts/page/[page].astro', 'src/pages/categories/index.astro', 'src/pages/categories/page/[page].astro', 'src/pages/categories/[slug].astro', 'src/pages/categories/[slug]/page/[page].astro', 'src/pages/tags/index.astro', 'src/pages/tags/page/[page].astro', 'src/pages/tags/[slug].astro', 'src/pages/tags/[slug]/page/[page].astro']
+  locked_paths: []
+  relevant_specs: [openspec/specs/publication-snapshot-source/spec.md]
+  required_tests: [unit, e2e, visual_assertion]
+  acceptance_commands: [pnpm test, pnpm check, git diff --check]
+  report: .agent/reports/B03-render-overflow.md
+  handoff: .agent/handoffs/B03-render-overflow.md
+  blocked_by: []
+  unblock_when: User reported defect remediation
+  last_updated: 2026-09-09
+
+- id: B04
+  change: blog-visual-metadata-gates
+  priority: P1
+  objective: strict-publication-metadata
+  deps: [B01, B02]
+  status: done
+  owner_session: null
+  branch: codex/obsidian-blog-cutover
+  allowed_paths: ['src/lib/publication.ts', 'src/lib/blog-model.ts', 'src/content.config.ts', 'src/test/**', 'scripts/validate-content.ts']
+  locked_paths: []
+  relevant_specs: [openspec/specs/publication-snapshot-source/spec.md]
+  required_tests: [unit, e2e, visual_assertion]
+  acceptance_commands: [pnpm test, pnpm check, git diff --check]
+  report: .agent/reports/B04-metadata-gate.md
+  handoff: .agent/handoffs/B04-metadata-gate.md
+  blocked_by: []
+  unblock_when: User reported defect remediation
+  last_updated: 2026-09-09
+
+- id: B05
+  change: blog-visual-metadata-gates
+  priority: P1
+  objective: all-page-midscene-audit
+  deps: [B01, B02]
+  status: done
+  owner_session: null
+  branch: codex/obsidian-blog-cutover
+  allowed_paths: ['scripts/visual-audit/**', 'openspec/changes/blog-visual-metadata-gates/**']
+  locked_paths: []
+  relevant_specs: [openspec/specs/publication-snapshot-source/spec.md]
+  required_tests: [unit, e2e, visual_assertion]
+  acceptance_commands: [pnpm test, pnpm check, git diff --check]
+  report: .agent/reports/B05-all-page-visual-audit.md
+  handoff: .agent/handoffs/B05-all-page-visual-audit.md
+  blocked_by: []
+  unblock_when: User reported defect remediation
+  last_updated: 2026-09-09

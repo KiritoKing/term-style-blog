@@ -35,7 +35,8 @@ createServer(async (request, response) => {
 
   const redirect = redirects.get(pathname.replace(/\/$/, '') || '/');
   if (redirect) {
-    response.writeHead(redirect.status, { location: redirect.to }).end();
+    const target = new URL(redirect.to, requestUrl);
+    response.writeHead(redirect.status, { location: target.pathname + target.search + target.hash }).end();
     return;
   }
 

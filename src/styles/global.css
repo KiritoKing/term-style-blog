@@ -42,6 +42,17 @@
     overflow-x: auto;
   }
 
+  .prose-terminal .mermaid {
+    max-width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+  }
+
+  .prose-terminal .mermaid[data-mermaid-scrollable='true'] > svg {
+    max-width: none !important;
+    height: auto;
+  }
+
   .article-meta-chip {
     @apply bg-white dark:bg-[#111] px-2 py-1 rounded border border-gray-200 dark:border-[#222] hover:border-blue-500 dark:hover:border-green-500;
   }
@@ -243,6 +254,14 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .mermaid,
+  .mermaid *,
+  .mermaid *::before,
+  .mermaid *::after {
+    animation: none !important;
+    transition: none !important;
   }
 
   .scanlines {

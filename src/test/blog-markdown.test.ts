@@ -37,6 +37,24 @@ describe('Markdown blog model', () => {
     expect(post).not.toHaveProperty('source_notion_id');
   });
 
+  it('refuses invalid category instead of inventing Uncategorized', () => {
+    expect(() =>
+      normalizeMarkdownBlogPost({
+        ...entry('invalid-category', '2024-01-01'),
+        data: { ...entry('invalid-category', '2024-01-01').data, category: '   ' },
+      }),
+    ).toThrow(/invalid-category\.md: required field category/);
+  });
+
+  it('refuses blank summary instead of substituting the title', () => {
+    expect(() =>
+      normalizeMarkdownBlogPost({
+        ...entry('invalid-summary', '2024-01-01'),
+        data: { ...entry('invalid-summary', '2024-01-01').data, summary: '' },
+      }),
+    ).toThrow(/invalid-summary\.md: required field summary/);
+  });
+
   it('provides chronological adjacent navigation', () => {
     const posts = [
       normalizeMarkdownBlogPost(entry('new', '2026-01-01')),

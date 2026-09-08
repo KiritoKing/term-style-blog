@@ -122,7 +122,7 @@ export default function TerminalPanel({ promptPath, route, postIndex }: Props) {
 
   useEffect(() => {
     if (inputRef.current) {
-      inputRef.current.focus();
+      inputRef.current.focus({ preventScroll: true });
     }
   }, []);
 
@@ -493,15 +493,15 @@ export default function TerminalPanel({ promptPath, route, postIndex }: Props) {
   };
 
   return (
-    <div className="border-t border-gray-300 dark:border-[#333] bg-gray-50 dark:bg-[#0a0a0a] flex flex-col shrink-0">
+    <div className="border-t border-gray-300 dark:border-[#333] bg-gray-50 dark:bg-[#0a0a0a] flex flex-col shrink-0 min-w-0">
       <div
-        className="max-h-48 overflow-y-auto flex flex-col gap-1 text-sm md:text-base px-4 md:px-6 pt-4 pb-2"
+        className="max-h-48 overflow-y-auto flex flex-col gap-1 text-sm md:text-base px-4 md:px-6 pt-4 pb-2 min-w-0"
         ref={terminalScrollRef}
       >
         {terminalOutput.map((line, index) => (
           <div
             key={`${line.type}-${index}`}
-            className={`whitespace-pre-wrap ${
+            className={`whitespace-pre-wrap break-words [overflow-wrap:anywhere] ${
               line.type === 'cmd'
                 ? 'text-gray-500 dark:text-gray-400'
                 : line.type === 'err'
@@ -513,16 +513,18 @@ export default function TerminalPanel({ promptPath, route, postIndex }: Props) {
           </div>
         ))}
       </div>
-      <div className="px-4 md:px-6 pb-4 md:pb-6 flex items-center gap-2 text-lg">
-        <span className="text-blue-600 dark:text-green-500 font-bold shrink-0">
-          chlorinec@blog:{promptPath} $
+      <div className="px-4 md:px-6 pb-4 md:pb-6 flex items-center gap-2 text-lg min-w-0" data-terminal-row>
+        <span className="text-blue-600 dark:text-green-500 font-bold flex flex-1 min-w-0" data-terminal-prompt>
+          <span className="shrink-0">chlorinec@blog:</span>
+          <span className="truncate min-w-0" title={promptPath}>{promptPath}</span>
+          <span className="shrink-0">&nbsp;$</span>
         </span>
         <input
           ref={inputRef}
           id="terminal-input"
           name="terminalCommand"
           type="text"
-          className="flex-1 bg-transparent outline-none text-gray-900 dark:text-white font-console min-w-0"
+          className="w-20 sm:w-32 md:w-48 shrink-0 bg-transparent outline-none text-gray-900 dark:text-white font-console min-w-0"
           autoComplete="off"
           spellCheck={false}
           aria-label="Terminal command input"

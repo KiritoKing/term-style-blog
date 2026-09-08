@@ -1,3 +1,8 @@
+import {
+  requirePublicationCategory,
+  requirePublicationString,
+} from '@/lib/publication';
+
 export type MarkdownBlogData = {
   title: string;
   slug: string;
@@ -40,9 +45,9 @@ export const normalizeMarkdownBlogPost = (post: MarkdownBlogEntry): BlogMeta => 
   slug: post.data.slug.trim(),
   title: post.data.title,
   date: post.data.date,
-  category: post.data.category.trim() || 'Uncategorized',
+  category: requirePublicationCategory(post.data.category, post.id),
   tags: post.data.tags,
-  description: post.data.summary.trim() || post.data.title,
+  description: requirePublicationString(post.data.summary, 'summary', post.id),
   status: post.data.status,
   relatedContent: post.data.related_content ?? [],
   ...(post.data.publish.updated_at ? { updatedAt: post.data.publish.updated_at } : {}),

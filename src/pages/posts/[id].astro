@@ -174,28 +174,60 @@ const giscusConfig = {
   )}
 
   <script>
-    const initArticleEnhancements = async () => {
+    let articleEnhancementRun: Promise<void> | null = null;
+    let articleEnhancementQueued = false;
+
+    const renderArticleMermaid = async () => {
       const mermaidBlocks = Array.from(
         document.querySelectorAll('pre[data-language="mermaid"], pre:has(code.language-mermaid)'),
       );
-      if (mermaidBlocks.length > 0) {
-        const { default: mermaid } = await import('mermaid');
-        mermaid.initialize({
-          startOnLoad: false,
-          securityLevel: 'strict',
-          theme: document.documentElement.classList.contains('dark') ? 'dark' : 'default',
-        });
-        for (const block of mermaidBlocks) {
-          const diagram = document.createElement('div');
-          diagram.className = 'mermaid';
-          diagram.textContent = block.textContent ?? '';
-          block.replaceWith(diagram);
-        }
-        await mermaid.run({ querySelector: '.mermaid' });
-      }
+      if (mermaidBlocks.length === 0) return;
+
+      // Claim every source block before the first await. The initial script run and
+      // astro:page-load can otherwise hand the same Mermaid source to two renderers.
+      const diagrams = mermaidBlocks.map((block) => {
+        const diagram = document.createElement('div');
+        diagram.className = 'mermaid';
+        diagram.textContent = block.textContent ?? '';
+        block.replaceWith(diagram);
+        return diagram;
+      });
+
+      const { default: mermaid } = await import('mermaid');
+      await document.fonts.ready;
+      mermaid.initialize({
+        startOnLoad: false,
+        securityLevel: 'strict',
+        theme: document.documentElement.classList.contains('dark') ? 'dark' : 'default',
+      });
+      await mermaid.run({ nodes: diagrams });
+
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+      });
+      for (const diagram of diagrams) diagram.dataset.blogMermaidComplete = 'true';
+      document.dispatchEvent(new CustomEvent('blog:mermaid-rendered'));
     };
 
-    initArticleEnhancements();
-    document.addEventListener('astro:page-load', initArticleEnhancements);
+    const initArticleEnhancements = () => {
+      if (articleEnhancementRun) {
+        articleEnhancementQueued = true;
+        return articleEnhancementRun;
+      }
+
+      articleEnhancementRun = renderArticleMermaid().finally(() => {
+        articleEnhancementRun = null;
+        if (articleEnhancementQueued) {
+          articleEnhancementQueued = false;
+          void initArticleEnhancements();
+        }
+      });
+      return articleEnhancementRun;
+    };
+
+    void initArticleEnhancements();
+    document.addEventListener('astro:page-load', () => {
+      void initArticleEnhancements();
+    });
   </script>
 </ShellLayout>

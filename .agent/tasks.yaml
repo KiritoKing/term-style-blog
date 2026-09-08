@@ -976,3 +976,22 @@ tasks:
   blocked_by: []
   unblock_when: User reported defect remediation
   last_updated: 2026-09-09
+
+- id: B06
+  change: manual-preview-deployment-policy
+  priority: P0
+  objective: Make immutable manual preview the default and keep production fail-closed
+  deps: [B01, B02, B03, B04, B05]
+  status: done
+  owner_session: null
+  branch: codex/obsidian-blog-cutover
+  allowed_paths: [.github/workflows/deploy-publication.yml, scripts/validate-publication-snapshot.mjs, tests/validate-publication-snapshot.test.mjs, openspec/changes/archive/2026-09-08-manual-preview-deployment-policy/**, openspec/specs/publication-deployment/spec.md, .agent/**, docs/ai-agent-delivery-plan.md]
+  locked_paths: []
+  relevant_specs: [openspec/specs/publication-deployment/spec.md, openspec/changes/archive/2026-09-08-manual-preview-deployment-policy]
+  required_tests: [input_policy, workflow_static, node_unit, yaml_shell, openspec_validation]
+  acceptance_commands: ['pnpm test:deployment', 'pnpm test', 'node --check scripts/validate-publication-snapshot.mjs', 'openspec validate publication-deployment --type spec --strict', 'git diff --check']
+  report: .agent/reports/B06-manual-preview-policy.md
+  handoff: .agent/handoffs/B06-manual-preview-policy.md
+  blocked_by: []
+  unblock_when: B01-B05 accepted and closed; already satisfied
+  last_updated: 2026-09-09

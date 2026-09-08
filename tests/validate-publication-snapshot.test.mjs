@@ -204,9 +204,11 @@ const dispatchEnvironment = {
   INPUT_CLOUDFLARE_PROJECT: "notion-astro-rev",
 };
 
-test("normalizes the fixed dispatch and manual interfaces", () => {
+test("defaults a fixed dispatch to a manual preview", () => {
   const dispatch = resolveInputs(dispatchEnvironment);
-  assert.equal(dispatch.deploy_mode, "production");
+  assert.equal(dispatch.deploy_mode, "preview");
+  assert.equal(dispatch.production_enabled, "false");
+  assert.equal(dispatch.preview_review, "manual");
   assert.equal(dispatch.framework_sha, "a".repeat(40));
   assert.deepEqual(Object.keys(dispatch).sort(), [
     "cloudflare_account_id",
@@ -217,6 +219,8 @@ test("normalizes the fixed dispatch and manual interfaces", () => {
     "dispatch_id",
     "framework_sha",
     "manifest_sha256",
+    "preview_review",
+    "production_enabled",
     "publication_branch",
     "source_tree_hash",
   ]);
@@ -231,6 +235,73 @@ test("normalizes the fixed dispatch and manual interfaces", () => {
   });
   assert.equal(manual.deploy_mode, "preview");
   assert.match(manual.dispatch_id, /^manual:/);
+});
+
+test("allows automatic production only as an explicit opt-in", () => {
+  const dispatch = resolveInputs({
+    ...dispatchEnvironment,
+    PUBLICATION_PRODUCTION_ENABLED: "true",
+    PUBLICATION_PREVIEW_REVIEW: "automatic",
+  });
+  assert.equal(dispatch.deploy_mode, "production");
+  assert.equal(dispatch.production_enabled, "true");
+  assert.equal(dispatch.preview_review, "automatic");
+});
+
+test("keeps repository dispatch in preview unless both production gates are enabled", () => {
+  assert.equal(
+    resolveInputs({
+      ...dispatchEnvironment,
+      PUBLICATION_PRODUCTION_ENABLED: "true",
+      PUBLICATION_PREVIEW_REVIEW: "manual",
+    }).deploy_mode,
+    "preview",
+  );
+  assert.equal(
+    resolveInputs({
+      ...dispatchEnvironment,
+      PUBLICATION_PRODUCTION_ENABLED: "false",
+      PUBLICATION_PREVIEW_REVIEW: "automatic",
+    }).deploy_mode,
+    "preview",
+  );
+});
+
+test("rejects invalid publication policy values", () => {
+  assert.throws(
+    () => resolveInputs({ ...dispatchEnvironment, PUBLICATION_PRODUCTION_ENABLED: "yes" }),
+    (error) => error?.code === "INVALID_PUBLICATION_POLICY",
+  );
+  assert.throws(
+    () => resolveInputs({ ...dispatchEnvironment, PUBLICATION_PREVIEW_REVIEW: "human" }),
+    (error) => error?.code === "INVALID_PUBLICATION_POLICY",
+  );
+});
+
+test("rejects production retry until automatic production is enabled", () => {
+  const retry = {
+    ...dispatchEnvironment,
+    GITHUB_EVENT_NAME: "workflow_dispatch",
+    GITHUB_EVENT_ACTION: "",
+    INPUT_DEPLOY_MODE: "production-retry",
+    INPUT_DISPATCH_ID: "",
+  };
+  assert.throws(
+    () => resolveInputs(retry),
+    (error) => error?.code === "PRODUCTION_DISABLED",
+  );
+  assert.throws(
+    () => resolveInputs({ ...retry, PUBLICATION_PRODUCTION_ENABLED: "true" }),
+    (error) => error?.code === "AUTOMATIC_REVIEW_REQUIRED",
+  );
+  assert.equal(
+    resolveInputs({
+      ...retry,
+      PUBLICATION_PRODUCTION_ENABLED: "true",
+      PUBLICATION_PREVIEW_REVIEW: "automatic",
+    }).deploy_mode,
+    "production",
+  );
 });
 
 test("rejects unsupported or mutable deployment inputs", () => {
@@ -283,7 +354,7 @@ test("distinguishes preview and production artifacts", async () => {
   }
 });
 
-test("workflow pins dependencies and keeps production serialized behind preview", async () => {
+test("workflow defaults to manual preview and preserves gated automatic production", async () => {
   const workflow = await readFile(
     new URL("../.github/workflows/deploy-publication.yml", import.meta.url),
     "utf8",
@@ -295,10 +366,31 @@ test("workflow pins dependencies and keeps production serialized behind preview"
   assert.match(workflow, /deploy_production:[\s\S]+needs: \[prepare, build_preview\]/);
   assert.match(workflow, /concurrency:[\s\S]+cancel-in-progress: false/);
   assert.match(workflow, /Reject stale framework or content candidates/);
-  const previewVerified = workflow.indexOf("Verify preview deployment response");
+  assert.match(workflow, /PUBLICATION_PRODUCTION_ENABLED: \$\{\{ vars\.PUBLICATION_PRODUCTION_ENABLED \}\}/);
+  assert.match(workflow, /PUBLICATION_PREVIEW_REVIEW: \$\{\{ vars\.PUBLICATION_PREVIEW_REVIEW \}\}/);
+  assert.match(workflow, /Record pending human preview acceptance[\s\S]+online_acceptance=pending/);
+  assert.match(workflow, /record=\{schema_version:1,framework_sha:[^\n]+manifest_sha256:[^\n]+source_tree_hash:[^\n]+deployment_id:[^\n]+preview_url:[^\n]+environment:"preview",online_acceptance:"pending"\}/);
+  assert.match(workflow, /Preserve pending preview deployment record[\s\S]+name: preview-deployment-record-/);
+  assert.match(workflow, /Validate automatic preview response[\s\S]+if: needs\.prepare\.outputs\.preview_review == 'automatic'/);
+  assert.match(workflow, /Validate manual preview deployment outputs[\s\S]+if: needs\.prepare\.outputs\.preview_review == 'manual'/);
+  assert.match(workflow, /Build immutable preview candidate[\s\S]+STRICT_CONTENT_ASSETS: '1'/);
+  assert.match(workflow, /Run built-site browser acceptance[\s\S]+E2E_REAL_CORPUS: '1'[\s\S]+E2E_REAL_LISTINGS: '1'/);
+  const manualPolicy = workflow.slice(
+    workflow.indexOf("Validate manual preview deployment outputs"),
+    workflow.indexOf("Validate automatic preview response"),
+  );
+  assert.doesNotMatch(manualPolicy, /curl\s/);
+  const previewVerified = workflow.indexOf("Validate automatic preview response");
   const productionBuild = workflow.indexOf("Build strict production artifact");
   const productionArtifact = workflow.indexOf("Preserve production artifact");
   assert.ok(previewVerified > 0 && productionBuild > previewVerified && productionArtifact > productionBuild);
+  assert.match(workflow, /deploy_production:[\s\S]+if: needs\.prepare\.outputs\.deploy_mode == 'production' && needs\.prepare\.outputs\.production_enabled == 'true' && needs\.prepare\.outputs\.preview_review == 'automatic'/);
+  const productionConditions = workflow.match(/^\s+if: .*deploy_mode.*$/gm) || [];
+  assert.equal(productionConditions.length, 5);
+  for (const condition of productionConditions) {
+    assert.match(condition, /production_enabled == 'true'/);
+    assert.match(condition, /preview_review == 'automatic'/);
+  }
   assert.match(workflow, /Build strict production artifact[\s\S]+PUBLIC_DEPLOYMENT_ENV: production[\s\S]+STRICT_CONTENT_ASSETS: '1'/);
   assert.match(workflow, /validate-publication-snapshot\.mjs site[\s\S]+--mode production/);
   assert.match(workflow, /name: publication-production-site-/);

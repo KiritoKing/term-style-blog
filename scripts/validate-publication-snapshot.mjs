@@ -78,6 +78,24 @@ function validateProject(value) {
   return project;
 }
 
+function publicationPolicy(environment) {
+  const productionEnabled = environment.PUBLICATION_PRODUCTION_ENABLED?.trim() || "false";
+  if (!new Set(["true", "false"]).has(productionEnabled)) {
+    reject(
+      "INVALID_PUBLICATION_POLICY",
+      "PUBLICATION_PRODUCTION_ENABLED must be true or false",
+    );
+  }
+  const previewReview = environment.PUBLICATION_PREVIEW_REVIEW?.trim() || "manual";
+  if (!new Set(["manual", "automatic"]).has(previewReview)) {
+    reject(
+      "INVALID_PUBLICATION_POLICY",
+      "PUBLICATION_PREVIEW_REVIEW must be manual or automatic",
+    );
+  }
+  return { productionEnabled, previewReview };
+}
+
 export function resolveInputs(environment = process.env) {
   const eventName = requiredString(environment.GITHUB_EVENT_NAME, "GITHUB_EVENT_NAME");
   if (!new Set(["repository_dispatch", "workflow_dispatch"]).has(eventName)) {
@@ -116,6 +134,7 @@ export function resolveInputs(environment = process.env) {
   );
 
   const requestedMode = requiredString(environment.INPUT_DEPLOY_MODE, "deploy_mode");
+  const { productionEnabled, previewReview } = publicationPolicy(environment);
   let deployMode;
   let dispatchId;
   if (eventName === "repository_dispatch") {
@@ -132,13 +151,24 @@ export function resolveInputs(environment = process.env) {
     if (dispatchId !== `blog-publish:${contentSha}`) {
       reject("INVALID_DISPATCH_ID", "dispatch_id does not bind the content SHA");
     }
-    deployMode = "production";
+    deployMode = productionEnabled === "true" && previewReview === "automatic"
+      ? "production"
+      : "preview";
   } else {
     if (!new Set(["preview", "production-retry"]).has(requestedMode)) {
       reject("INVALID_INPUT", "manual deploy_mode must be preview or production-retry");
     }
     if (requestedMode === "production-retry" && environment.GITHUB_REF !== "refs/heads/main") {
       reject("WRONG_FRAMEWORK_REF", "manual production retry must run from main");
+    }
+    if (requestedMode === "production-retry" && productionEnabled !== "true") {
+      reject("PRODUCTION_DISABLED", "production retry requires explicit production enablement");
+    }
+    if (requestedMode === "production-retry" && previewReview !== "automatic") {
+      reject(
+        "AUTOMATIC_REVIEW_REQUIRED",
+        "production retry requires automatic online preview review",
+      );
     }
     deployMode = requestedMode === "preview" ? "preview" : "production";
     dispatchId = `manual:${environment.GITHUB_RUN_ID || "local"}:${environment.GITHUB_RUN_ATTEMPT || "1"}`;
@@ -160,6 +190,8 @@ export function resolveInputs(environment = process.env) {
     source_tree_hash: sourceTreeHash,
     framework_sha: frameworkSha,
     deploy_mode: deployMode,
+    production_enabled: productionEnabled,
+    preview_review: previewReview,
     dispatch_id: dispatchId,
     cloudflare_account_id: accountId,
     cloudflare_project: validateProject(environment.INPUT_CLOUDFLARE_PROJECT),

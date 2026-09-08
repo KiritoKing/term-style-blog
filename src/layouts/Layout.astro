@@ -1,21 +1,76 @@
 ---
 import '@/styles/global.css';
-import { ViewTransitions } from 'astro:transitions';
+import { ClientRouter } from 'astro:transitions';
+import { site } from '@/lib/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  article?: boolean;
+  publishedTime?: string;
+  updatedTime?: string;
+}
+
+const {
+  title,
+  description = site.description,
+  article = false,
+  publishedTime,
+  updatedTime,
+} = Astro.props;
+const pageTitle = title ? `${title} - ${site.title}` : `${site.title} - ${site.subtitle}`;
+const canonical = new URL(Astro.url.pathname, site.origin).toString();
+const isProduction = import.meta.env.PUBLIC_DEPLOYMENT_ENV === 'production';
+const structuredData = article
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      headline: title,
+      description,
+      url: canonical,
+      datePublished: publishedTime,
+      dateModified: updatedTime ?? publishedTime,
+      author: { '@type': 'Person', name: site.author, url: site.github },
+      publisher: { '@type': 'Person', name: site.author },
+    }
+  : {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: site.title,
+      description,
+      url: site.origin,
+      author: { '@type': 'Person', name: site.author },
+    };
 ---
 
 <!doctype html>
-<html lang="en" class="dark">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="description" content="A terminal-inspired personal blog interface built with Astro." />
-		<meta name="generator" content={Astro.generator} />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<title>Terminal Style Blog</title>
-		<ViewTransitions />
-	</head>
-	<body class="font-mode-pixel">
-		<slot />
-	</body>
+<html lang="zh-CN" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="author" content={site.author} />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="robots" content={isProduction ? 'index, follow' : 'noindex, nofollow'} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" type="application/rss+xml" title={site.title} href="/rss.xml" />
+    <meta property="og:site_name" content={site.title} />
+    <meta property="og:type" content={article ? 'article' : 'website'} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+    {updatedTime && <meta property="article:modified_time" content={updatedTime} />}
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <title>{pageTitle}</title>
+    <ClientRouter />
+  </head>
+  <body class="font-mode-pixel" data-pagefind-ignore={article ? undefined : 'all'}>
+    <slot />
+  </body>
 </html>

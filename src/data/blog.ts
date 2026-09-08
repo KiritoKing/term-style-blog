@@ -1,122 +1,16 @@
 import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
-import { notionBlogPropertyAliases } from '@/data/contentSource';
+import {
+  normalizeMarkdownBlogPost,
+  sortPosts,
+  type BlogMeta,
+} from '@/lib/blog-model';
 
 export type BlogPost = CollectionEntry<'blog'>;
+export type { BlogMeta } from '@/lib/blog-model';
+export { getAdjacentPosts, getPostPath, getPostPathSegment } from '@/lib/blog-model';
 
-export type BlogMeta = {
-  id: string;
-  slug?: string;
-  title: string;
-  date: Date;
-  category: string;
-  tags: string[];
-  description: string;
-};
-
-type NotionProperty = { type: string } & Record<string, unknown>;
-
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-  typeof value === 'object' && value !== null;
-
-const getProperty = (
-  properties: Record<string, unknown>,
-  names: readonly string[],
-): NotionProperty | undefined => {
-  for (const name of names) {
-    const value = properties[name];
-    if (isRecord(value) && typeof value.type === 'string') {
-      return value as NotionProperty;
-    }
-  }
-  return undefined;
-};
-
-const getPlainText = (value: unknown): string => {
-  if (!Array.isArray(value)) return '';
-  return value
-    .map((item) =>
-      isRecord(item) && typeof item.plain_text === 'string' ? item.plain_text : '',
-    )
-    .join('');
-};
-
-const getSelectName = (value: unknown): string =>
-  isRecord(value) && typeof value.name === 'string' ? value.name : '';
-
-const getTitle = (properties: Record<string, unknown>): string => {
-  const prop = getProperty(properties, notionBlogPropertyAliases.title);
-  if (prop?.type === 'title') {
-    return getPlainText(prop.title);
-  }
-  return '';
-};
-
-const getDate = (properties: Record<string, unknown>): Date => {
-  const prop = getProperty(properties, notionBlogPropertyAliases.date);
-  if (prop?.type === 'date' && isRecord(prop.date) && typeof prop.date.start === 'string') {
-    return new Date(prop.date.start);
-  }
-  return new Date(0);
-};
-
-const getCategory = (properties: Record<string, unknown>): string => {
-  const prop = getProperty(properties, notionBlogPropertyAliases.category);
-  if (prop?.type === 'select') {
-    return getSelectName(prop.select);
-  }
-  if (prop?.type === 'status') {
-    return getSelectName(prop.status);
-  }
-  return '';
-};
-
-const getTags = (properties: Record<string, unknown>): string[] => {
-  const prop = getProperty(properties, notionBlogPropertyAliases.tags);
-  if (prop?.type === 'multi_select' && Array.isArray(prop.multi_select)) {
-    return prop.multi_select
-      .map((item) => (isRecord(item) && typeof item.name === 'string' ? item.name : ''))
-      .filter((name) => name.length > 0);
-  }
-  return [];
-};
-
-const getDescription = (properties: Record<string, unknown>): string => {
-  const prop = getProperty(properties, notionBlogPropertyAliases.description);
-  if (prop?.type === 'rich_text') {
-    return getPlainText(prop.rich_text);
-  }
-  return '';
-};
-
-const getSlug = (properties: Record<string, unknown>): string | undefined => {
-  const prop = getProperty(properties, notionBlogPropertyAliases.slug);
-  if (prop?.type === 'rich_text') {
-    return getPlainText(prop.rich_text);
-  }
-  return undefined;
-};
-
-export const normalizeBlogPost = (post: BlogPost): BlogMeta => {
-  const properties =
-    isRecord(post.data) && isRecord(post.data.properties) ? post.data.properties : {};
-  const title = getTitle(properties) || post.id;
-  const date = getDate(properties);
-  const category = getCategory(properties) || 'general';
-  const tags = getTags(properties);
-  const description = getDescription(properties);
-  const slug = getSlug(properties);
-  return { id: post.id, slug, title, date, category, tags, description };
-};
-
-export const getPostPathSegment = (post: BlogMeta): string => {
-  const slug = post.slug?.trim();
-  return slug && slug.length > 0 ? slug : post.id;
-};
-
-export const getPostPath = (post: BlogMeta): string => `/posts/${getPostPathSegment(post)}`;
-
-const sortPosts = (posts: BlogMeta[]) =>
-  posts.slice().sort((a, b) => b.date.getTime() - a.date.getTime());
+export const normalizeBlogPost = (post: BlogPost): BlogMeta =>
+  normalizeMarkdownBlogPost(post);
 
 export const formatDate = (date: Date): string => date.toISOString().split('T')[0];
 
@@ -133,19 +27,7 @@ export const getPostEntryById = async (id: string): Promise<BlogPost | undefined
 
 export const getPostEntryBySlugOrId = async (
   slugOrId: string,
-): Promise<BlogPost | undefined> => {
-  const entry = await getEntry('blog', slugOrId);
-  if (entry) return entry;
-  const posts = await getCollection('blog');
-  for (const post of posts) {
-    const meta = normalizeBlogPost(post);
-    const slug = meta.slug?.trim();
-    if (slug && slug === slugOrId) {
-      return post;
-    }
-  }
-  return undefined;
-};
+): Promise<BlogPost | undefined> => getEntry('blog', slugOrId);
 
 export const getPostById = async (id: string): Promise<BlogMeta | null> => {
   const post = await getPostEntryById(id);

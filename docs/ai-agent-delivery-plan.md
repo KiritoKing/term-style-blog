@@ -471,3 +471,8 @@ Residual risk:
 - LangChain/LangGraph docs: Multi-agent, Subagents, Graph API, Agent Server。
 - Microsoft AutoGen docs: SelectorGroupChat, GraphFlow。
 - CrewAI docs: Processes, Hierarchical Process。
+
+
+## 2026-09-09 用户批准的个人博客迁移
+
+B01 在独立 worktree 合并处理本次必要能力：Obsidian Markdown 生产内容源、历史链接、渲染、搜索评论、RSS/SEO、移动端阅读、离线 CI；保留终端风格和交互，通用配置与非必要增强延后。旧 Notion-only 假设在本 change 内正式更新规格。代码工作不依赖服务器同步恢复，生产接入须等待 S0。其余旧任务保留历史，B01 报告列出重叠能力结果，不将未验收任务直接标记完成。

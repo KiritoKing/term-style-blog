@@ -388,7 +388,9 @@ async function walkMarkdown(root, directory = root) {
       reject("UNSUPPORTED_ENTRY", `${relativePath}: only Markdown files are allowed`);
     }
   }
-  return files;
+  return files.sort((left, right) =>
+    left.relativePath < right.relativePath ? -1 : left.relativePath > right.relativePath ? 1 : 0
+  );
 }
 
 function parseManifest(bytes) {
@@ -501,12 +503,12 @@ export async function validateSnapshot({ root, expectedManifestSha256, expectedT
     }
     portableSlugs.add(portableSlug);
     normalizedEntries.push({
-      path: file.relativePath,
-      bytes: bytes.byteLength,
-      sha256: expected.sha256,
       slug: metadata.slug,
       status: metadata.status,
       title: metadata.title,
+      path: file.relativePath,
+      bytes: bytes.byteLength,
+      sha256: expected.sha256,
     });
   }
   const computedTreeHash = sha256Hex(JSON.stringify(normalizedEntries));

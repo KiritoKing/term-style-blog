@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "publication_branch": "publish-snapshots",
+  "source": {
+    "directory": "20-writing/published",
+    "target": "blog",
+    "statuses": [
+      "publish",
+      "published"
+    ]
+  },
+  "source_tree_hash": "14679cfe4d6bae9e72704f2bd9dbe8109999f05be3e673a1b500a557949c3bf1",
+  "previous_manifest_hash": null,
+  "files": [
+    {
+      "slug": "prefix-file",
+      "status": "publish",
+      "title": "Prefix file",
+      "path": "a.md",
+      "bytes": 206,
+      "sha256": "bb4bd6fb1995c7af90093f9403fd49b3c63b96e8a173ea63c7f1f218deba1ed5"
+    },
+    {
+      "slug": "nested-child",
+      "status": "published",
+      "title": "Nested child",
+      "path": "a/child.md",
+      "bytes": 212,
+      "sha256": "f150c973ffd2c9dfd065af8792a2a6e7e0f70de7b3086740749eb2bf765e31c4"
+    },
+    {
+      "slug": "合成-历史",
+      "status": "published",
+      "title": "合成历史文章",
+      "path": "nested/历史.md",
+      "bytes": 254,
+      "sha256": "1bebdfe34a2251c3104e4c263bf73e2d3db9686a7a8b99e31a384645f4fddecf"
+    },
+    {
+      "slug": "final-file",
+      "status": "publish",
+      "title": "Final file",
+      "path": "z.md",
+      "bytes": 197,
+      "sha256": "ef4f8b25ef39f0f5263500d9ba96abb66bed9e296975a3ff33854f0f7fe154da"
+    }
+  ],
+  "changes": {
+    "added": [
+      "a.md",
+      "a/child.md",
+      "nested/历史.md",
+      "z.md"
+    ],
+    "updated": [],
+    "deleted": []
+  }
+}

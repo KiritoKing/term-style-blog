@@ -21,8 +21,8 @@ const { navActive } = Astro.props;
  |||||  
 `}
     </pre>
-    <h1 class="font-pixel text-xl text-gray-900 dark:text-white mb-1 text-glow-white">GUEST_USER</h1>
-    <p class="text-sm text-blue-600 dark:text-green-600 mb-4">Level 42 Developer</p>
+    <h1 class="font-pixel text-xl text-gray-900 dark:text-white mb-1 text-glow-white">ChlorineC</h1>
+    <p class="text-sm text-blue-600 dark:text-green-600 mb-4">Coding With Passion</p>
 
     <div class="w-full h-px bg-gray-300 dark:bg-[#333] my-2"></div>
 
@@ -77,6 +77,16 @@ const { navActive } = Astro.props;
       >
         <LucideIcon name="user" size={18} /> ~/about
       </a>
+      <a
+        href="/archive"
+        class={`pixel-btn px-3 py-2 flex items-center gap-3 text-base ${
+          navActive === 'archive'
+            ? 'bg-blue-100 dark:bg-green-900/40 text-blue-600 dark:text-green-400 border-l-2 border-blue-500 dark:border-green-500'
+            : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+        }`}
+      >
+        <LucideIcon name="file-text" size={18} /> ~/archive
+      </a>
     </div>
   </div>
 
@@ -99,7 +109,7 @@ const { navActive } = Astro.props;
     <div class="flex items-center gap-2 border border-gray-300 dark:border-[#333] bg-white dark:bg-[#111] px-3 py-2">
       <span class="text-blue-600 dark:text-green-500 font-bold shrink-0">$ grep</span>
       <input
-        id="sidebar-grep-input"
+        data-sidebar-grep-input
         type="text"
         class="flex-1 bg-transparent outline-none text-gray-900 dark:text-white font-console min-w-0 text-base"
         placeholder="hello"
@@ -117,23 +127,29 @@ const { navActive } = Astro.props;
 </div>
 
 <script is:inline>
-  const initSidebarGrep = () => {
-    const input = document.getElementById('sidebar-grep-input');
-    if (!(input instanceof HTMLInputElement)) return;
-    if (input.dataset.bound === 'true') return;
-    input.dataset.bound = 'true';
-    const params = new URLSearchParams(window.location.search);
-    const q = params.get('q');
-    if (q) input.value = q;
-    input.addEventListener('keydown', (event) => {
-      if (event.key !== 'Enter') return;
-      const query = input.value.trim();
-      const next = query ? `/search?q=${encodeURIComponent(query)}` : '/search';
-      window.location.assign(next);
-    });
-  };
+  (() => {
+    const initSidebarGrep = () => {
+      document.querySelectorAll('[data-sidebar-grep-input]').forEach((element) => {
+        if (!(element instanceof HTMLInputElement)) return;
+        if (element.dataset.bound === 'true') return;
+        element.dataset.bound = 'true';
+        const params = new URLSearchParams(window.location.search);
+        const q = params.get('q');
+        if (q) element.value = q;
+        element.addEventListener('keydown', (event) => {
+          if (event.key !== 'Enter') return;
+          const query = element.value.trim();
+          const next = query ? `/search?q=${encodeURIComponent(query)}` : '/search';
+          window.location.assign(next);
+        });
+      });
+    };
 
-  initSidebarGrep();
-  document.addEventListener('astro:page-load', initSidebarGrep);
-  document.addEventListener('astro:after-swap', initSidebarGrep);
+    initSidebarGrep();
+    if (document.documentElement.dataset.sidebarGrepLifecycleBound !== 'true') {
+      document.documentElement.dataset.sidebarGrepLifecycleBound = 'true';
+      document.addEventListener('astro:page-load', initSidebarGrep);
+      document.addEventListener('astro:after-swap', initSidebarGrep);
+    }
+  })();
 </script>

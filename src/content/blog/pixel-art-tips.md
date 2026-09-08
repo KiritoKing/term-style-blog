@@ -1,9 +1,14 @@
 ---
 title: Pixel Art Basics
+slug: pixel-art-tips
+status: published
 date: "2026-01-30"
 category: Art
 tags: ["art", "design"]
-description: Practical pixel art tips focused on constraints, palettes, and readability.
+summary: Practical pixel art tips focused on constraints, palettes, and readability.
+related_content: []
+publish:
+  target: blog
 ---
 
 Pixel art is all about constraints. By limiting your resolution and color palette, you force yourself to focus on form and readability.

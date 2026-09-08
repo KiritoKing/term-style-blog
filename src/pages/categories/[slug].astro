@@ -44,22 +44,23 @@ const { slug, page, posts, totalPages } = Astro.props as Props;
 <ShellLayout>
   <div class="animate-in fade-in duration-300">
     <p class="text-blue-600 dark:text-green-400 mb-6">$ ls -la ~/categories/{slug}</p>
-    <div class="flex flex-col gap-2">
-      <div class="flex items-center gap-4 text-gray-500 border-b border-gray-300 dark:border-[#333] pb-2 mb-2 font-bold">
-        <span class="w-24">PERMISSIONS</span>
-        <span class="w-16">OWNER</span>
-        <span class="w-24">DATE</span>
+    <div class="flex flex-col gap-2" data-listing-table>
+      <div class="flex items-center gap-4 text-gray-500 border-b border-gray-300 dark:border-[#333] pb-2 mb-2 font-bold" data-listing-header>
+        <span class="hidden md:inline-block md:w-24 whitespace-nowrap shrink-0" data-listing-permissions>PERMISSIONS</span>
+        <span class="hidden md:inline-block md:w-16 whitespace-nowrap shrink-0" data-listing-owner>OWNER</span>
+        <span class="w-24 whitespace-nowrap shrink-0" data-listing-date>DATE</span>
         <span>NAME</span>
       </div>
       {posts.map((post) => (
         <a
           href={`/posts/${post.id}`}
           class="group cursor-pointer flex flex-col md:flex-row md:items-center gap-2 md:gap-4 py-2 hover:bg-gray-200 dark:hover:bg-[#111] px-2 -mx-2 rounded transition-colors"
+          data-listing-row
         >
           <div class="flex items-center gap-4 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">
-            <span class="text-blue-500 dark:text-blue-400 w-24">-rw-r--r--</span>
-            <span class="text-green-600 w-16">guest</span>
-            <span class="w-24">{formatDate(post.date)}</span>
+            <span class="text-blue-500 dark:text-blue-400 hidden md:inline-block md:w-24 whitespace-nowrap shrink-0" data-listing-permissions>-rw-r--r--</span>
+            <span class="text-green-600 hidden md:inline-block md:w-16 whitespace-nowrap shrink-0" data-listing-owner>guest</span>
+            <span class="w-24 whitespace-nowrap shrink-0" data-listing-date>{formatDate(post.date)}</span>
           </div>
           <div class="flex-1 flex flex-col md:flex-row md:items-center justify-between gap-2 min-w-0">
             <span class="text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-green-400 flex items-center gap-2 text-xl min-w-0">

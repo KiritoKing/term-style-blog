@@ -10,11 +10,11 @@ const { headerPath } = Astro.props;
 ---
 
 <div class="bg-gray-200 dark:bg-[#111] border-b border-gray-300 dark:border-[#333] p-2 flex items-center justify-between select-none">
-  <div class="flex items-center gap-2 text-gray-600 dark:text-gray-400 text-sm font-pixel">
+  <div class="min-w-0 flex-1 flex items-center gap-2 mr-2 text-gray-600 dark:text-gray-400 text-sm font-pixel">
     <LucideIcon name="command" size={14} />
-    <span>guest@server:{headerPath}</span>
+    <span class="truncate" title={`chlorinec@blog:${headerPath}`}>chlorinec@blog:{headerPath}</span>
   </div>
-  <div class="flex items-center gap-4">
+  <div class="shrink-0 flex items-center gap-4">
     <div class="flex gap-2 mr-2">
       <TopBarControls client:load />
     </div>

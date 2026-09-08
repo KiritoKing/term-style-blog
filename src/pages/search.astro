@@ -7,7 +7,7 @@ import ShellLayout from '@/layouts/ShellLayout.astro';
 		<div class="grep-command" id="grep-command">$ grep -n "&lt;query&gt;" ~/posts/*.md</div>
 		<div class="grep-results" id="grep-results"></div>
 	</div>
-	<script type="module">
+  <script is:inline type="module">
 		const resultsEl = document.querySelector('#grep-results');
 		const commandEl = document.querySelector('#grep-command');
 
@@ -24,6 +24,21 @@ import ShellLayout from '@/layouts/ShellLayout.astro';
 			line.className = 'grep-line grep-line-muted';
 			line.textContent = message;
 			resultsEl.appendChild(line);
+		};
+
+		const renderExcerpt = (target, html) => {
+			const parsed = new DOMParser().parseFromString(html, 'text/html');
+			const append = (node, parent) => {
+				if (node.nodeType === Node.TEXT_NODE) {
+					parent.appendChild(document.createTextNode(node.textContent || ''));
+					return;
+				}
+				if (!(node instanceof HTMLElement)) return;
+				const next = node.tagName === 'MARK' ? document.createElement('mark') : parent;
+				if (next !== parent) parent.appendChild(next);
+				node.childNodes.forEach((child) => append(child, next));
+			};
+			parsed.body.childNodes.forEach((node) => append(node, target));
 		};
 
 		const normalizePath = (url) => {
@@ -66,7 +81,7 @@ import ShellLayout from '@/layouts/ShellLayout.astro';
 
 				const excerptEl = document.createElement('div');
 				excerptEl.className = 'grep-card-excerpt grep-excerpt';
-				excerptEl.innerHTML = excerpt;
+				renderExcerpt(excerptEl, excerpt);
 
 				card.append(pathEl, titleEl, excerptEl);
 				resultsEl.appendChild(card);
@@ -80,6 +95,7 @@ import ShellLayout from '@/layouts/ShellLayout.astro';
 				renderMessage('usage: grep <query>');
 				return;
 			}
+			renderMessage(`grep: searching for "${query}"...`);
 
 			let pagefind;
 			try {

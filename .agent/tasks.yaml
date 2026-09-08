@@ -881,3 +881,117 @@ tasks:
   blocked_by: []
   unblock_when: Accepted and archived; no unblock action required.
   last_updated: 2026-06-08T23:57:18+0800
+
+- id: B01
+  change: obsidian-personal-blog-cutover
+  priority: P0
+  objective: Implement user approved Obsidian content and personal blog cutover
+  deps: []
+  status: done
+  owner_session: root-supervisor
+  branch: codex/obsidian-blog-cutover
+  allowed_paths: [src/**, public/**, tests/**, scripts/**, openspec/**, .agent/**, docs/**, .github/**, package.json, pnpm-lock.yaml, astro.config.mjs, tsconfig.json, vitest.config.ts, playwright.config.ts, README.md]
+  locked_paths: []
+  relevant_specs: [openspec/specs/content-layer-markdown/spec.md, openspec/specs/notion-content-layer/spec.md, openspec/specs/post-route-preference/spec.md]
+  required_tests: [unit, fixture_validation, e2e, openspec_validation]
+  acceptance_commands: [pnpm test, pnpm check, pnpm build, git diff --check]
+  report: .agent/reports/B01-obsidian-cutover.md
+  handoff: .agent/handoffs/B01-obsidian-cutover.md
+  blocked_by: []
+  unblock_when: Code and local tests independent of Sync; production integration waits for S0
+  last_updated: 2026-09-09T01:36:55+0800
+
+- id: B02
+  change: integrate-publication-deployment
+  priority: P0
+  objective: Integrate the accepted immutable publication deployment workflow and local validation
+  deps: [B01]
+  status: done
+  owner_session: B02-blog-integration
+  branch: codex/obsidian-blog-cutover
+  allowed_paths: [.github/workflows/deploy-publication.yml, .github/workflows/ci.yml, scripts/validate-publication-snapshot.mjs, tests/validate-publication-snapshot.test.mjs, package.json, openspec/changes/integrate-publication-deployment/**, .agent/**]
+  locked_paths: []
+  relevant_specs: [openspec/specs/publication-snapshot-source/spec.md, openspec/specs/publication-discovery/spec.md, openspec/changes/integrate-publication-deployment]
+  required_tests: [node_unit, input_contract, site_mode, workflow_static, openspec_validation]
+  acceptance_commands: ['pnpm test:deployment', 'node --check scripts/validate-publication-snapshot.mjs', 'openspec validate integrate-publication-deployment --strict', 'git diff --check']
+  report: .agent/reports/B02-publication-deployment.md
+  handoff: .agent/handoffs/B02-publication-deployment.md
+  blocked_by: []
+  unblock_when: B01 accepted and files unlocked; already satisfied
+  last_updated: 2026-09-09T02:14:41+0800
+
+- id: B03
+  change: blog-visual-metadata-gates
+  priority: P1
+  objective: render-overflow-repair
+  deps: [B01, B02]
+  status: done
+  owner_session: null
+  branch: codex/obsidian-blog-cutover
+  allowed_paths: ['src/components/**', 'src/layouts/**', 'src/styles/**', 'tests/e2e/**', 'src/pages/posts/[id].astro', 'src/pages/posts/index.astro', 'src/pages/posts/page/[page].astro', 'src/pages/categories/index.astro', 'src/pages/categories/page/[page].astro', 'src/pages/categories/[slug].astro', 'src/pages/categories/[slug]/page/[page].astro', 'src/pages/tags/index.astro', 'src/pages/tags/page/[page].astro', 'src/pages/tags/[slug].astro', 'src/pages/tags/[slug]/page/[page].astro']
+  locked_paths: []
+  relevant_specs: [openspec/specs/publication-snapshot-source/spec.md]
+  required_tests: [unit, e2e, visual_assertion]
+  acceptance_commands: [pnpm test, pnpm check, git diff --check]
+  report: .agent/reports/B03-render-overflow.md
+  handoff: .agent/handoffs/B03-render-overflow.md
+  blocked_by: []
+  unblock_when: User reported defect remediation
+  last_updated: 2026-09-09
+
+- id: B04
+  change: blog-visual-metadata-gates
+  priority: P1
+  objective: strict-publication-metadata
+  deps: [B01, B02]
+  status: done
+  owner_session: null
+  branch: codex/obsidian-blog-cutover
+  allowed_paths: ['src/lib/publication.ts', 'src/lib/blog-model.ts', 'src/content.config.ts', 'src/test/**', 'scripts/validate-content.ts']
+  locked_paths: []
+  relevant_specs: [openspec/specs/publication-snapshot-source/spec.md]
+  required_tests: [unit, e2e, visual_assertion]
+  acceptance_commands: [pnpm test, pnpm check, git diff --check]
+  report: .agent/reports/B04-metadata-gate.md
+  handoff: .agent/handoffs/B04-metadata-gate.md
+  blocked_by: []
+  unblock_when: User reported defect remediation
+  last_updated: 2026-09-09
+
+- id: B05
+  change: blog-visual-metadata-gates
+  priority: P1
+  objective: all-page-midscene-audit
+  deps: [B01, B02]
+  status: done
+  owner_session: null
+  branch: codex/obsidian-blog-cutover
+  allowed_paths: ['scripts/visual-audit/**', 'openspec/changes/blog-visual-metadata-gates/**']
+  locked_paths: []
+  relevant_specs: [openspec/specs/publication-snapshot-source/spec.md]
+  required_tests: [unit, e2e, visual_assertion]
+  acceptance_commands: [pnpm test, pnpm check, git diff --check]
+  report: .agent/reports/B05-all-page-visual-audit.md
+  handoff: .agent/handoffs/B05-all-page-visual-audit.md
+  blocked_by: []
+  unblock_when: User reported defect remediation
+  last_updated: 2026-09-09
+
+- id: B06
+  change: manual-preview-deployment-policy
+  priority: P0
+  objective: Make immutable manual preview the default and keep production fail-closed
+  deps: [B01, B02, B03, B04, B05]
+  status: done
+  owner_session: null
+  branch: codex/obsidian-blog-cutover
+  allowed_paths: [.github/workflows/deploy-publication.yml, scripts/validate-publication-snapshot.mjs, tests/validate-publication-snapshot.test.mjs, openspec/changes/archive/2026-09-08-manual-preview-deployment-policy/**, openspec/specs/publication-deployment/spec.md, .agent/**, docs/ai-agent-delivery-plan.md]
+  locked_paths: []
+  relevant_specs: [openspec/specs/publication-deployment/spec.md, openspec/changes/archive/2026-09-08-manual-preview-deployment-policy]
+  required_tests: [input_policy, workflow_static, node_unit, yaml_shell, openspec_validation]
+  acceptance_commands: ['pnpm test:deployment', 'pnpm test', 'node --check scripts/validate-publication-snapshot.mjs', 'openspec validate publication-deployment --type spec --strict', 'git diff --check']
+  report: .agent/reports/B06-manual-preview-policy.md
+  handoff: .agent/handoffs/B06-manual-preview-policy.md
+  blocked_by: []
+  unblock_when: B01-B05 accepted and closed; already satisfied
+  last_updated: 2026-09-09

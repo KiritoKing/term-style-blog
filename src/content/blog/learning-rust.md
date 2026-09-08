@@ -1,9 +1,14 @@
 ---
 title: Rewriting everything in Rust
+slug: learning-rust
+status: published
 date: "2026-02-15"
 category: Tech
 tags: ["rust", "programming"]
-description: A quick story about embracing Rust and the benefits that followed.
+summary: A quick story about embracing Rust and the benefits that followed.
+related_content: []
+publish:
+  target: blog
 ---
 
 It finally happened. I succumbed to the crab. Here is my journey of rewriting my side projects in Rust.

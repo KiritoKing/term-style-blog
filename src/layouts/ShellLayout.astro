@@ -8,9 +8,14 @@ import { getAllPosts } from '@/data/blog';
 
 interface Props {
   route?: string;
+  title?: string;
+  description?: string;
+  article?: boolean;
+  publishedTime?: string;
+  updatedTime?: string;
 }
 
-const { route: routeProp } = Astro.props;
+const { route: routeProp, title, description, article, publishedTime, updatedTime } = Astro.props;
 
 const normalizedPathname = Astro.url.pathname.replace(/^\/|\/$/g, '');
 const route = routeProp ?? (normalizedPathname === '' ? 'home' : normalizedPathname);
@@ -35,21 +40,25 @@ const promptPathValue = promptPath();
 
 const posts = await getAllPosts();
 const postIndex = posts.map((post) => ({
-  id: post.id,
+  id: post.slug ?? post.id,
   category: post.category,
   tags: post.tags,
 }));
 ---
 
-<Layout>
-  <div class="min-h-screen bg-gray-100 dark:bg-[#050505] text-gray-900 dark:text-[#e5e5e5] font-console p-2 md:p-6 flex items-center justify-center relative overflow-hidden">
+<Layout {title} {description} {article} {publishedTime} {updatedTime}>
+  <div class="min-h-screen bg-gray-100 dark:bg-[#050505] text-gray-900 dark:text-[#e5e5e5] font-console p-2 md:p-6 flex items-center justify-center relative overflow-hidden" data-terminal-shell>
     <div class="scanlines" transition:name="scanlines"></div>
 
-    <div class="w-full max-w-[90rem] h-[95vh] flex flex-col md:flex-row gap-4 relative z-10">
-      <div transition:name="sidebar" class="crt-flicker">
+    <div class="w-full max-w-[90rem] h-[calc(100dvh-1rem)] md:h-[95vh] flex flex-col md:flex-row gap-2 md:gap-4 relative z-10 min-w-0">
+      <details class="md:hidden pixel-panel" data-mobile-navigation>
+        <summary class="cursor-pointer px-4 py-3 font-pixel text-xs text-blue-600 dark:text-green-400">MENU ~/</summary>
+        <Sidebar navActive={navActive} />
+      </details>
+      <div transition:name="sidebar" class="crt-flicker hidden md:block">
         <Sidebar navActive={navActive} />
       </div>
-      <div class="flex-1 pixel-panel flex flex-col overflow-hidden bg-white dark:bg-[#020202]">
+      <div class="flex-1 min-w-0 pixel-panel flex flex-col overflow-hidden bg-white dark:bg-[#020202]">
         <div transition:name="topbar" class="crt-flicker">
           <TopBar headerPath={headerPath} />
         </div>
@@ -58,7 +67,11 @@ const postIndex = posts.map((post) => ({
             <slot />
           </ContentFrame>
         </div>
-        <div transition:name="terminal" class="crt-flicker">
+        <details class="md:hidden border-t border-gray-300 dark:border-[#333]" data-mobile-terminal>
+          <summary class="cursor-pointer px-4 py-2 font-pixel text-xs text-blue-600 dark:text-green-400">TERMINAL $</summary>
+          <TerminalPanel promptPath={promptPathValue} route={route} postIndex={postIndex} />
+        </details>
+        <div transition:name="terminal" class="crt-flicker hidden md:block">
           <TerminalPanel promptPath={promptPathValue} route={route} postIndex={postIndex} />
         </div>
       </div>

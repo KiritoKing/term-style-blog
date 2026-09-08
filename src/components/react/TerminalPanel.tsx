@@ -126,7 +126,7 @@ export default function TerminalPanel({ promptPath, route, postIndex }: Props) {
     }
   }, []);
 
-  const toPrompt = (cmd: string) => `guest@server:${promptPath} $ ${cmd}`;
+  const toPrompt = (cmd: string) => `chlorinec@blog:${promptPath} $ ${cmd}`;
 
   const resolveNavigationPath = (targetRoute: RouteContext): string => {
     switch (targetRoute.section) {
@@ -238,7 +238,7 @@ export default function TerminalPanel({ promptPath, route, postIndex }: Props) {
           options = ['about.txt', 'welcome.sh', ...postIndex.map((post) => `${post.id}.md`)];
         }
       }
-      const matches = options.filter((entry) => entry.startsWith(prefix));
+      const matches = options.filter((entry) => entry.toLowerCase().startsWith(prefix));
       if (matches.length === 1) {
         setInput(`${parts[0]} ${matches[0]}`);
       } else if (matches.length > 1) {
@@ -347,40 +347,40 @@ export default function TerminalPanel({ promptPath, route, postIndex }: Props) {
       const target = cmdLower.substring(3).trim();
       if (target === '~' || target === '/') {
         nextRoute = { section: 'home' };
-        outputText = 'Changed directory to /home/guest';
+        outputText = 'Changed directory to /home/chlorinec';
       } else if (target === '..') {
         if (routeContext.section === 'post') {
           nextRoute = { section: 'posts' };
-          outputText = 'Changed directory to /home/guest/posts';
+          outputText = 'Changed directory to /home/chlorinec/posts';
         } else if (routeContext.section === 'category') {
           nextRoute = { section: 'categories' };
-          outputText = 'Changed directory to /home/guest/categories';
+          outputText = 'Changed directory to /home/chlorinec/categories';
         } else if (routeContext.section === 'tag') {
           nextRoute = { section: 'tags' };
-          outputText = 'Changed directory to /home/guest/tags';
+          outputText = 'Changed directory to /home/chlorinec/tags';
         } else if (routeContext.section !== 'home') {
           nextRoute = { section: 'home' };
-          outputText = 'Changed directory to /home/guest';
+          outputText = 'Changed directory to /home/chlorinec';
         } else {
           outputText = 'Already at root directory.';
         }
       } else if (target === 'posts' || target === './posts' || target === 'posts/') {
         nextRoute = { section: 'posts' };
-        outputText = 'Changed directory to /home/guest/posts';
+        outputText = 'Changed directory to /home/chlorinec/posts';
       } else if (target === 'categories' || target === './categories' || target === 'categories/') {
         nextRoute = { section: 'categories' };
-        outputText = 'Changed directory to /home/guest/categories';
+        outputText = 'Changed directory to /home/chlorinec/categories';
       } else if (target === 'tags' || target === './tags' || target === 'tags/') {
         nextRoute = { section: 'tags' };
-        outputText = 'Changed directory to /home/guest/tags';
+        outputText = 'Changed directory to /home/chlorinec/tags';
       } else if (target === 'about' || target === './about' || target === 'about/') {
         nextRoute = { section: 'about' };
-        outputText = 'Changed directory to /home/guest/about';
+        outputText = 'Changed directory to /home/chlorinec/about';
       } else if (target.startsWith('categories/')) {
         const slug = target.split('/')[1]?.toLowerCase();
         if (slug && categories.includes(slug)) {
           nextRoute = { section: 'category', slug };
-          outputText = `Changed directory to /home/guest/categories/${slug}`;
+          outputText = `Changed directory to /home/chlorinec/categories/${slug}`;
         } else {
           outputText = `cd: ${target}: No such file or directory`;
           isError = true;
@@ -389,7 +389,7 @@ export default function TerminalPanel({ promptPath, route, postIndex }: Props) {
         const slug = target.split('/')[1]?.toLowerCase();
         if (slug && tags.includes(slug)) {
           nextRoute = { section: 'tag', slug };
-          outputText = `Changed directory to /home/guest/tags/${slug}`;
+          outputText = `Changed directory to /home/chlorinec/tags/${slug}`;
         } else {
           outputText = `cd: ${target}: No such file or directory`;
           isError = true;
@@ -397,7 +397,7 @@ export default function TerminalPanel({ promptPath, route, postIndex }: Props) {
       } else if (routeContext.section === 'categories') {
         if (categories.includes(target.toLowerCase())) {
           nextRoute = { section: 'category', slug: target.toLowerCase() };
-          outputText = `Changed directory to /home/guest/categories/${target.toLowerCase()}`;
+          outputText = `Changed directory to /home/chlorinec/categories/${target.toLowerCase()}`;
         } else {
           outputText = `cd: ${target}: No such file or directory`;
           isError = true;
@@ -405,7 +405,7 @@ export default function TerminalPanel({ promptPath, route, postIndex }: Props) {
       } else if (routeContext.section === 'tags') {
         if (tags.includes(target.toLowerCase())) {
           nextRoute = { section: 'tag', slug: target.toLowerCase() };
-          outputText = `Changed directory to /home/guest/tags/${target.toLowerCase()}`;
+          outputText = `Changed directory to /home/chlorinec/tags/${target.toLowerCase()}`;
         } else {
           outputText = `cd: ${target}: No such file or directory`;
           isError = true;
@@ -416,28 +416,30 @@ export default function TerminalPanel({ promptPath, route, postIndex }: Props) {
       }
     } else if (cmdLower === 'cd') {
       nextRoute = { section: 'home' };
-      outputText = 'Changed directory to /home/guest';
+      outputText = 'Changed directory to /home/chlorinec';
     } else if (cmdLower === 'pwd') {
-      if (routeContext.section === 'home') outputText = '/home/guest';
-      else if (routeContext.section === 'posts') outputText = '/home/guest/posts';
-      else if (routeContext.section === 'categories') outputText = '/home/guest/categories';
-      else if (routeContext.section === 'tags') outputText = '/home/guest/tags';
-      else if (routeContext.section === 'about') outputText = '/home/guest/about';
-      else if (routeContext.section === 'post') outputText = `/home/guest/posts/${routeContext.slug}`;
-      else if (routeContext.section === 'category') outputText = `/home/guest/categories/${routeContext.slug}`;
-      else if (routeContext.section === 'tag') outputText = `/home/guest/tags/${routeContext.slug}`;
+      if (routeContext.section === 'home') outputText = '/home/chlorinec';
+      else if (routeContext.section === 'posts') outputText = '/home/chlorinec/posts';
+      else if (routeContext.section === 'categories') outputText = '/home/chlorinec/categories';
+      else if (routeContext.section === 'tags') outputText = '/home/chlorinec/tags';
+      else if (routeContext.section === 'about') outputText = '/home/chlorinec/about';
+      else if (routeContext.section === 'post') outputText = `/home/chlorinec/posts/${routeContext.slug}`;
+      else if (routeContext.section === 'category') outputText = `/home/chlorinec/categories/${routeContext.slug}`;
+      else if (routeContext.section === 'tag') outputText = `/home/chlorinec/tags/${routeContext.slug}`;
     } else if (cmdLower.startsWith('echo ')) {
       outputText = cmd.substring(5);
     } else if (cmdLower === 'whoami') {
-      outputText = 'guest';
+      outputText = 'chlorinec';
     } else if (cmdLower === 'date') {
       outputText = new Date().toString();
     } else if (cmdLower.startsWith('cat ')) {
-      const file = cmdLower.replace('cat ', '').replace('.md', '').replace('.txt', '');
-      if (file === 'about') {
+      const rawFile = cmd.substring(4).trim();
+      const file = rawFile.replace(/\.(?:md|txt)$/i, '');
+      const fileLower = file.toLowerCase();
+      if (fileLower === 'about') {
         nextRoute = { section: 'about' };
         outputText = 'Reading about.txt...';
-      } else if (file === 'welcome.sh' || file === 'welcome') {
+      } else if (fileLower === 'welcome.sh' || fileLower === 'welcome') {
         nextRoute = { section: 'home' };
         outputText = 'Executing welcome.sh...';
       } else {
@@ -513,7 +515,7 @@ export default function TerminalPanel({ promptPath, route, postIndex }: Props) {
       </div>
       <div className="px-4 md:px-6 pb-4 md:pb-6 flex items-center gap-2 text-lg">
         <span className="text-blue-600 dark:text-green-500 font-bold shrink-0">
-          guest@server:{promptPath} $
+          chlorinec@blog:{promptPath} $
         </span>
         <input
           ref={inputRef}

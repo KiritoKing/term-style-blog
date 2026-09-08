@@ -1,119 +1,153 @@
 ---
-import ShellLayout from '@/layouts/ShellLayout.astro';
 import { render } from 'astro:content';
+import LucideIcon from '@/components/icons/LucideIcon.astro';
+import Comments from '@/components/react/Comments';
 import {
   formatDate,
+  getAdjacentPosts,
   getAllPosts,
   getPostEntryBySlugOrId,
+  getPostPath,
   getPostPathSegment,
   normalizeBlogPost,
 } from '@/data/blog';
-import LucideIcon from '@/components/icons/LucideIcon.astro';
-import Comments from '@/components/react/Comments';
+import { site } from '@/lib/site';
+import ShellLayout from '@/layouts/ShellLayout.astro';
 
 export async function getStaticPaths() {
   const posts = await getAllPosts();
-  return posts.map((post) => ({
-    params: { id: getPostPathSegment(post) },
-  }));
+  return posts.map((post) => ({ params: { id: getPostPathSegment(post) } }));
 }
 
 const { id } = Astro.params;
-
-if (!id) {
-  throw new Error('Post id is required.');
-}
-
+if (!id) throw new Error('Post id is required.');
 const post = await getPostEntryBySlugOrId(id);
-
-if (!post) {
-  throw new Error(`Post not found: ${id}`);
-}
+if (!post) throw new Error(`Post not found: ${id}`);
 
 const { Content, headings } = await render(post);
 const postMeta = normalizeBlogPost(post);
+const allPosts = await getAllPosts();
+const { previous, next } = getAdjacentPosts(allPosts, postMeta.slug ?? postMeta.id);
 const postPath = getPostPathSegment(postMeta);
 const hasToc = headings.length > 0;
 const minDepth = hasToc ? Math.min(...headings.map((heading) => heading.depth)) : 0;
-const tocItems = hasToc
-  ? headings.map((heading) => ({
-      ...heading,
-      level: heading.depth - minDepth,
-    }))
-  : [];
-const siteOrigin = Astro.site?.toString() ?? new URL(Astro.url).origin;
+const tocItems = headings.map((heading) => ({
+  ...heading,
+  level: heading.depth - minDepth,
+}));
+const siteOrigin = Astro.site?.toString() ?? site.origin;
 const giscusConfig = {
-  repo: import.meta.env.PUBLIC_GISCUS_REPO ?? '',
-  repoId: import.meta.env.PUBLIC_GISCUS_REPO_ID ?? '',
-  category: import.meta.env.PUBLIC_GISCUS_CATEGORY ?? '',
-  categoryId: import.meta.env.PUBLIC_GISCUS_CATEGORY_ID ?? '',
+  repo: 'KiritoKing/notion-astro-rev',
+  repoId: 'R_kgDONmCW3w',
+  category: 'Announcements',
+  categoryId: 'DIC_kwDONmCW384CpTzw',
   themeLight: new URL('/giscus-terminal-light.css', siteOrigin).toString(),
   themeDark: new URL('/giscus-terminal-dark.css', siteOrigin).toString(),
 };
 ---
 
-<ShellLayout>
-  <div class="animate-in fade-in duration-300">
-    <p class="text-blue-600 dark:text-green-400 mb-6">$ cat ~/posts/{postPath}.md</p>
-    <div class="relative">
-        <div class="border border-gray-300 dark:border-[#333] bg-gray-50 dark:bg-[#0a0a0a] p-6 md:p-8 text-gray-700 dark:text-gray-300 relative">
-          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500/50 dark:from-green-500/50 to-transparent"></div>
-          <h1 class="text-3xl md:text-5xl font-pixel text-gray-900 dark:text-white mb-4 text-glow-white">
-            {postMeta.title}
-          </h1>
-          <div class="flex flex-wrap gap-4 text-sm text-gray-500 mb-8 border-b border-gray-300 dark:border-[#333] pb-4">
-            <span class="bg-white dark:bg-[#111] px-2 py-1 rounded border border-gray-200 dark:border-[#222]">
-              DATE: {formatDate(postMeta.date)}
+<ShellLayout
+  title={postMeta.title}
+  description={postMeta.description}
+  article
+  publishedTime={postMeta.date.toISOString()}
+  updatedTime={postMeta.updatedAt}
+>
+  <div class="animate-in fade-in duration-300 min-w-0">
+    <p class="text-blue-600 dark:text-green-400 mb-4 md:mb-6 break-all">
+      $ cat ~/posts/{postPath}.md
+    </p>
+    <article
+      class="article-shell border border-gray-300 dark:border-[#333] bg-gray-50 dark:bg-[#0a0a0a] p-4 sm:p-6 md:p-8 text-gray-700 dark:text-gray-300 relative min-w-0"
+      data-pagefind-body
+    >
+      <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500/50 dark:from-green-500/50 to-transparent"></div>
+      <h1
+        class="text-2xl sm:text-3xl md:text-5xl font-pixel text-gray-900 dark:text-white mb-4 text-glow-white break-words"
+        data-pagefind-meta="title"
+      >
+        {postMeta.title}
+      </h1>
+      <p class="text-base md:text-lg text-gray-600 dark:text-gray-400 mb-5 leading-relaxed">
+        {postMeta.description}
+      </p>
+      <div class="flex flex-wrap gap-2 md:gap-4 text-sm text-gray-500 mb-8 border-b border-gray-300 dark:border-[#333] pb-4">
+        <time datetime={postMeta.date.toISOString()} class="article-meta-chip">
+          DATE: {formatDate(postMeta.date)}
+        </time>
+        <a href={`/categories/${postMeta.category.toLowerCase()}`} class="article-meta-chip">
+          CATEGORY: {postMeta.category}
+        </a>
+        <span class="article-meta-chip flex flex-wrap gap-1">
+          TAGS:
+          {postMeta.tags.map((tag, index) => (
+            <span>
+              <a href={`/tags/${tag.toLowerCase()}`}>{tag}</a>{index < postMeta.tags.length - 1 ? ', ' : ''}
             </span>
-            <a
-              href={`/categories/${postMeta.category.toLowerCase()}`}
-              class="bg-white dark:bg-[#111] px-2 py-1 rounded border border-gray-200 dark:border-[#222] cursor-pointer hover:border-blue-500 dark:hover:border-green-500 hover:text-blue-600 dark:hover:text-green-400 transition-colors"
-            >
-              CATEGORY: {postMeta.category}
-            </a>
-            <span class="bg-white dark:bg-[#111] px-2 py-1 rounded border border-gray-200 dark:border-[#222] flex gap-1">
-              TAGS:
-              {postMeta.tags.map((tag, idx) => (
-                <span>
-                  <a
-                    href={`/tags/${tag.toLowerCase()}`}
-                    class="cursor-pointer hover:text-blue-600 dark:hover:text-green-400 transition-colors"
-                  >
-                    {tag}
-                  </a>
-                  {idx < postMeta.tags.length - 1 ? ', ' : ''}
-                </span>
-              ))}
-            </span>
-          </div>
-
-          {hasToc && (
-            <div class="xl:hidden mb-8 pixel-panel p-4 font-console text-gray-700 dark:text-gray-300 bg-white dark:bg-[#111]" data-toc>
-              <h2 class="font-pixel text-xs text-gray-500 dark:text-gray-400 mb-3 border-b border-gray-200 dark:border-[#222] pb-2">
-                TABLE OF CONTENTS
-              </h2>
-              <nav>
-                <ul class="flex flex-col gap-2 text-base">
-                  {tocItems.map((heading) => (
-                    <li style={`padding-left: ${heading.level * 12}px`}>
-                      <a
-                        href={`#${heading.slug}`}
-                        class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-green-400 transition-colors"
-                      >
-                        {heading.text}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
-            </div>
-          )}
-
-          <div class="prose-terminal">
-            <Content />
-          </div>
-        </div>
+          ))}
+        </span>
       </div>
+
+      {hasToc && (
+        <details class="xl:hidden mb-8 pixel-panel p-4 font-console bg-white dark:bg-[#111]" data-toc>
+          <summary class="font-pixel text-xs cursor-pointer text-blue-600 dark:text-green-400">TABLE OF CONTENTS</summary>
+          <nav class="mt-3">
+            <ul class="flex flex-col gap-2 text-base">
+              {tocItems.map((heading) => (
+                <li style={`padding-left: ${heading.level * 12}px`}>
+                  <a href={`#${heading.slug}`}>{heading.text}</a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </details>
+      )}
+
+      <div class="prose-terminal min-w-0">
+        <Content />
+      </div>
+
+      <footer class="mt-10 border-t border-gray-300 dark:border-[#333] pt-5 text-sm text-gray-500">
+        <p>
+          © {site.author} · <a href={site.license.url} rel="license">{site.license.name}</a>
+        </p>
+      </footer>
+    </article>
+
+    <nav class="mt-6 grid gap-3 sm:grid-cols-2" aria-label="相邻文章">
+      {previous ? (
+        <a class="post-nav-link" href={getPostPath(previous)}>← {previous.title}</a>
+      ) : <span></span>}
+      {next && <a class="post-nav-link sm:text-right" href={getPostPath(next)}>{next.title} →</a>}
+    </nav>
+
+    <section class="mt-8 pixel-panel p-4 md:p-8 text-gray-700 dark:text-gray-300" data-pagefind-ignore>
+      <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-4">
+        <span class="font-pixel text-xs">COMMENTS</span>
+        <span class="text-blue-600 dark:text-green-400"># giscus</span>
+      </div>
+      <div class="giscus-terminal">
+        <Comments
+          client:load
+          repo={giscusConfig.repo}
+          repoId={giscusConfig.repoId}
+          category={giscusConfig.category}
+          categoryId={giscusConfig.categoryId}
+          mapping="pathname"
+          strict="0"
+          reactionsEnabled="1"
+          emitMetadata="0"
+          inputPosition="top"
+          lang="zh-CN"
+          themeLight={giscusConfig.themeLight}
+          themeDark={giscusConfig.themeDark}
+        />
+      </div>
+    </section>
+
+    <a href="/posts" class="post-nav-link mt-6 w-fit">
+      <LucideIcon name="chevron-right" size={18} /> cd ../
+    </a>
   </div>
 
   {hasToc && (
@@ -129,10 +163,7 @@ const giscusConfig = {
         <ul class="flex flex-col gap-2 text-base">
           {tocItems.map((heading) => (
             <li style={`padding-left: ${heading.level * 12}px`}>
-              <a
-                href={`#${heading.slug}`}
-                class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-green-400 transition-colors block py-0.5"
-              >
+              <a href={`#${heading.slug}`} class="block py-0.5 hover:text-blue-600 dark:hover:text-green-400">
                 {heading.text}
               </a>
             </li>
@@ -141,75 +172,30 @@ const giscusConfig = {
       </nav>
     </aside>
   )}
-  <script is:inline>
-    const initTocScroll = () => {
-      const tocs = document.querySelectorAll('[data-toc]');
-      tocs.forEach((toc) => {
-        if (!(toc instanceof HTMLElement)) return;
-        if (toc.dataset.bound === 'true') return;
-        toc.dataset.bound = 'true';
 
-        toc.addEventListener('click', (event) => {
-          const target = event.target;
-          if (!(target instanceof HTMLElement)) return;
-          const link = target.closest('a[href^="#"]');
-          if (!(link instanceof HTMLAnchorElement)) return;
-
-          const hash = link.getAttribute('href');
-          if (!hash) return;
-          const id = decodeURIComponent(hash.slice(1));
-          if (!id) return;
-
-          event.preventDefault();
-
-          const heading = document.getElementById(id);
-          if (!(heading instanceof HTMLElement)) return;
-
-          const scroller = document.getElementById('content-scroll');
-          if (!(scroller instanceof HTMLElement)) return;
-
-          const scrollerRect = scroller.getBoundingClientRect();
-          const headingRect = heading.getBoundingClientRect();
-          const top = scroller.scrollTop + (headingRect.top - scrollerRect.top) - 16;
-          scroller.scrollTo({ top, behavior: 'smooth' });
-
-          history.replaceState(null, '', `#${encodeURIComponent(id)}`);
+  <script>
+    const initArticleEnhancements = async () => {
+      const mermaidBlocks = Array.from(
+        document.querySelectorAll('pre[data-language="mermaid"], pre:has(code.language-mermaid)'),
+      );
+      if (mermaidBlocks.length > 0) {
+        const { default: mermaid } = await import('mermaid');
+        mermaid.initialize({
+          startOnLoad: false,
+          securityLevel: 'strict',
+          theme: document.documentElement.classList.contains('dark') ? 'dark' : 'default',
         });
-      });
+        for (const block of mermaidBlocks) {
+          const diagram = document.createElement('div');
+          diagram.className = 'mermaid';
+          diagram.textContent = block.textContent ?? '';
+          block.replaceWith(diagram);
+        }
+        await mermaid.run({ querySelector: '.mermaid' });
+      }
     };
 
-    initTocScroll();
-    document.addEventListener('astro:page-load', initTocScroll);
-    document.addEventListener('astro:after-swap', initTocScroll);
+    initArticleEnhancements();
+    document.addEventListener('astro:page-load', initArticleEnhancements);
   </script>
-    <section class="mt-8 pixel-panel p-6 md:p-8 text-gray-700 dark:text-gray-300">
-      <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-4">
-        <span class="font-pixel text-xs">COMMENTS</span>
-        <span class="text-blue-600 dark:text-green-400"># giscus</span>
-      </div>
-      <div class="giscus-terminal">
-        <Comments
-          client:load
-          repo={giscusConfig.repo}
-          repoId={giscusConfig.repoId}
-          category={giscusConfig.category}
-          categoryId={giscusConfig.categoryId}
-          mapping="pathname"
-          strict="1"
-          reactionsEnabled="1"
-          emitMetadata="0"
-          inputPosition="bottom"
-          lang="zh-CN"
-          themeLight={giscusConfig.themeLight}
-          themeDark={giscusConfig.themeDark}
-        />
-      </div>
-    </section>
-    <a
-      href="/posts"
-      class="mt-6 text-blue-600 dark:text-green-500 hover:text-gray-900 dark:hover:text-white hover:bg-blue-100 dark:hover:bg-green-900/30 px-4 py-2 rounded flex items-center gap-2 transition-colors border border-transparent hover:border-blue-500/50 dark:hover:border-green-500/50 w-fit"
-    >
-      <LucideIcon name="chevron-right" size={18} /> cd ../
-    </a>
-  </div>
 </ShellLayout>

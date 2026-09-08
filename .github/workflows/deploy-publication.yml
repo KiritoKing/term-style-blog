@@ -1,0 +1,370 @@
+name: Deploy publication snapshot
+
+on:
+  repository_dispatch:
+    types: [content_published_changed]
+  workflow_dispatch:
+    inputs:
+      content_repository:
+        description: Immutable publication repository
+        required: true
+        default: KiritoKing/llm-obsidian
+        type: string
+      publication_branch:
+        description: Publication branch containing the content commit
+        required: true
+        default: publish-snapshots
+        type: string
+      content_sha:
+        description: Full immutable publication commit SHA
+        required: true
+        type: string
+      manifest_sha256:
+        description: SHA-256 of blog-publish-manifest.json
+        required: true
+        type: string
+      source_tree_hash:
+        description: Manifest source_tree_hash
+        required: true
+        type: string
+      deploy_mode:
+        description: Preview only or an explicit production retry
+        required: true
+        default: preview
+        type: choice
+        options:
+          - preview
+          - production-retry
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  prepare:
+    name: Validate immutable inputs
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      content_repository: ${{ steps.inputs.outputs.content_repository }}
+      publication_branch: ${{ steps.inputs.outputs.publication_branch }}
+      content_sha: ${{ steps.inputs.outputs.content_sha }}
+      manifest_sha256: ${{ steps.inputs.outputs.manifest_sha256 }}
+      source_tree_hash: ${{ steps.inputs.outputs.source_tree_hash }}
+      framework_sha: ${{ steps.inputs.outputs.framework_sha }}
+      deploy_mode: ${{ steps.inputs.outputs.deploy_mode }}
+      dispatch_id: ${{ steps.inputs.outputs.dispatch_id }}
+      cloudflare_account_id: ${{ steps.inputs.outputs.cloudflare_account_id }}
+      cloudflare_project: ${{ steps.inputs.outputs.cloudflare_project }}
+    steps:
+      - name: Checkout workflow framework commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          path: framework
+
+      - name: Normalize and validate trigger inputs
+        id: inputs
+        env:
+          GITHUB_EVENT_ACTION: ${{ github.event.action }}
+          INPUT_CONTENT_REPOSITORY: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.content_repository || inputs.content_repository }}
+          INPUT_CONTENT_SHA: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.content_sha || inputs.content_sha }}
+          INPUT_MANIFEST_SHA256: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.manifest_sha256 || inputs.manifest_sha256 }}
+          INPUT_SOURCE_TREE_HASH: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.source_tree_hash || inputs.source_tree_hash }}
+          INPUT_PUBLICATION_BRANCH: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.publication_branch || inputs.publication_branch }}
+          INPUT_DISPATCH_ID: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.dispatch_id || '' }}
+          INPUT_DEPLOY_MODE: ${{ github.event_name == 'repository_dispatch' && 'production' || inputs.deploy_mode }}
+          INPUT_CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          INPUT_CLOUDFLARE_PROJECT: ${{ vars.CLOUDFLARE_PAGES_PROJECT || 'notion-astro-rev' }}
+        run: node framework/scripts/validate-publication-snapshot.mjs inputs
+
+  build_preview:
+    name: Build and deploy isolated preview
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    outputs:
+      artifact_digest: ${{ steps.artifact.outputs['artifact-digest'] }}
+      preview_deployment_id: ${{ steps.preview.outputs.pages-deployment-id }}
+      preview_url: ${{ steps.preview.outputs.deployment-url }}
+    steps:
+      - name: Checkout immutable framework commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.prepare.outputs.framework_sha }}
+          persist-credentials: false
+          path: framework
+
+      - name: Checkout immutable publication commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ${{ needs.prepare.outputs.content_repository }}
+          ref: ${{ needs.prepare.outputs.content_sha }}
+          ssh-key: ${{ secrets.VAULT_CONTENTS_READ_KEY }}
+          persist-credentials: true
+          fetch-depth: 1
+          sparse-checkout: |
+            blog-publish-manifest.json
+            20-writing/published
+          sparse-checkout-cone-mode: false
+          path: content
+
+      - name: Verify commit belongs to publication branch
+        env:
+          CONTENT_SHA: ${{ needs.prepare.outputs.content_sha }}
+          PUBLICATION_BRANCH: ${{ needs.prepare.outputs.publication_branch }}
+        run: |
+          test "$(git -C content rev-parse HEAD)" = "$CONTENT_SHA"
+          if test "$(git -C content rev-parse --is-shallow-repository)" = true; then
+            git -C content fetch --no-tags --unshallow origin "+refs/heads/$PUBLICATION_BRANCH:refs/remotes/origin/$PUBLICATION_BRANCH"
+          else
+            git -C content fetch --no-tags origin "+refs/heads/$PUBLICATION_BRANCH:refs/remotes/origin/$PUBLICATION_BRANCH"
+          fi
+          git -C content merge-base --is-ancestor "$CONTENT_SHA" "refs/remotes/origin/$PUBLICATION_BRANCH"
+
+      - name: Verify exact snapshot manifest and source
+        id: snapshot
+        env:
+          MANIFEST_SHA256: ${{ needs.prepare.outputs.manifest_sha256 }}
+          SOURCE_TREE_HASH: ${{ needs.prepare.outputs.source_tree_hash }}
+        run: |
+          node framework/scripts/validate-publication-snapshot.mjs snapshot \
+            --root content \
+            --manifest-sha256 "$MANIFEST_SHA256" \
+            --source-tree-hash "$SOURCE_TREE_HASH"
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+        with:
+          version: 10.28.0
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24.14.0
+          cache: pnpm
+          cache-dependency-path: framework/pnpm-lock.yaml
+
+      - name: Install frozen framework dependencies
+        working-directory: framework
+        run: pnpm install --frozen-lockfile
+
+      - name: Run framework tests
+        working-directory: framework
+        run: pnpm test
+
+      - name: Run publication deployment validator tests
+        working-directory: framework
+        run: pnpm test:deployment
+
+      - name: Run framework type and Astro checks
+        working-directory: framework
+        run: pnpm check
+
+      - name: Build immutable preview candidate
+        working-directory: framework
+        env:
+          CONTENT_DIR: ${{ github.workspace }}/content/20-writing/published
+          EXPECTED_CONTENT_COUNT: ${{ steps.snapshot.outputs.content_count }}
+          PUBLIC_DEPLOYMENT_ENV: preview
+        run: pnpm build:content
+
+      - name: Verify preview indexing policy
+        run: >-
+          node framework/scripts/validate-publication-snapshot.mjs site
+          --root framework/dist
+          --mode preview
+
+      - name: Install Chromium for browser acceptance
+        working-directory: framework
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run built-site browser acceptance
+        working-directory: framework
+        env:
+          E2E_POST_SLUG: KeePass
+          E2E_SEARCH_QUERY: 前端
+        run: pnpm test:e2e
+
+      - name: Deploy isolated Cloudflare Pages preview
+        id: preview
+        uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ needs.prepare.outputs.cloudflare_account_id }}
+          wranglerVersion: 4.130.0
+          workingDirectory: framework
+          command: >-
+            pages deploy dist
+            --project-name=${{ needs.prepare.outputs.cloudflare_project }}
+            --branch=preview-${{ needs.prepare.outputs.content_sha }}
+            --commit-hash=${{ needs.prepare.outputs.framework_sha }}
+            --commit-message="preview content ${{ needs.prepare.outputs.content_sha }}"
+
+      - name: Verify preview deployment response
+        env:
+          PREVIEW_URL: ${{ steps.preview.outputs.deployment-url }}
+        run: |
+          case "$PREVIEW_URL" in https://*.pages.dev) ;; *) exit 1 ;; esac
+          curl --fail --location --retry 3 --proto '=https' --tlsv1.2 "$PREVIEW_URL/" --output preview-index.html
+          curl --fail --location --retry 3 --proto '=https' --tlsv1.2 "$PREVIEW_URL/robots.txt" --output preview-robots.txt
+          grep -Eiq '<html|<!doctype html' preview-index.html
+          grep -Eiq 'name="robots"[^>]*content="noindex, nofollow"' preview-index.html
+          grep -Eiq '^Disallow: /$' preview-robots.txt
+
+      - name: Remove preview output before production build
+        if: needs.prepare.outputs.deploy_mode == 'production'
+        working-directory: framework
+        run: rm -rf dist
+
+      - name: Build strict production artifact
+        if: needs.prepare.outputs.deploy_mode == 'production'
+        working-directory: framework
+        env:
+          CONTENT_DIR: ${{ github.workspace }}/content/20-writing/published
+          EXPECTED_CONTENT_COUNT: ${{ steps.snapshot.outputs.content_count }}
+          PUBLIC_DEPLOYMENT_ENV: production
+          STRICT_CONTENT_ASSETS: '1'
+        run: pnpm build:content
+
+      - name: Verify production indexing policy
+        if: needs.prepare.outputs.deploy_mode == 'production'
+        run: >-
+          node framework/scripts/validate-publication-snapshot.mjs site
+          --root framework/dist
+          --mode production
+
+      - name: Preserve production artifact
+        if: needs.prepare.outputs.deploy_mode == 'production'
+        id: artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: publication-production-site-${{ needs.prepare.outputs.framework_sha }}-${{ needs.prepare.outputs.content_sha }}
+          path: framework/dist
+          if-no-files-found: error
+          retention-days: 7
+
+  deploy_production:
+    name: Serialize and deploy current production candidate
+    needs: [prepare, build_preview]
+    if: needs.prepare.outputs.deploy_mode == 'production'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: production
+    concurrency:
+      group: publication-production-${{ needs.prepare.outputs.cloudflare_project }}
+      cancel-in-progress: false
+    steps:
+      - name: Checkout immutable framework commit for freshness proof
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.prepare.outputs.framework_sha }}
+          persist-credentials: true
+          path: framework
+
+      - name: Checkout immutable publication commit for freshness proof
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ${{ needs.prepare.outputs.content_repository }}
+          ref: ${{ needs.prepare.outputs.content_sha }}
+          ssh-key: ${{ secrets.VAULT_CONTENTS_READ_KEY }}
+          persist-credentials: true
+          fetch-depth: 1
+          sparse-checkout: |
+            blog-publish-manifest.json
+            20-writing/published
+          sparse-checkout-cone-mode: false
+          path: content
+
+      - name: Reject stale framework or content candidates
+        env:
+          CONTENT_SHA: ${{ needs.prepare.outputs.content_sha }}
+          FRAMEWORK_SHA: ${{ needs.prepare.outputs.framework_sha }}
+          PUBLICATION_BRANCH: ${{ needs.prepare.outputs.publication_branch }}
+        run: |
+          framework_tip="$(git -C framework ls-remote --exit-code origin refs/heads/main | cut -f1)"
+          content_tip="$(git -C content ls-remote --exit-code origin "refs/heads/$PUBLICATION_BRANCH" | cut -f1)"
+          test "$framework_tip" = "$FRAMEWORK_SHA"
+          test "$content_tip" = "$CONTENT_SHA"
+          test "$(git -C framework rev-parse HEAD)" = "$FRAMEWORK_SHA"
+          test "$(git -C content rev-parse HEAD)" = "$CONTENT_SHA"
+
+      - name: Reverify exact snapshot before production
+        env:
+          MANIFEST_SHA256: ${{ needs.prepare.outputs.manifest_sha256 }}
+          SOURCE_TREE_HASH: ${{ needs.prepare.outputs.source_tree_hash }}
+        run: |
+          node framework/scripts/validate-publication-snapshot.mjs snapshot \
+            --root content \
+            --manifest-sha256 "$MANIFEST_SHA256" \
+            --source-tree-hash "$SOURCE_TREE_HASH"
+
+      - name: Download preview-gated production artifact
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: publication-production-site-${{ needs.prepare.outputs.framework_sha }}-${{ needs.prepare.outputs.content_sha }}
+          path: framework/dist
+
+      - name: Reverify downloaded production indexing policy
+        env:
+          ARTIFACT_DIGEST: ${{ needs.build_preview.outputs.artifact_digest }}
+        run: >-
+          [[ "$ARTIFACT_DIGEST" =~ ^[a-f0-9]{64}$ ]] &&
+          node framework/scripts/validate-publication-snapshot.mjs site
+          --root framework/dist --mode production
+
+      - name: Deploy production to Cloudflare Pages
+        id: production
+        uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ needs.prepare.outputs.cloudflare_account_id }}
+          wranglerVersion: 4.130.0
+          workingDirectory: framework
+          command: >-
+            pages deploy dist
+            --project-name=${{ needs.prepare.outputs.cloudflare_project }}
+            --branch=main
+            --commit-hash=${{ needs.prepare.outputs.framework_sha }}
+            --commit-message="content ${{ needs.prepare.outputs.content_sha }}"
+
+      - name: Verify production deployment response
+        env:
+          DEPLOYMENT_ENVIRONMENT: ${{ steps.production.outputs.pages-environment }}
+          PRODUCTION_URL: ${{ steps.production.outputs.deployment-url }}
+        run: |
+          test "$DEPLOYMENT_ENVIRONMENT" = production
+          case "$PRODUCTION_URL" in https://*.pages.dev) ;; *) exit 1 ;; esac
+          curl --fail --location --retry 3 --proto '=https' --tlsv1.2 "$PRODUCTION_URL/" --output production-index.html
+          curl --fail --location --retry 3 --proto '=https' --tlsv1.2 "$PRODUCTION_URL/robots.txt" --output production-robots.txt
+          grep -Eiq '<html|<!doctype html' production-index.html
+          grep -Eiq 'name="robots"[^>]*content="index, follow"' production-index.html
+          ! grep -Eiq 'noindex' production-index.html
+          grep -Eiq '^Allow: /$' production-robots.txt
+          grep -Eiq '^Sitemap: https://' production-robots.txt
+          ! grep -Eiq '^Disallow: /$' production-robots.txt
+
+      - name: Write non-secret deployment record
+        env:
+          ARTIFACT_DIGEST: ${{ needs.build_preview.outputs.artifact_digest }}
+          CONTENT_SHA: ${{ needs.prepare.outputs.content_sha }}
+          DEPLOYMENT_ID: ${{ steps.production.outputs.pages-deployment-id }}
+          FRAMEWORK_SHA: ${{ needs.prepare.outputs.framework_sha }}
+          MANIFEST_SHA256: ${{ needs.prepare.outputs.manifest_sha256 }}
+          SOURCE_TREE_HASH: ${{ needs.prepare.outputs.source_tree_hash }}
+        run: |
+          node -e 'const fs=require("node:fs");const e=process.env;const record={schema_version:1,framework_sha:e.FRAMEWORK_SHA,content_sha:e.CONTENT_SHA,manifest_sha256:e.MANIFEST_SHA256,source_tree_hash:e.SOURCE_TREE_HASH,artifact_sha256:e.ARTIFACT_DIGEST,deployment_id:e.DEPLOYMENT_ID,status:"production"};fs.writeFileSync(process.env.RUNNER_TEMP+"/deployment-record.json",JSON.stringify(record,null,2)+"\n")'
+          cat "$RUNNER_TEMP/deployment-record.json" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Preserve deployment record
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: deployment-record-${{ needs.prepare.outputs.framework_sha }}-${{ needs.prepare.outputs.content_sha }}
+          path: ${{ runner.temp }}/deployment-record.json
+          if-no-files-found: error
+          retention-days: 30

@@ -1,9 +1,14 @@
 ---
 title: Hello World
+slug: hello-world
+status: published
 date: "2026-02-23"
 category: General
 tags: ["personal", "update"]
-description: A short intro to the console-based blog and its retro terminal inspiration.
+summary: A short intro to the console-based blog and its retro terminal inspiration.
+related_content: []
+publish:
+  target: blog
 ---
 
 Welcome to my new console-based blog. I built this using React and Tailwind CSS. The design is inspired by retro terminals and pixel art.

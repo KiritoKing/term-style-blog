@@ -1,55 +1,36 @@
-# Astro Starter Kit: Basics
+# ChlorineC's terminal blog
 
-- [x] 更改图标方案，改成iconify，使用astro原生图标
-- [x] 修改博客加载方案，改成content layer方案
-- [x] 增加分页功能
-- [x] 增加正文目录功能
-- [x] 增加代码高亮
-- [ ] 增加大图查看功能
-- [x] 增加全文搜索功能
-- [x] 增加评论功能
+Astro static blog with a terminal-inspired shell. Production content is an immutable Obsidian Markdown publication snapshot; builds do not read Notion.
+
+## Content contract
+
+Set `CONTENT_DIR` to the snapshot's `20-writing/published` directory. Every Markdown file in that directory must include an exact, stable `slug`, `status: publish|published`, `publish.target: blog`, title, date, category, tags and summary. File names may change without changing the public URL. Slug case is significant.
+
+Local `pnpm test`, `pnpm check` and `pnpm build` use the repository's small fixture collection. A production candidate must use the explicit external source:
 
 ```sh
-pnpm create astro@latest -- --template basics
+CONTENT_DIR=/absolute/snapshot/20-writing/published \
+EXPECTED_CONTENT_COUNT=53 \
+PUBLIC_DEPLOYMENT_ENV=preview \
+pnpm build:content
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+The validator rejects empty sources, invalid publication states, wrong targets, duplicate slugs and conflict markers. Unpublished Obsidian wikilinks render as text and local image references emit source-specific warnings, so the build cannot copy private notes or local assets into the site.
 
-## 🚀 Project Structure
+## Quality gates
 
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
+```sh
+pnpm test
+pnpm check
+pnpm build
+pnpm exec playwright install chromium
+pnpm test:e2e
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+For the real corpus browser gate, build first with the external source and run:
 
-## 🧞 Commands
+```sh
+E2E_POST_SLUG=KeePass E2E_SEARCH_QUERY=前端 pnpm test:e2e
+```
 
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+The build generates Pagefind, RSS, sitemap, robots and 162 permanent historical redirects. Preview builds use `noindex`; set `PUBLIC_DEPLOYMENT_ENV=production` only in an authorized production deployment workflow.

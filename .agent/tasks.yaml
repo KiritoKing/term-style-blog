@@ -995,3 +995,22 @@ tasks:
   blocked_by: []
   unblock_when: B01-B05 accepted and closed; already satisfied
   last_updated: 2026-09-09
+
+- id: B07
+  change: preserve-exporter-v1-tree-hash
+  priority: P0
+  objective: Make the Node consumer validate existing exporter-v1 snapshot hashes
+  deps: [B02, B06]
+  status: done
+  owner_session: null
+  branch: codex/publication-live-validation-fix
+  allowed_paths: [scripts/validate-publication-snapshot.mjs, tests/validate-publication-snapshot.test.mjs, tests/fixtures/publication-exporter-v1/**, openspec/changes/archive/2026-09-08-preserve-exporter-v1-tree-hash/**, openspec/specs/publication-deployment/spec.md, .agent/**, docs/ai-agent-delivery-plan.md]
+  locked_paths: []
+  relevant_specs: [openspec/specs/publication-deployment/spec.md, openspec/changes/archive/2026-09-08-preserve-exporter-v1-tree-hash]
+  required_tests: [exporter_golden, tree_hash_order, global_path_order, tamper, node_unit, vitest, openspec_validation]
+  acceptance_commands: ['pnpm test:deployment', 'pnpm test', 'pnpm check', 'openspec validate publication-deployment --type spec --strict', 'git diff --check']
+  report: .agent/reports/B07-exporter-v1-hash-compatibility.md
+  handoff: .agent/handoffs/B07-exporter-v1-hash-compatibility.md
+  blocked_by: []
+  unblock_when: B06 accepted and CI diagnostic identifies a bounded consumer defect; satisfied
+  last_updated: 2026-09-09

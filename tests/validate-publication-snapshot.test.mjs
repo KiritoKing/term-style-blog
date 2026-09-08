@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import test, { after } from "node:test";
+import { fileURLToPath } from "node:url";
 
 import {
   resolveInputs,
@@ -11,6 +12,9 @@ import {
 } from "../scripts/validate-publication-snapshot.mjs";
 
 const TEST_TEMP_ROOT = path.resolve(".test-tmp");
+const EXPORTER_V1_FIXTURE = fileURLToPath(
+  new URL("./fixtures/publication-exporter-v1/", import.meta.url),
+);
 after(() => rm(TEST_TEMP_ROOT, { recursive: true, force: true }));
 
 const article = ({
@@ -45,12 +49,12 @@ async function createSnapshot(files = { "hello.md": article() }) {
     const status = source.match(/^status:\s*(.+)$/m)?.[1];
     const bytes = Buffer.from(source);
     entries.push({
-      path: relativePath,
-      bytes: bytes.byteLength,
-      sha256: sha256Hex(bytes),
       slug,
       status,
       title,
+      path: relativePath,
+      bytes: bytes.byteLength,
+      sha256: sha256Hex(bytes),
     });
   }
   const sourceTreeHash = sha256Hex(JSON.stringify(entries));
@@ -77,6 +81,40 @@ async function createSnapshot(files = { "hello.md": article() }) {
     sourceTreeHash,
   };
 }
+
+test("accepts the actual Deno exporter-v1 golden snapshot", async () => {
+  const manifestBytes = await readFile(
+    path.join(EXPORTER_V1_FIXTURE, "blog-publish-manifest.json"),
+  );
+  const manifest = JSON.parse(manifestBytes.toString("utf8"));
+  assert.deepEqual(Object.keys(manifest.files[0]), [
+    "slug",
+    "status",
+    "title",
+    "path",
+    "bytes",
+    "sha256",
+  ]);
+  assert.deepEqual(manifest.files.map((entry) => entry.path), [
+    "a.md",
+    "a/child.md",
+    "nested/历史.md",
+    "z.md",
+  ]);
+
+  const result = await validateSnapshot({
+    root: EXPORTER_V1_FIXTURE,
+    expectedManifestSha256: sha256Hex(manifestBytes),
+    expectedTreeHash: manifest.source_tree_hash,
+  });
+  assert.deepEqual(result, {
+    manifestHash: "c5b9138f9038af03e1f17f21bc9a0632f67e8adcf01cd2f2eb6839b9b1629637",
+    sourceTreeHash: "14679cfe4d6bae9e72704f2bd9dbe8109999f05be3e673a1b500a557949c3bf1",
+    fileCount: 4,
+    publishCount: 2,
+    publishedCount: 2,
+  });
+});
 
 async function expectSnapshotFailure(snapshot, code) {
   await assert.rejects(
@@ -151,6 +189,19 @@ test("rejects tampered, extra, missing, and empty file sets", async (t) => {
       snapshot.manifestHash = sha256Hex(bytes);
       snapshot.sourceTreeHash = snapshot.manifest.source_tree_hash;
       await expectSnapshotFailure(snapshot, "EMPTY_SNAPSHOT");
+    } finally {
+      await rm(snapshot.root, { recursive: true, force: true });
+    }
+  });
+
+  await t.test("malformed file hash", async () => {
+    const snapshot = await createSnapshot();
+    try {
+      snapshot.manifest.files[0].sha256 = "malformed";
+      const bytes = `${JSON.stringify(snapshot.manifest, null, 2)}\n`;
+      await writeFile(path.join(snapshot.root, "blog-publish-manifest.json"), bytes);
+      snapshot.manifestHash = sha256Hex(bytes);
+      await expectSnapshotFailure(snapshot, "MANIFEST_SCHEMA");
     } finally {
       await rm(snapshot.root, { recursive: true, force: true });
     }

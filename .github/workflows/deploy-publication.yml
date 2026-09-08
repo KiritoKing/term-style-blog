@@ -56,6 +56,8 @@ jobs:
       source_tree_hash: ${{ steps.inputs.outputs.source_tree_hash }}
       framework_sha: ${{ steps.inputs.outputs.framework_sha }}
       deploy_mode: ${{ steps.inputs.outputs.deploy_mode }}
+      production_enabled: ${{ steps.inputs.outputs.production_enabled }}
+      preview_review: ${{ steps.inputs.outputs.preview_review }}
       dispatch_id: ${{ steps.inputs.outputs.dispatch_id }}
       cloudflare_account_id: ${{ steps.inputs.outputs.cloudflare_account_id }}
       cloudflare_project: ${{ steps.inputs.outputs.cloudflare_project }}
@@ -78,6 +80,8 @@ jobs:
           INPUT_PUBLICATION_BRANCH: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.publication_branch || inputs.publication_branch }}
           INPUT_DISPATCH_ID: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.dispatch_id || '' }}
           INPUT_DEPLOY_MODE: ${{ github.event_name == 'repository_dispatch' && 'production' || inputs.deploy_mode }}
+          PUBLICATION_PRODUCTION_ENABLED: ${{ vars.PUBLICATION_PRODUCTION_ENABLED }}
+          PUBLICATION_PREVIEW_REVIEW: ${{ vars.PUBLICATION_PREVIEW_REVIEW }}
           INPUT_CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
           INPUT_CLOUDFLARE_PROJECT: ${{ vars.CLOUDFLARE_PAGES_PROJECT || 'notion-astro-rev' }}
         run: node framework/scripts/validate-publication-snapshot.mjs inputs
@@ -172,6 +176,7 @@ jobs:
           CONTENT_DIR: ${{ github.workspace }}/content/20-writing/published
           EXPECTED_CONTENT_COUNT: ${{ steps.snapshot.outputs.content_count }}
           PUBLIC_DEPLOYMENT_ENV: preview
+          STRICT_CONTENT_ASSETS: '1'
         run: pnpm build:content
 
       - name: Verify preview indexing policy
@@ -189,6 +194,8 @@ jobs:
         env:
           E2E_POST_SLUG: KeePass
           E2E_SEARCH_QUERY: 前端
+          E2E_REAL_CORPUS: '1'
+          E2E_REAL_LISTINGS: '1'
         run: pnpm test:e2e
 
       - name: Deploy isolated Cloudflare Pages preview
@@ -206,10 +213,43 @@ jobs:
             --commit-hash=${{ needs.prepare.outputs.framework_sha }}
             --commit-message="preview content ${{ needs.prepare.outputs.content_sha }}"
 
-      - name: Verify preview deployment response
+      - name: Validate manual preview deployment outputs
+        if: needs.prepare.outputs.preview_review == 'manual'
         env:
+          DEPLOYMENT_ENVIRONMENT: ${{ steps.preview.outputs.pages-environment }}
           PREVIEW_URL: ${{ steps.preview.outputs.deployment-url }}
         run: |
+          test "$DEPLOYMENT_ENVIRONMENT" = preview
+          case "$PREVIEW_URL" in https://*.pages.dev) ;; *) exit 1 ;; esac
+
+      - name: Record pending human preview acceptance
+        if: needs.prepare.outputs.preview_review == 'manual'
+        env:
+          CONTENT_SHA: ${{ needs.prepare.outputs.content_sha }}
+          DEPLOYMENT_ID: ${{ steps.preview.outputs.pages-deployment-id }}
+          FRAMEWORK_SHA: ${{ needs.prepare.outputs.framework_sha }}
+          MANIFEST_SHA256: ${{ needs.prepare.outputs.manifest_sha256 }}
+          PREVIEW_URL: ${{ steps.preview.outputs.deployment-url }}
+          SOURCE_TREE_HASH: ${{ needs.prepare.outputs.source_tree_hash }}
+        run: |
+          node -e 'const fs=require("node:fs");const e=process.env;const record={schema_version:1,framework_sha:e.FRAMEWORK_SHA,content_sha:e.CONTENT_SHA,manifest_sha256:e.MANIFEST_SHA256,source_tree_hash:e.SOURCE_TREE_HASH,deployment_id:e.DEPLOYMENT_ID,preview_url:e.PREVIEW_URL,environment:"preview",online_acceptance:"pending"};fs.writeFileSync(e.RUNNER_TEMP+"/preview-deployment-record.json",JSON.stringify(record,null,2)+"\n");fs.appendFileSync(e.GITHUB_STEP_SUMMARY,["## Manual publication preview",`- framework_sha=${e.FRAMEWORK_SHA}`,`- content_sha=${e.CONTENT_SHA}`,`- preview_url=${e.PREVIEW_URL}`,"- online_acceptance=pending","- Access or login content was not fetched or accepted as blog evidence.",""].join("\n"))'
+
+      - name: Preserve pending preview deployment record
+        if: needs.prepare.outputs.preview_review == 'manual'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: preview-deployment-record-${{ needs.prepare.outputs.framework_sha }}-${{ needs.prepare.outputs.content_sha }}
+          path: ${{ runner.temp }}/preview-deployment-record.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Validate automatic preview response
+        if: needs.prepare.outputs.preview_review == 'automatic'
+        env:
+          DEPLOYMENT_ENVIRONMENT: ${{ steps.preview.outputs.pages-environment }}
+          PREVIEW_URL: ${{ steps.preview.outputs.deployment-url }}
+        run: |
+          test "$DEPLOYMENT_ENVIRONMENT" = preview
           case "$PREVIEW_URL" in https://*.pages.dev) ;; *) exit 1 ;; esac
           curl --fail --location --retry 3 --proto '=https' --tlsv1.2 "$PREVIEW_URL/" --output preview-index.html
           curl --fail --location --retry 3 --proto '=https' --tlsv1.2 "$PREVIEW_URL/robots.txt" --output preview-robots.txt
@@ -218,12 +258,12 @@ jobs:
           grep -Eiq '^Disallow: /$' preview-robots.txt
 
       - name: Remove preview output before production build
-        if: needs.prepare.outputs.deploy_mode == 'production'
+        if: needs.prepare.outputs.deploy_mode == 'production' && needs.prepare.outputs.production_enabled == 'true' && needs.prepare.outputs.preview_review == 'automatic'
         working-directory: framework
         run: rm -rf dist
 
       - name: Build strict production artifact
-        if: needs.prepare.outputs.deploy_mode == 'production'
+        if: needs.prepare.outputs.deploy_mode == 'production' && needs.prepare.outputs.production_enabled == 'true' && needs.prepare.outputs.preview_review == 'automatic'
         working-directory: framework
         env:
           CONTENT_DIR: ${{ github.workspace }}/content/20-writing/published
@@ -233,14 +273,14 @@ jobs:
         run: pnpm build:content
 
       - name: Verify production indexing policy
-        if: needs.prepare.outputs.deploy_mode == 'production'
+        if: needs.prepare.outputs.deploy_mode == 'production' && needs.prepare.outputs.production_enabled == 'true' && needs.prepare.outputs.preview_review == 'automatic'
         run: >-
           node framework/scripts/validate-publication-snapshot.mjs site
           --root framework/dist
           --mode production
 
       - name: Preserve production artifact
-        if: needs.prepare.outputs.deploy_mode == 'production'
+        if: needs.prepare.outputs.deploy_mode == 'production' && needs.prepare.outputs.production_enabled == 'true' && needs.prepare.outputs.preview_review == 'automatic'
         id: artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
@@ -252,7 +292,7 @@ jobs:
   deploy_production:
     name: Serialize and deploy current production candidate
     needs: [prepare, build_preview]
-    if: needs.prepare.outputs.deploy_mode == 'production'
+    if: needs.prepare.outputs.deploy_mode == 'production' && needs.prepare.outputs.production_enabled == 'true' && needs.prepare.outputs.preview_review == 'automatic'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     environment: production

@@ -1,30 +1,4 @@
-# publication-deployment Specification
-
-## Purpose
-TBD - created by archiving change integrate-publication-deployment. Update Purpose after archive.
-## Requirements
-### Requirement: Deployment SHALL bind immutable framework and publication inputs
-The system MUST accept only the fixed publication repository and branch, full immutable framework and content SHAs, and matching manifest and source-tree SHA-256 values before a deployment candidate is built.
-
-#### Scenario: An automatic publication event arrives
-- **WHEN** `content_published_changed` identifies an approved immutable snapshot
-- **THEN** the workflow SHALL validate the repository, branch, content SHA, manifest hash, tree hash and SHA-bound dispatch id
-- **THEN** both `publish` and `published` articles SHALL remain eligible
-
-#### Scenario: A mutable or mismatched input arrives
-- **WHEN** an input names another repository or branch, a mutable ref, a malformed hash or a mismatched dispatch id
-- **THEN** validation MUST fail before checkout, build or deployment
-
-### Requirement: Deployment SHALL verify the exact sanitized snapshot
-The system MUST match the manifest to the exact sorted Markdown file set and each file's bytes, hash, slug, title and status while rejecting content outside the publication boundary.
-
-#### Scenario: Publication content was changed after export
-- **WHEN** a file is added, removed or changed relative to the immutable manifest
-- **THEN** validation MUST fail before the site build
-
-#### Scenario: Publication content contains blocked data
-- **WHEN** content contains a draft, wrong target, secret-like metadata, conflict state, symlink, non-Markdown file or local media
-- **THEN** validation MUST fail without writing to the content checkout
+## MODIFIED Requirements
 
 ### Requirement: Preview and production artifacts SHALL be distinct and mode-verified
 The system MUST default publication events to a noindex manual-review preview. It MUST verify the exact immutable snapshot, strict content assets and local preview artifact before deployment, and MUST not build production unless production is explicitly enabled and automated online preview verification succeeds.

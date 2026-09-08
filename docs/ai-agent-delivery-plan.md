@@ -476,3 +476,7 @@ Residual risk:
 ## 2026-09-09 用户批准的个人博客迁移
 
 B01 在独立 worktree 合并处理本次必要能力：Obsidian Markdown 生产内容源、历史链接、渲染、搜索评论、RSS/SEO、移动端阅读、离线 CI；保留终端风格和交互，通用配置与非必要增强延后。旧 Notion-only 假设在本 change 内正式更新规格。代码工作不依赖服务器同步恢复，生产接入须等待 S0。其余旧任务保留历史，B01 报告列出重叠能力结果，不将未验收任务直接标记完成。
+
+## 2026-09-09 B06 人工预览发布策略
+
+仓库 dispatch 默认只构建和部署不可变 noindex 预览。Cloudflare 部署成功后，在线人工验收仍记录为 pending；工作流不会抓取受 Access 保护的 URL 并把登录页当作博客通过证据。生产默认关闭，只有 `PUBLICATION_PRODUCTION_ENABLED=true` 且 `PUBLICATION_PREVIEW_REVIEW=automatic` 时，既有在线页面验证与生产链路才可启用。人工 `production-retry` 服从相同的双重门禁。人工预览同时保存无秘密部署记录，将框架与内容 SHA、manifest 和 source tree hash、Cloudflare deployment id 与 URL 绑定，供验收下载核对。

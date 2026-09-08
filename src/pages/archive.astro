@@ -1,0 +1,33 @@
+---
+import { formatDate, getAllPosts, getPostPath } from '@/data/blog';
+import ShellLayout from '@/layouts/ShellLayout.astro';
+
+const posts = await getAllPosts();
+const groups = Map.groupBy(posts, (post) => post.date.getUTCFullYear());
+const years = Array.from(groups.keys()).sort((a, b) => b - a);
+---
+
+<ShellLayout title="归档" description="ChlorineC 博客文章时间归档">
+  <div class="animate-in fade-in duration-300">
+    <p class="text-blue-600 dark:text-green-400 mb-6">$ find ~/posts -type f | sort -r</p>
+    <h1 class="font-pixel text-2xl md:text-4xl mb-8">ARCHIVE</h1>
+    <div class="space-y-8">
+      {years.map((year) => (
+        <section>
+          <h2 class="font-pixel text-xl text-blue-600 dark:text-green-400 mb-3">{year}</h2>
+          <ul class="space-y-2">
+            {groups.get(year)?.map((post) => (
+              <li class="flex flex-col sm:flex-row sm:gap-4 border-b border-gray-200 dark:border-[#222] py-2">
+                <time class="text-gray-500 shrink-0">{formatDate(post.date)}</time>
+                <a href={getPostPath(post)} class="hover:text-blue-600 dark:hover:text-green-400">
+                  {post.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
+  </div>
+</ShellLayout>
+

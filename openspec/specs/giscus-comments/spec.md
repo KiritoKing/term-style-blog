@@ -3,9 +3,7 @@
 ## Purpose
 
 为文章详情页提供基于 GitHub Discussions 的评论能力，并限制加载范围与映射方式。 用于指导后续变更、校验实现行为，并保持与现有终端风格博客约束一致。
-
 ## Requirements
-
 ### Requirement: 文章详情页必须提供评论区
 系统 MUST 在文章详情页展示评论区，以便读者在阅读路径内完成评论与反应操作。
 
@@ -28,8 +26,8 @@
 - **THEN** 页面禁止加载 giscus 脚本与 giscus iframe
 
 ### Requirement: 页面与 discussion 的映射必须稳定
-系统 MUST 使用稳定的映射方式将页面与 discussion 关联，禁止依赖易变的页面标题作为唯一映射依据。
+系统 MUST 使用 `KiritoKing/notion-astro-rev` 的 `Announcements` category，并按浏览器 pathname 将文章页面关联到既有 discussion。
 
 #### Scenario: 路径映射
-- **WHEN** giscus 在文章详情页初始化
-- **THEN** 系统必须使用 pathname 作为映射方式以查找或创建对应 discussion
+- **WHEN** giscus 在 `/posts/<exact-slug>` 初始化
+- **THEN** 它必须使用 `pathname` mapping 和历史仓库及 category 标识

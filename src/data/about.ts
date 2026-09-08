@@ -7,8 +7,8 @@ export type AboutData = {
 export const aboutData: AboutData = {
   heading: 'ABOUT_ME',
   paragraphs: [
-    "Hi, I'm a developer who loves retro aesthetics, pixel art, and building things from scratch.",
-    "I specialize in creating web experiences that don't just look like standard corporate templates. I believe the web should be fun, weird, and personal.",
+    '这里是 ChlorineC 随便写写的地方。',
+    '记录前端、工程化、AI 与生活，也保留一点终端和像素风格。',
   ],
-  skills: ['React', 'TypeScript', 'Rust', 'TailwindCSS', 'Pixel Art', 'Linux'],
+  skills: ['Frontend', 'TypeScript', 'Engineering', 'AI'],
 };

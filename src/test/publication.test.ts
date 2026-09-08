@@ -45,6 +45,31 @@ describe('publication source', () => {
     ).toMatchObject({ total: 2, publish: 1, published: 1 });
   });
 
+  it.each(['publish', 'published'] as const)(
+    'requires category and summary uniformly for %s entries',
+    (status) => {
+      for (const [field, value] of [
+        ['category', undefined],
+        ['category', ''],
+        ['category', '   '],
+        ['category', 'Uncategorized'],
+        ['category', ' uncategorized '],
+        ['summary', undefined],
+        ['summary', ''],
+        ['summary', '   '],
+      ] as const) {
+        expect(() =>
+          validatePublicationRecords([
+            record({
+              path: `${status}-${field}.md`,
+              data: { ...record().data, status, [field]: value },
+            }),
+          ]),
+        ).toThrow(new RegExp(`${status}-${field}\\.md: required field ${field}`));
+      }
+    },
+  );
+
   it.each([
     ['draft state', record({ data: { ...record().data, status: 'draft' } })],
     ['wrong target', record({ data: { ...record().data, publish: { target: 'wechat' } } })],

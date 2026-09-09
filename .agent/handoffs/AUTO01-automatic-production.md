@@ -2,7 +2,7 @@
 
 Status: in_progress
 Owner: root
-Branch: codex/automatic-production-activation-20260909
+Branch: codex/publication-test-barrier-20260909
 Last updated: 2026-09-09
 
 Implementation PR11 merged. Access service policy now saved, human policy retained, protected preview34350240034 passed103 routes. Production true/automatic.
@@ -12,3 +12,5 @@ First real save emitted content6934c09 through Sync and normal Hermes repository
 The canary is still present in keepass.md. Private byte backup and guarded restoration: /tmp/term-blog-open-source-audit-20260909/auto-production/source-save-probe.py and source-save-probe.json. Never overwrite intervening user edits. Private recovery activation-state.json contains run IDs and Access token ID (no credentials).
 
 Root owns remaining files. Relevant spec: openspec/changes/automatic-production-publication. Do not archive before actual production E2E.
+
+PR12 runtime fix merged572aa721. Repeat dispatch34351742631 stopped at a flaky timer-based concurrency test; root replaces fixture timing with an explicit barrier, with50 repeated focused runs. Next merge this test-only repair and resave the existing guarded canary; production is still unchanged.

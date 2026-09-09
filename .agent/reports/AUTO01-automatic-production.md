@@ -38,3 +38,7 @@ Resume from branch `codex/automatic-production-activation-20260909` in `/tmp/ter
 The existing Pages Access application now retains human Allow plus a Service Auth rule restricted to the dedicated token. Protected preview run34350240034 passed103 hosted routes; anonymous requests still302 to Access. Both automatic policy variables are enabled.
 
 A temporary frontmatter comment saved at12:21:05UTC reached Sync history at12:23:43UTC and Hermes with the exact new hash. The normal exporter produced content6934c09 and repository_dispatch run34350956620 at12:25:44UTC. Preview passed, but production failed before upload: Wrangler could not locate pnpm on its fresh job runner. Root adds pinned pnpm/Node setup plus a RED/GREEN workflow regression. Source canary still awaits restoration; end-to-end production is not accepted yet.
+
+## Deterministic concurrency fixture repair
+
+Runtime fix PR12 merged as572aa721. Repeat real save produced6c1ce11 and normal dispatch34351742631, but the concurrency test intermittently measured1 instead of2 because its1ms delay raced asynchronous fixture reads. No deployment ran. Replace wall-clock delays with a two-request barrier plus an event-loop drain boundary, preserving the exact concurrency and completion assertions. Production E2E remains pending and the guarded source canary still needs restoration.

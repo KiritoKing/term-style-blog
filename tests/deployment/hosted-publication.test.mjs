@@ -383,18 +383,26 @@ test("keeps route concurrency bounded and drains started workers before rejectio
     let inFlight = 0;
     let maximumInFlight = 0;
     const completed = [];
+    let arrivals = 0;
+    let releaseFirstPair;
+    const firstPairStarted = new Promise((resolve) => { releaseFirstPair = resolve; });
     const fetchImpl = fixtureFetch(distDir, async ({ path: requestPath, body }) => {
       if (!publication.routes.some((route) => route.path === requestPath)) return undefined;
       inFlight += 1;
       maximumInFlight = Math.max(maximumInFlight, inFlight);
       try {
-        await new Promise((resolve) => setTimeout(resolve, requestPath === "/" ? 1 : 8));
+        arrivals += 1;
+        if (arrivals === 2) releaseFirstPair();
+        await firstPairStarted;
         if (requestPath === "/") {
           return body.replace(
             /data-publication-revision="[a-f0-9]+"/,
             `data-publication-revision="${"0".repeat(64)}"`,
           );
         }
+        // Keep successful work pending until after the failing worker's microtasks.
+        // A premature Promise.all rejection would leave inFlight nonzero.
+        await new Promise((resolve) => setImmediate(resolve));
         completed.push(requestPath);
         return body;
       } finally {
@@ -427,14 +435,12 @@ test("prioritizes a terminal login failure over a concurrent retryable stale rou
         return undefined;
       }
       if (requestPath === "/") {
-        await new Promise((resolve) => setTimeout(resolve, 1));
         return body.replace(
           /data-publication-revision="[a-f0-9]+"/,
           `data-publication-revision="${"0".repeat(64)}"`,
         );
       }
       if (requestPath === "/articles/one/") {
-        await new Promise((resolve) => setTimeout(resolve, 2));
         return '<!doctype html><html><head><title>Cloudflare Access</title></head><body><form action="/cdn-cgi/access/login">Sign in</form></body></html>';
       }
       return undefined;

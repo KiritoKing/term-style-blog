@@ -2,9 +2,13 @@
 
 Status: in_progress
 Owner: root
-Branch: codex/automatic-production-20260909
+Branch: codex/automatic-production-activation-20260909
 Last updated: 2026-09-09
 
-Implementation and test plan: openspec/changes/automatic-production-publication.
-Recovery record: .agent/reports/AUTO01-automatic-production.md.
-Root owns workflow, production-state helper/tests, docs/specs and remote policy. Verifier worker owns scripts/verify-hosted-publication.mjs and tests/deployment/hosted-publication.test.mjs. Do not edit user checkouts or live article body; end-to-end canary is a backed-up frontmatter comment only, restored after observed promotion. Publication still false/manual until real hosted acceptance.
+Implementation PR11 merged. Access service policy now saved, human policy retained, protected preview34350240034 passed103 routes. Production true/automatic.
+
+First real save emitted content6934c09 through Sync and normal Hermes repository_dispatch34350956620. Preview passed but production Wrangler could not find pnpm. No upload occurred. Root added pinned pnpm/Node to the isolated production job; workflow regression RED then43/43 deployment tests GREEN. Next: exact-head CI/merge, resave the guarded temporary comment to produce a new automatic event, verify production, restore original bytes and verify second automatic production.
+
+The canary is still present in keepass.md. Private byte backup and guarded restoration: /tmp/term-blog-open-source-audit-20260909/auto-production/source-save-probe.py and source-save-probe.json. Never overwrite intervening user edits. Private recovery activation-state.json contains run IDs and Access token ID (no credentials).
+
+Root owns remaining files. Relevant spec: openspec/changes/automatic-production-publication. Do not archive before actual production E2E.

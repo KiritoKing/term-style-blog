@@ -24,3 +24,17 @@ Exact-head CI/merge, Access policy binding, protected preview acceptance, explic
 ## CI security follow-up
 
 Initial head 8dbee31 passed source CI but CodeQL flagged double entity decoding and incomplete script-end-tag text extraction. Root changed title decoding to a single pass and handled tolerated end-tag whitespace; two fixtures prove literal nested entities remain literal and non-rendered script/style text cannot satisfy the content check. No rule was disabled or alert dismissed. Updated exact-head security checks remain required before merge.
+
+## Merged implementation; activation checkpoint
+
+PR #11 merged as `f23f5b74cabe294f54f213415eee416a6d034ce6`. Candidate `4386ecdceda909614a46d212508e6060e57b35c5` passed CI run `34335563463` and all three CodeQL analyses plus the aggregate CodeQL gate. The fetched merge tree is identical to the accepted candidate. No alerts were dismissed.
+
+On 2026-09-09, live GitHub variables remain `PUBLICATION_PRODUCTION_ENABLED=false` and `PUBLICATION_PREVIEW_REVIEW=manual`. Cloudflare Zero Trust free activation succeeded with explicit user billing authorization; both Access secrets are stored, but the service token is not yet bound to the existing Pages application. Native Chrome exposes only a window title, and a fresh extension connection timed out. Screen lock is suspected, not proven. No source-save canary has run; automatic production is not yet enabled or accepted.
+
+Resume from branch `codex/automatic-production-activation-20260909` in `/tmp/term-blog-open-source-20260909`. Bind the existing token using a Service Auth policy while retaining human access, enable automatic preview review with production still disabled, accept an actual immutable protected preview, then enable production and observe source-save plus byte-exact restoration through the normal Sync/exporter events. Private recovery state and the guarded probe are under `/tmp/term-blog-open-source-audit-20260909/auto-production`. Do not recreate the existing service token or archive the change before live acceptance.
+
+## Live activation and first source-save finding
+
+The existing Pages Access application now retains human Allow plus a Service Auth rule restricted to the dedicated token. Protected preview run34350240034 passed103 hosted routes; anonymous requests still302 to Access. Both automatic policy variables are enabled.
+
+A temporary frontmatter comment saved at12:21:05UTC reached Sync history at12:23:43UTC and Hermes with the exact new hash. The normal exporter produced content6934c09 and repository_dispatch run34350956620 at12:25:44UTC. Preview passed, but production failed before upload: Wrangler could not locate pnpm on its fresh job runner. Root adds pinned pnpm/Node setup plus a RED/GREEN workflow regression. Source canary still awaits restoration; end-to-end production is not accepted yet.

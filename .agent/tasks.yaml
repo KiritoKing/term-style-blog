@@ -1061,7 +1061,7 @@ tasks:
   priority: P0
   deps: [CI01]
   owner_session: root
-  branch: codex/automatic-production-20260909
+  branch: codex/automatic-production-activation-20260909
   allowed_paths: [.github/workflows/deploy-publication.yml, scripts, tests/deployment, package.json, docs, README.md, README.en.md, openspec, .agent]
   locked_paths: [.github/workflows/deploy-publication.yml, package.json]
   relevant_specs: [openspec/specs/publication-deployment/spec.md]

@@ -2,6 +2,19 @@
 
 Obsidian Markdown remains the content source of truth. This document describes the owner-authorized save-to-production path. Unconfigured installations still default to a manual preview; production requires the explicit policy below. Operational activation and E2E evidence are recorded in the AUTO01 report.
 
+## Verified owner deployment (2026-09-09)
+
+The owner's installation is active with `PUBLICATION_PRODUCTION_ENABLED=true` and `PUBLICATION_PREVIEW_REVIEW=automatic`. A real local save and its byte-exact restoration each independently traveled through Obsidian Sync, the normal Hermes timer, repository_dispatch, protected preview acceptance and production. Neither successful run was manually dispatched.
+
+| Source change (UTC) | Automatic event | Public production accepted | Evidence |
+| --- | --- | --- | --- |
+| Save temporary YAML comment,12:38:28 |12:39:50 |12:43:00 |[save run 34352329632](https://github.com/KiritoKing/term-style-blog/actions/runs/34352329632) |
+| Restore original bytes,12:44:48 |12:45:54 |12:48:37 |[restoration run 34352935115](https://github.com/KiritoKing/term-style-blog/actions/runs/34352935115) |
+
+Both runs verified all 103 normal hosted HTML routes and passed desktop/mobile browser checks. The final 54-article source tree matches the pre-test content exactly. Successful observed save-to-site durations were about 4m32s and3m49s; these are measurements, not an SLA. The first diagnostic attempt encountered a temporary local Sync error before recovering; the Mac/mobile client must be online and finish Sync before Hermes can publish its changes. Other physical clients were not individually exercised in this acceptance.
+
+The dedicated Access service token expires on 2027-09-09. Renew it and replace both GitHub Access secrets before expiry. An expired token blocks preview acceptance and therefore new production updates. To pause publication, set `PUBLICATION_PRODUCTION_ENABLED=false`; normal vault synchronization continues. If a save does not appear, first check Obsidian Sync, then the latest Blog publish run. For exact identities, validation and retained failure evidence see the [AUTO01 report](../.agent/reports/AUTO01-automatic-production.md).
+
 ## Trigger map
 
 | Trigger | Actor | Result |

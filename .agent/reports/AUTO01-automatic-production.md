@@ -1,44 +1,55 @@
 # AUTO01 automatic production publication
 
-Status: in_progress
+Status: done
+Date: 2026-09-09
 
-## Authorization and scope
-The owner explicitly requested saving approved Obsidian content to update the formal site. On 2026-09-09 the owner also approved the required Cloudflare account setup. Root owns shared workflow, project configuration and live integration. The bounded verifier worker owns the hosted verifier/test only.
+## Result and ownership
 
-## Implementation
-The publication workflow stamps source identity on generated HTML, verifies the protected hosted preview route inventory, then separately builds/promotes production under explicit policy. The public canonical domain must match the accepted artifact. A before-upload deployment record allows conditional rollback only while this run owns production; the old Notion Git writer must remain disabled. Live Sync/exporter ownership is unchanged.
+Owner-authorized save-to-production is enabled: `PUBLICATION_PRODUCTION_ENABLED=true`, `PUBLICATION_PREVIEW_REVIEW=automatic`. Obsidian Sync remains the only vault synchronization mechanism. Hermes reads the approved publication directory and writes only its isolated Git snapshot/state. CI never writes article content or status back into the live vault. The legacy Notion Git production writer remains disabled, verified by the production baseline guard.
 
-## Verification so far
-- 112 existing unit tests pass.
-- Strict 53-article preview build and 29 real Chromium tests pass.
-- Root production backup/rollback fixture tests pass, including rejection of another run's candidate.
-- 40/40 deployment tests were independently rerun by reviewer; the final CodeQL repair adds two regressions, bringing the suite to 42/42. Coverage includes origin-limited auth, stale identity, production-only 404 propagation, legitimate Access technical articles, drained worker pools and terminal auth failure taking priority over concurrent retryable errors.
-- Astro check has zero errors/warnings; 31 baseline specs plus the new change pass strict validation. Workflow YAML and 26 Bash steps pass.
-- Independent reviewer: pass with live integration limits.
-- Cloudflare free plan activation confirmed, dedicated one-year Access token created and both GitHub Secrets stored. Existing Access policy binding awaits an operable browser window; current token alone grants no application access.
-- GitHub production variables remain false/manual until protected hosted acceptance works.
+Implementation PR #11, runtime repair PR #12 and deterministic fixture repair PR #13 are merged. Accepted production framework: `6c4627697b7e0e7c44376621104b7dc05529c186`. This closeout changes documentation/specification state only; main-source changes alone do not deploy.
 
-## Remaining integration
-Exact-head CI/merge, Access policy binding, protected preview acceptance, explicit production opt-in, real source save plus restoration through Sync, and final immutable production/browser evidence. Do not claim completion from unit tests or secret creation alone.
+## Live evidence
 
-## CI security follow-up
+| Stage | Evidence | Result |
+| --- | --- | --- |
+| Protected preview before enabling production |[34350240034](https://github.com/KiritoKing/term-style-blog/actions/runs/34350240034) |103 normal hosted routes verified; anonymous request302, machine Service Auth accepted |
+| Real save12:38:28UTC |[34352329632](https://github.com/KiritoKing/term-style-blog/actions/runs/34352329632), repository_dispatch12:39:50UTC |production accepted12:43:00UTC; about 4m32s |
+| Byte-exact restoration12:44:48UTC |[34352935115](https://github.com/KiritoKing/term-style-blog/actions/runs/34352935115), repository_dispatch12:45:54UTC |production accepted12:48:37UTC; about 3m49s |
 
-Initial head 8dbee31 passed source CI but CodeQL flagged double entity decoding and incomplete script-end-tag text extraction. Root changed title decoding to a single pass and handled tolerated end-tag whitespace; two fixtures prove literal nested entities remain literal and non-rendered script/style text cannot satisfy the content check. No rule was disabled or alert dismissed. Updated exact-head security checks remain required before merge.
+Successful save content: `cc2f329c1d5dcc5adb2e36ca93404a8cc421a3a4`; production deployment: `8561f621-7053-49ae-9809-cc25672e68be`.
 
-## Merged implementation; activation checkpoint
+Final restored content: `d1bd7e2ec3b16246a30bcfd756a541d5ea129f7d`; deployment: `8d60c430-fa10-4251-b089-aa36969a7398`; manifest: `8873be5a1f0a233c91ec562bcaed706e047560584449318600dcbd99549b1c2a`; source tree: `0bfba329bae5273e47017971616a5ba4015e3785d310300480807f0c607b25b1`; production artifact: `365c299db78530e5407ed4edf6c42d02c20dcfaa54b840df4cfc59169c4b7804`; public revision: `5ca6ba35299173076c0d4ceb65ccea9187708f500a3af12ab558ff6cbcf6b947`.
 
-PR #11 merged as `f23f5b74cabe294f54f213415eee416a6d034ce6`. Candidate `4386ecdceda909614a46d212508e6060e57b35c5` passed CI run `34335563463` and all three CodeQL analyses plus the aggregate CodeQL gate. The fetched merge tree is identical to the accepted candidate. No alerts were dismissed.
+All 54 article files in the final snapshot are byte-identical to the pre-test060779b snapshot. The only canary was a temporary frontmatter comment in an already-published article; it is removed. Local restored SHA-256: `b8fd370a33555afb35cd1bd152382957297741d09ccf6d26556f4810abe57f87`. No article semantics or publishing fields changed. Local Sync finishes in synced state. Both bare and www domains serve the final identity.
 
-On 2026-09-09, live GitHub variables remain `PUBLICATION_PRODUCTION_ENABLED=false` and `PUBLICATION_PREVIEW_REVIEW=manual`. Cloudflare Zero Trust free activation succeeded with explicit user billing authorization; both Access secrets are stored, but the service token is not yet bound to the existing Pages application. Native Chrome exposes only a window title, and a fresh extension connection timed out. Screen lock is suspected, not proven. No source-save canary has run; automatic production is not yet enabled or accepted.
+## Verification
 
-Resume from branch `codex/automatic-production-activation-20260909` in `/tmp/term-blog-open-source-20260909`. Bind the existing token using a Service Auth policy while retaining human access, enable automatic preview review with production still disabled, accept an actual immutable protected preview, then enable production and observe source-save plus byte-exact restoration through the normal Sync/exporter events. Private recovery state and the guarded probe are under `/tmp/term-blog-open-source-audit-20260909/auto-production`. Do not recreate the existing service token or archive the change before live acceptance.
+- `pnpm test:deployment`:43/43; concurrency-focused fixtures 50/50 repeated runs.
+- `pnpm test`:112 tests; `pnpm check`:zero errors/warnings, existing hints only.
+- Strict real54-article build and 29 real Chromium checks ran in each successful publication job.
+- Hosted verifier checked all 103 normal HTML routes for expected immutable revision, title and indexing policy on both protected previews and public production.
+- Additional live Chromium acceptance:4 representative routes across 1440x1000 and 390x844,8 visits per successful deployment; correct publication identity, visible article/shell, no page overflow, no broken loaded images or page errors, and working terminal help. Desktop and mobile screenshots were inspected. This is sampled live visual acceptance, not a new all-page Midscene audit.
+- Final configuration heads passed source CI and aggregate CodeQL:34335563463(PR #11),34351458925(PR #12),34352007524(PR #13).
+- Independent implementation reviewer passed with then-pending live integration limits; root completed the live checks above.
+- Strict OpenSpec and whitespace checks pass. The delta is synchronized and archived in this closeout.
 
-## Live activation and first source-save finding
+## Failure evidence retained and repaired
 
-The existing Pages Access application now retains human Allow plus a Service Auth rule restricted to the dedicated token. Protected preview run34350240034 passed103 hosted routes; anonymous requests still302 to Access. Both automatic policy variables are enabled.
+- Run 34350956620 failed before upload because the isolated production runner lacked pnpm. Production recovery checked that the recorded previous deployment was still current. PR #12 installs pinned pnpm and supported Node in that job; its regression failed before the fix and passes afterward.
+- Run 34351742631 stopped before deployment on a flaky1ms/8ms concurrency fixture. PR #13 replaces wall-clock scheduling assumptions with a two-arrival barrier and an event-loop drain boundary, retaining exact concurrency and completion assertions. No test or acceptance gate was skipped.
+- Initial CodeQL findings in PR #11 were repaired with one-pass entity decoding and tolerant script/style-end-tag handling. No alerts were dismissed.
 
-A temporary frontmatter comment saved at12:21:05UTC reached Sync history at12:23:43UTC and Hermes with the exact new hash. The normal exporter produced content6934c09 and repository_dispatch run34350956620 at12:25:44UTC. Preview passed, but production failed before upload: Wrangler could not locate pnpm on its fresh job runner. Root adds pinned pnpm/Node setup plus a RED/GREEN workflow regression. Source canary still awaits restoration; end-to-end production is not accepted yet.
+## Access, recovery and limits
 
-## Deterministic concurrency fixture repair
+The existing Pages preview Access application retains its human Allow policy and now includes a Service Auth policy restricted to the dedicated term-style-blog-ci-preview token. GitHub stores the pair as CF_ACCESS_CLIENT_ID and CF_ACCESS_CLIENT_SECRET. The token expires2027-09-09. Zero Trust free-plan activation and its checkout billing authorization were explicitly approved by the owner. Access headers are restricted to the exact accepted preview origin; public production receives none.
 
-Runtime fix PR12 merged as572aa721. Repeat real save produced6c1ce11 and normal dispatch34351742631, but the concurrency test intermittently measured1 instead of2 because its1ms delay raced asynchronous fixture reads. No deployment ran. Replace wall-clock delays with a two-request barrier plus an event-loop drain boundary, preserving the exact concurrency and completion assertions. Production E2E remains pending and the guarded source canary still needs restoration.
+Every production attempt captures its previous deployment before upload. On failed final acceptance it may restore that baseline only while the failed candidate is still current. Offline tests cover rollback ownership; live failure verified the no-upload/no-op recovery case. A deliberate destructive production failure was not injected. The last successful restoration run preserved 8561f621 as its recovery baseline.
+
+This acceptance exercised the current Mac through real Sync and Hermes. Other physical Macs/mobile clients must finish their existing Sync normally; they were not individually tested. Sync/API/build outages delay publication. Normal directory additions, changes and withdrawals use the same existing exporter; draft/metadata/privacy gates and mass-delete guards remain. The bridge retries failed dispatch transport, not accepted CI failures. Pause new production with PUBLICATION_PRODUCTION_ENABLED=false.
+
+Private raw logs, byte backup, guarded probe, screenshots and downloaded run records are in `/tmp/term-blog-open-source-audit-20260909/auto-production`. GitHub retains non-secret production/recovery artifacts under the linked runs according to workflow retention. No credentials are included in this report.
+
+## Plan review
+
+No additional plan adjustment proposed. AUTO01 is accepted and complete; no implementation or live activation blocker remains.

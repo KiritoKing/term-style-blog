@@ -437,7 +437,7 @@ test("workflow defaults to manual preview and preserves gated automatic producti
   assert.ok(previewVerified > 0 && productionBuild > previewVerified && productionArtifact > productionBuild);
   assert.match(workflow, /deploy_production:[\s\S]+if: needs\.prepare\.outputs\.deploy_mode == 'production' && needs\.prepare\.outputs\.production_enabled == 'true' && needs\.prepare\.outputs\.preview_review == 'automatic'/);
   const productionConditions = workflow.match(/^\s+if: .*deploy_mode.*$/gm) || [];
-  assert.equal(productionConditions.length, 5);
+  assert.equal(productionConditions.length, 6);
   for (const condition of productionConditions) {
     assert.match(condition, /production_enabled == 'true'/);
     assert.match(condition, /preview_review == 'automatic'/);
@@ -446,8 +446,15 @@ test("workflow defaults to manual preview and preserves gated automatic producti
   assert.match(workflow, /validate-publication-snapshot\.mjs site[\s\S]+--mode production/);
   assert.match(workflow, /name: publication-production-site-/);
   assert.match(workflow, /Reverify downloaded production indexing policy[\s\S]+--mode production[\s\S]+Deploy production to Cloudflare Pages/);
-  assert.match(workflow, /production-index\.html[\s\S]+content="index, follow"/);
-  assert.match(workflow, /production-robots\.txt[\s\S]+Sitemap: https:\/\//);
+  assert.match(workflow, /verify-hosted-publication\.mjs verify --dist framework\/dist --url https:\/\/chlorinec\.top/);
+  assert.match(workflow, /CF_ACCESS_CLIENT_ID: \$\{\{ secrets\.CF_ACCESS_CLIENT_ID \}\}/);
+  assert.match(workflow, /CF_ACCESS_CLIENT_SECRET: \$\{\{ secrets\.CF_ACCESS_CLIENT_SECRET \}\}/);
+  assert.match(workflow, /Stamp preview publication identity[\s\S]+PUBLICATION_MODE: preview/);
+  assert.match(workflow, /Stamp production publication identity[\s\S]+PUBLICATION_MODE: production/);
+  assert.match(workflow, /Capture current production recovery baseline[\s\S]+Preserve recovery baseline before upload[\s\S]+Deploy production to Cloudflare Pages/);
+  assert.match(workflow, /Recover previous production after failed acceptance[\s\S]+publication-production-state\.mjs rollback/);
+  const productionJob = workflow.slice(workflow.indexOf("  deploy_production:"));
+  assert.doesNotMatch(productionJob, /CF_ACCESS_CLIENT/);
   assert.equal((workflow.match(/Verify exact snapshot manifest and source|Reverify exact snapshot before production/g) || []).length, 2);
   assert.doesNotMatch(workflow, /NOTION_TOKEN|NOTION_DATABASE_ID|@notion/i);
   assert.match(workflow, /\npermissions:\n  contents: read\n/);
@@ -477,7 +484,7 @@ test("package and both workflows run the deployment validator suite", async () =
 
   assert.equal(
     packageJson.scripts["test:deployment"],
-    "node --test tests/validate-publication-snapshot.test.mjs",
+    "node --test tests/validate-publication-snapshot.test.mjs tests/deployment/*.test.mjs",
   );
   assert.match(offlineWorkflow, /^\s+- run: pnpm test:deployment$/m);
   assert.match(

@@ -1,6 +1,6 @@
 # Publication triggers and ownership
 
-Verified operational snapshot: 2026-09-09. Obsidian Markdown remains the content source of truth. The live production site is already deployed; the current automatic path ends at a Cloudflare preview because production policy is false/manual.
+Obsidian Markdown remains the content source of truth. This document describes the owner-authorized save-to-production path. Unconfigured installations still default to a manual preview; production requires the explicit policy below. Operational activation and E2E evidence are recorded in the AUTO01 report.
 
 ## Trigger map
 
@@ -12,6 +12,7 @@ Verified operational snapshot: 2026-09-09. Obsidian Markdown remains the content
 | Stable approved publication bytes differ | The Hermes publication exporter | Write and push a sanitized immutable commit to private `llm-obsidian:publish-snapshots` |
 | A publication snapshot is ready to announce | The exporter through authenticated `gh` | Send `repository_dispatch` with type `content_published_changed` to `term-style-blog` |
 | Valid immutable content event or manual workflow dispatch | GitHub `Blog publish (Cloudflare)` | Validate, build, test and upload a noindex preview |
+| Protected preview passes every hosted route and immutable identity check | GitHub publication workflow | Rebuild production from the same sources, serialize promotion, then verify `chlorinec.top` |
 | Framework PR or main push | GitHub `CI`, plus CodeQL | Validate framework source; no content publication is triggered by this alone |
 | Monday 09:00 Asia/Shanghai | Dependabot | Group routine dependency updates into reviewable PRs; security updates remain separately enabled |
 
@@ -37,8 +38,14 @@ Headless Sync is a continuous enabled service with restart-on-failure after 15 s
 
 ## Preview and production
 
-Current repository variables are `PUBLICATION_PRODUCTION_ENABLED=false` and `PUBLICATION_PREVIEW_REVIEW=manual`. A successful automatic event therefore deploys a preview and records human acceptance as pending. It does not move the `chlorinec.top` production deployment. This is a policy stop, not a pending GitHub environment approval: the production environment has no reviewer protection rules, and manual `production-retry` is rejected while production is disabled or preview review remains manual. The Access-protected preview must not be accepted by mistaking its login page for rendered blog HTML.
+Automatic production uses `PUBLICATION_PRODUCTION_ENABLED=true` and `PUBLICATION_PREVIEW_REVIEW=automatic`. For a pause, set production to `false`; use `manual` review to retain human-only preview acceptance. Unset values default to `false/manual`. The production environment has no reviewer protection rules. Manual `production-retry` is rejected unless both automatic policy gates are enabled.
 
-Each dispatch binds the framework to the immutable main tip at that event. Before any enabled production upload, the workflow checks that framework main and the publication branch still match the candidate. A framework source change on main takes effect in a later publication build; source CI alone does not deploy the live blog. Production remains subject to a separately authorized policy change and the existing deployment gates. See [configuration and deployment](getting-started.md) for the immutable input contract and fork setup.
+CI accesses the existing `*.notion-astro-rev.pages.dev` Access application with a dedicated Service Auth token, stored in `CF_ACCESS_CLIENT_ID` and `CF_ACCESS_CLIENT_SECRET`. Human login protection remains. The headers are sent only to the exact validated Pages deployment origin, never to the public domain or another redirected host. Access login HTML, missing credentials, redirects and wrong revisions fail acceptance. Token setup follows [Cloudflare service authentication](https://developers.cloudflare.com/cloudflare-one/access-controls/service-credentials/service-tokens/); renew its configured expiry before it lapses.
+
+After strict metadata/asset checks and local browser acceptance, every HTML page is stamped with an immutable publication revision. `publication.json` records source identities and the generated route inventory. The hosted verifier checks this exact record, every generated page's revision/title/indexing policy and robots rules. Preview must be noindex; a separately rebuilt production artifact must allow indexing. The immutable source SHA changes even if a source edit does not visibly alter rendered text.
+
+Each dispatch binds framework main and content to immutable commits. Before production, both branch tips must still match. Uploads are serialized per project; the legacy Notion Git production writer must remain disabled. The workflow captures the current deployment ID before upload and verifies the new source identity at `https://chlorinec.top`. If final acceptance fails, it attempts rollback only while its own run still owns the current production deployment. Another writer is never silently rolled back. A failed run remains failed even after recovery.
+
+A source-main push alone does not deploy. The next content event uses the updated framework; an operator can also submit a validated immutable `production-retry`. The expected save-to-site delay is Sync propagation plus up to about two minutes for the bridge, followed by CI/build/preview/production acceptance. Multiple quick saves can make older candidates stale; only an accepted current candidate can promote. CI or Access failure preserves the prior site unless promotion already happened, in which case the conditional recovery path applies. See [configuration and deployment](getting-started.md).
 
 The older Vercel demo’s Git auto-deployment is disabled in this repository. Existing GitHub logs and deployment records are retained as audit history; CodeQL and Dependabot job activity is not another blog publication pipeline.

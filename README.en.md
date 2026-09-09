@@ -51,7 +51,7 @@ pnpm build:content
 
 Every Markdown file under that directory must be approved for publication and provide a stable slug, title, date, category, tags, summary, `status: publish|published` and `publish.target: blog`. Blank or placeholder categories, missing summaries, conflicts and duplicate slugs fail validation. See the [content contract](docs/content.md).
 
-The author's pipeline is **Obsidian Sync → read-only Hermes exporter → isolated Git snapshot → GitHub Actions → Cloudflare Pages preview**. Git never pulls changes into the active vault. The actual vault and credentials remain private. The live site is deployed; subsequent content changes currently require preview review before production.
+The author's pipeline is **Obsidian Sync → read-only Hermes exporter → isolated Git snapshot → GitHub Actions → protected Pages preview acceptance → production**. Git never pulls changes into the active vault. The actual vault and credentials remain private. The live site is deployed. With the explicit automatic policy enabled, approved content changes pass hosted page acceptance before production promotion; unconfigured installations default to manual preview. See [publication and recovery](docs/publication-pipeline.md).
 
 **Before deploying a fork**, replace site origin and identity, about/network data, Giscus configuration and the historical URL map. The owner's publication workflow is intentionally gated to this repository's main branch. It is not a one-click deployment service for forks. See [configuration and deployment](docs/getting-started.md).
 

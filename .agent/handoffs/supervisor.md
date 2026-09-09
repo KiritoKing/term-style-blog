@@ -129,3 +129,7 @@ OSS01 is done and unlocked. PR#8 passed exact-head CI and merged as2405de9; v1.0
 ## 2026-09-09 CI01 accepted
 
 CI01 is done and unlocked; integration is PR #10. Legacy Vercel auto-deployment/check noise is removed; CI, Cloudflare publication, managed CodeQL and grouped weekly Dependabot have explicit roles. Existing gates and required verify context remain. Exact configuration-head CI/CodeQL passed, and the PR no longer has Vercel checks. Read-only live Hermes verification confirms a healthy continuous Sync receiver and a two-minute deterministic exporter; normal events still end at manual-review preview. Detailed triggers, exceptions and source evidence are in docs/publication-pipeline.md and the CI01 report. No further cleanup task is required.
+
+## AUTO01 authorized automatic production
+
+User explicitly requested save-to-production completion. Root owns workflow, Access configuration and live integration; verifier worker has exclusive script/test files. Default policy remains disabled until real protected preview acceptance. Plan/test design: openspec/changes/automatic-production-publication.

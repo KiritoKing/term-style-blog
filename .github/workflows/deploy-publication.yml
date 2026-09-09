@@ -200,6 +200,14 @@ jobs:
           E2E_REAL_LISTINGS: '1'
         run: pnpm test:e2e
 
+      - name: Stamp preview publication identity
+        env:
+          PUBLICATION_FRAMEWORK_SHA: ${{ needs.prepare.outputs.framework_sha }}
+          PUBLICATION_CONTENT_SHA: ${{ needs.prepare.outputs.content_sha }}
+          PUBLICATION_MANIFEST_SHA256: ${{ needs.prepare.outputs.manifest_sha256 }}
+          PUBLICATION_MODE: preview
+        run: node framework/scripts/verify-hosted-publication.mjs stamp --dist framework/dist
+
       - name: Deploy isolated Cloudflare Pages preview
         id: preview
         uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0
@@ -248,16 +256,18 @@ jobs:
       - name: Validate automatic preview response
         if: needs.prepare.outputs.preview_review == 'automatic'
         env:
+          PUBLICATION_FRAMEWORK_SHA: ${{ needs.prepare.outputs.framework_sha }}
+          PUBLICATION_CONTENT_SHA: ${{ needs.prepare.outputs.content_sha }}
+          PUBLICATION_MANIFEST_SHA256: ${{ needs.prepare.outputs.manifest_sha256 }}
+          PUBLICATION_MODE: preview
           DEPLOYMENT_ENVIRONMENT: ${{ steps.preview.outputs.pages-environment }}
           PREVIEW_URL: ${{ steps.preview.outputs.deployment-url }}
+          CLOUDFLARE_PAGES_PROJECT: ${{ needs.prepare.outputs.cloudflare_project }}
+          CF_ACCESS_CLIENT_ID: ${{ secrets.CF_ACCESS_CLIENT_ID }}
+          CF_ACCESS_CLIENT_SECRET: ${{ secrets.CF_ACCESS_CLIENT_SECRET }}
         run: |
           test "$DEPLOYMENT_ENVIRONMENT" = preview
-          case "$PREVIEW_URL" in https://*.pages.dev) ;; *) exit 1 ;; esac
-          curl --fail --location --retry 3 --proto '=https' --tlsv1.2 "$PREVIEW_URL/" --output preview-index.html
-          curl --fail --location --retry 3 --proto '=https' --tlsv1.2 "$PREVIEW_URL/robots.txt" --output preview-robots.txt
-          grep -Eiq '<html|<!doctype html' preview-index.html
-          grep -Eiq 'name="robots"[^>]*content="noindex, nofollow"' preview-index.html
-          grep -Eiq '^Disallow: /$' preview-robots.txt
+          node framework/scripts/verify-hosted-publication.mjs verify --dist framework/dist --url "$PREVIEW_URL"
 
       - name: Remove preview output before production build
         if: needs.prepare.outputs.deploy_mode == 'production' && needs.prepare.outputs.production_enabled == 'true' && needs.prepare.outputs.preview_review == 'automatic'
@@ -280,6 +290,15 @@ jobs:
           node framework/scripts/validate-publication-snapshot.mjs site
           --root framework/dist
           --mode production
+
+      - name: Stamp production publication identity
+        if: needs.prepare.outputs.deploy_mode == 'production' && needs.prepare.outputs.production_enabled == 'true' && needs.prepare.outputs.preview_review == 'automatic'
+        env:
+          PUBLICATION_FRAMEWORK_SHA: ${{ needs.prepare.outputs.framework_sha }}
+          PUBLICATION_CONTENT_SHA: ${{ needs.prepare.outputs.content_sha }}
+          PUBLICATION_MANIFEST_SHA256: ${{ needs.prepare.outputs.manifest_sha256 }}
+          PUBLICATION_MODE: production
+        run: node framework/scripts/verify-hosted-publication.mjs stamp --dist framework/dist
 
       - name: Preserve production artifact
         if: needs.prepare.outputs.deploy_mode == 'production' && needs.prepare.outputs.production_enabled == 'true' && needs.prepare.outputs.preview_review == 'automatic'
@@ -360,6 +379,22 @@ jobs:
           node framework/scripts/validate-publication-snapshot.mjs site
           --root framework/dist --mode production
 
+      - name: Capture current production recovery baseline
+        id: baseline
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ needs.prepare.outputs.cloudflare_account_id }}
+          CLOUDFLARE_PAGES_PROJECT: ${{ needs.prepare.outputs.cloudflare_project }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: node framework/scripts/publication-production-state.mjs backup
+
+      - name: Preserve recovery baseline before upload
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: publication-rollback-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/publication-rollback.json
+          if-no-files-found: error
+          retention-days: 30
+
       - name: Deploy production to Cloudflare Pages
         id: production
         uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0
@@ -373,23 +408,35 @@ jobs:
             --project-name=${{ needs.prepare.outputs.cloudflare_project }}
             --branch=main
             --commit-hash=${{ needs.prepare.outputs.framework_sha }}
-            --commit-message="content ${{ needs.prepare.outputs.content_sha }}"
+            --commit-message="publication-run-${{ github.run_id }}-${{ github.run_attempt }}"
 
       - name: Verify production deployment response
+        id: acceptance
         env:
+          PUBLICATION_FRAMEWORK_SHA: ${{ needs.prepare.outputs.framework_sha }}
+          PUBLICATION_CONTENT_SHA: ${{ needs.prepare.outputs.content_sha }}
+          PUBLICATION_MANIFEST_SHA256: ${{ needs.prepare.outputs.manifest_sha256 }}
+          PUBLICATION_MODE: production
           DEPLOYMENT_ENVIRONMENT: ${{ steps.production.outputs.pages-environment }}
-          PRODUCTION_URL: ${{ steps.production.outputs.deployment-url }}
+          DEPLOYMENT_ID: ${{ steps.production.outputs.pages-deployment-id }}
+          FRAMEWORK_SHA: ${{ needs.prepare.outputs.framework_sha }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ needs.prepare.outputs.cloudflare_account_id }}
+          CLOUDFLARE_PAGES_PROJECT: ${{ needs.prepare.outputs.cloudflare_project }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
           test "$DEPLOYMENT_ENVIRONMENT" = production
-          case "$PRODUCTION_URL" in https://*.pages.dev) ;; *) exit 1 ;; esac
-          curl --fail --location --retry 3 --proto '=https' --tlsv1.2 "$PRODUCTION_URL/" --output production-index.html
-          curl --fail --location --retry 3 --proto '=https' --tlsv1.2 "$PRODUCTION_URL/robots.txt" --output production-robots.txt
-          grep -Eiq '<html|<!doctype html' production-index.html
-          grep -Eiq 'name="robots"[^>]*content="index, follow"' production-index.html
-          ! grep -Eiq 'noindex' production-index.html
-          grep -Eiq '^Allow: /$' production-robots.txt
-          grep -Eiq '^Sitemap: https://' production-robots.txt
-          ! grep -Eiq '^Disallow: /$' production-robots.txt
+          node framework/scripts/publication-production-state.mjs verify
+          node framework/scripts/verify-hosted-publication.mjs verify --dist framework/dist --url https://chlorinec.top
+
+      - name: Recover previous production after failed acceptance
+        if: failure() && steps.baseline.outcome == 'success' && steps.production.outcome != 'skipped' && steps.acceptance.outcome != 'success'
+        env:
+          DEPLOYMENT_ID: ${{ steps.production.outputs.pages-deployment-id }}
+          FRAMEWORK_SHA: ${{ needs.prepare.outputs.framework_sha }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ needs.prepare.outputs.cloudflare_account_id }}
+          CLOUDFLARE_PAGES_PROJECT: ${{ needs.prepare.outputs.cloudflare_project }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: node framework/scripts/publication-production-state.mjs rollback
 
       - name: Write non-secret deployment record
         env:

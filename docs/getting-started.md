@@ -79,12 +79,13 @@ The owner workflow uses these **GitHub Actions** settings:
 | --- | --- | --- |
 | `VAULT_CONTENTS_READ_KEY` | Secret | Read-only SSH deploy key for the private publication repository |
 | `CLOUDFLARE_API_TOKEN` | Secret | Dedicated Pages deployment access |
+| `CF_ACCESS_CLIENT_ID` / `CF_ACCESS_CLIENT_SECRET` | Secrets | Dedicated Service Auth token for protected preview acceptance; both required together |
 | `CLOUDFLARE_ACCOUNT_ID` | Variable | Target account identifier |
 | `CLOUDFLARE_PAGES_PROJECT` | Variable | Pages project name |
 | `PUBLICATION_PRODUCTION_ENABLED` | Variable | Defaults to `false` |
 | `PUBLICATION_PREVIEW_REVIEW` | Variable | Defaults to `manual` |
 
-The production site is already live. New content events currently create previews for human review. Automatic production requires both explicit enabling and successful automated online preview verification; a preview behind Access cannot be accepted by treating its login page as blog HTML. Opening the source repository does not open the vault or enable automatic production.
+The production site is already live. The authorized automatic path requires `true/automatic`, a Service Auth policy limited to the preview application, and successful immutable hosted acceptance of every generated HTML page. It then promotes the separately verified production artifact and checks the public canonical domain. Default `false/manual` remains safe for unconfigured installations; opening the source repository does not open the vault or enable production. See [trigger map, recovery and retry rules](publication-pipeline.md).
 
 Public Actions logs/artifacts are public surfaces. Send only content that is safe to disclose to this repository's workflow; keep private drafts in the vault. Browser traces and visual-audit output may include full page content and should be reviewed before sharing.
 

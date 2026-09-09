@@ -17,7 +17,7 @@
     "validate:content": "tsx scripts/validate-content.ts --require-external",
     "test:fixtures": "vitest run src/test/fixtures.test.ts",
     "test": "vitest run",
-    "test:deployment": "node --test tests/validate-publication-snapshot.test.mjs",
+    "test:deployment": "node --test tests/validate-publication-snapshot.test.mjs tests/deployment/*.test.mjs",
     "test:e2e": "playwright test"
   },
   "dependencies": {

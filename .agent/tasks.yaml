@@ -1027,7 +1027,7 @@ tasks:
   locked_paths: []
   relevant_specs: [openspec/specs/publication-deployment/spec.md, openspec/changes/archive/2026-09-09-open-source-release]
   required_tests: [history_secret_review, attribution_review, workflow_boundary, fixture_build, unit, deployment, browser, documentation_links, public_readback]
-  acceptance_commands: [pnpm install --frozen-lockfile, pnpm test, pnpm test:deployment, pnpm check, pnpm build, pnpm test:e2e, openspec validate open-source-distribution --type spec --strict, git diff --check]
+  acceptance_commands: ["pnpm install --frozen-lockfile", "pnpm test", "pnpm test:deployment", "pnpm check", "pnpm build", "pnpm test:e2e", "openspec validate open-source-distribution --type spec --strict", "git diff --check"]
   report: .agent/reports/OSS01-open-source-release.md
   handoff: .agent/handoffs/OSS01-open-source-release.md
   blocked_by: []
@@ -1046,9 +1046,26 @@ tasks:
   locked_paths: []
   relevant_specs: [openspec/changes/archive/2026-09-09-ci-workflow-cleanup, openspec/specs/publication-deployment/spec.md]
   required_tests: [configuration_parse, deployment_boundary, ci_readback, live_pipeline_readback, openspec_validation]
-  acceptance_commands: [pnpm test:deployment, openspec validate ci-workflow-roles --type spec --strict, git diff --check]
+  acceptance_commands: ["pnpm test:deployment", "openspec validate ci-workflow-roles --type spec --strict", "git diff --check"]
   report: .agent/reports/CI01-workflow-cleanup.md
   handoff: .agent/handoffs/CI01-workflow-cleanup.md
   blocked_by: []
   unblock_when: User explicitly requested cleanup and trigger-chain explanation
+  last_updated: 2026-09-09
+
+- id: AUTO01
+  change: automatic-production-publication
+  objective: Enable authorized save-to-production with protected hosted acceptance and conditional recovery
+  required_tests: [hosted_identity, access_origin, production_recovery, deployment, chromium, live_sync_e2e]
+  status: in_progress
+  priority: P0
+  deps: [CI01]
+  owner_session: root
+  branch: codex/automatic-production-20260909
+  allowed_paths: [.github/workflows/deploy-publication.yml, scripts, tests/deployment, package.json, docs, README.md, README.en.md, openspec, .agent]
+  locked_paths: [.github/workflows/deploy-publication.yml, package.json]
+  relevant_specs: [openspec/specs/publication-deployment/spec.md]
+  acceptance_commands: ["pnpm test:deployment", "pnpm test", "pnpm check", "openspec validate automatic-production-publication --strict"]
+  report: .agent/reports/AUTO01-automatic-production.md
+  handoff: .agent/handoffs/AUTO01-automatic-production.md
   last_updated: 2026-09-09

@@ -141,6 +141,8 @@ jobs:
           ! grep -Eiq 'noindex' "$RUNNER_TEMP/blog-cutover/index.html"
           grep -Eq '^Allow: /$' "$RUNNER_TEMP/blog-cutover/robots.txt"
           ! grep -Eq '^Disallow: /$' "$RUNNER_TEMP/blog-cutover/robots.txt"
+      - name: Wait for public routes to converge after deployment
+        run: node operation/.agent/operations/wait-production-ready.mjs
       - name: Verify public production in real Chromium
         working-directory: framework
         env:

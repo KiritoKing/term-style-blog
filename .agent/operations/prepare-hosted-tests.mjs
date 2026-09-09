@@ -16,6 +16,11 @@ for(const name of readdirSync(source)){
   if(hashes[name])assert.equal(createHash('sha256').update(text).digest('hex'),hashes[name],'accepted test source changed');
   if(name==='mermaid-reading.spec.ts')text=once(text,"url.hostname === '127.0.0.1'","url.origin === 'https://chlorinec.top'");
   if(name==='blog-cutover.spec.ts')text=once(text,'new RegExp(`/posts/${postSlug}$`)','new RegExp(`/posts/${postSlug}/?$`)');
+  if(name==='blog-cutover.spec.ts'){
+    const marker = `  const input = page.locator('input[aria-label="Terminal command input"]:visible');`;
+    assert.equal(text.split(marker).length,3);
+    text=text.replaceAll(marker,()=>marker+`\n  await expect(input.locator('xpath=ancestor::astro-island')).not.toHaveAttribute('ssr', '');`);
+  }
   if(name==='sidebar-search.spec.ts')text=once(text,'/\\/search\\?q=rust$/','/\\/search\\/?\\?q=rust$/');
   writeFileSync(join(output,name),text);
 }

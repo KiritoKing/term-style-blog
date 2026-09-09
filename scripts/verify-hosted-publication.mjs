@@ -149,14 +149,16 @@ function isNotFoundHtml(relativePath) {
 }
 
 function decodeHtmlEntities(value) {
-  return value
-    .replace(/&#(\d+);/g, (_, number) => String.fromCodePoint(Number(number)))
-    .replace(/&#x([a-f0-9]+);/gi, (_, number) => String.fromCodePoint(Number.parseInt(number, 16)))
-    .replaceAll("&amp;", "&")
-    .replaceAll("&lt;", "<")
-    .replaceAll("&gt;", ">")
-    .replaceAll("&quot;", '"')
-    .replaceAll("&#39;", "'");
+  const named = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'" };
+  // Decode exactly once: encoded ampersands must not introduce a second entity pass.
+  return value.replace(/&(#x[a-f0-9]+|#[0-9]+|amp|lt|gt|quot|apos);/gi, (_entity, code) => {
+    if (!code.startsWith("#")) return named[code.toLowerCase()];
+    const hexadecimal = code[1].toLowerCase() === "x";
+    const point = Number.parseInt(code.slice(hexadecimal ? 2 : 1), hexadecimal ? 16 : 10);
+    return point > 0 && point <= 0x10ffff && !(point >= 0xd800 && point <= 0xdfff)
+      ? String.fromCodePoint(point)
+      : "\uFFFD";
+  });
 }
 
 function getTagAttribute(tag, attribute) {
@@ -234,8 +236,8 @@ function assertRealHtml(html, mode, context) {
   if (!title) reject("EMPTY_TITLE", `${context} has no nonempty title`);
   const body = html.match(/<body\b[^>]*>([\s\S]*?)<\/body\s*>/i)?.[1] ?? "";
   const bodyText = decodeHtmlEntities(
-    body.replace(/<script\b[^>]*>[\s\S]*?<\/script\s*>/gi, " ")
-      .replace(/<style\b[^>]*>[\s\S]*?<\/style\s*>/gi, " ")
+    body.replace(/<script\b[^>]*>[\s\S]*?<\/script\b[^>]*>/gi, " ")
+      .replace(/<style\b[^>]*>[\s\S]*?<\/style\b[^>]*>/gi, " ")
       .replace(/<[^>]*>/g, " ")
       .replace(/\s+/g, " ")
       .trim(),

@@ -478,3 +478,23 @@ test("production checks the canonical host without sending Access credentials", 
     }
   });
 });
+
+
+test("publication title decodes character references only once", async () => {
+  const distDir = await makeDist();
+  try {
+    await writeFile(path.join(distDir, "index.html"), html("preview", "&amp;lt; &#38;amp; &#x26;lt; &lt; &quot;"));
+    const publication = await stampPublication({ distDir, environment: environment("preview") });
+    assert.equal(publication.routes.find((route) => route.path === "/").title, '&lt; &amp; &lt; < "');
+  } finally { await rm(distDir, { recursive: true, force: true }); }
+});
+
+test("script and style text cannot satisfy rendered content checks with tolerated end-tag whitespace", async () => {
+  for (const tag of ["script", "style"]) {
+    const distDir = await makeDist();
+    try {
+      await writeFile(path.join(distDir, "index.html"), html("preview", "Empty", `<${tag}>only non-rendered text</${tag}\t\n data-x>`));
+      await assert.rejects(stampPublication({distDir, environment: environment("preview")}), {code: "EMPTY_BLOG_HTML"});
+    } finally {await rm(distDir, {recursive: true, force: true});}
+  }
+});

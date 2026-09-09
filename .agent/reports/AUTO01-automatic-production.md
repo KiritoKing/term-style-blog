@@ -12,7 +12,7 @@ The publication workflow stamps source identity on generated HTML, verifies the 
 - 112 existing unit tests pass.
 - Strict 53-article preview build and 29 real Chromium tests pass.
 - Root production backup/rollback fixture tests pass, including rejection of another run's candidate.
-- Final 40/40 deployment tests pass, independently rerun by reviewer. Coverage includes origin-limited auth, stale identity, production-only 404 propagation, legitimate Access technical articles, drained worker pools and terminal auth failure taking priority over concurrent retryable errors.
+- 40/40 deployment tests were independently rerun by reviewer; the final CodeQL repair adds two regressions, bringing the suite to 42/42. Coverage includes origin-limited auth, stale identity, production-only 404 propagation, legitimate Access technical articles, drained worker pools and terminal auth failure taking priority over concurrent retryable errors.
 - Astro check has zero errors/warnings; 31 baseline specs plus the new change pass strict validation. Workflow YAML and 26 Bash steps pass.
 - Independent reviewer: pass with live integration limits.
 - Cloudflare free plan activation confirmed, dedicated one-year Access token created and both GitHub Secrets stored. Existing Access policy binding awaits an operable browser window; current token alone grants no application access.
@@ -20,3 +20,7 @@ The publication workflow stamps source identity on generated HTML, verifies the 
 
 ## Remaining integration
 Exact-head CI/merge, Access policy binding, protected preview acceptance, explicit production opt-in, real source save plus restoration through Sync, and final immutable production/browser evidence. Do not claim completion from unit tests or secret creation alone.
+
+## CI security follow-up
+
+Initial head 8dbee31 passed source CI but CodeQL flagged double entity decoding and incomplete script-end-tag text extraction. Root changed title decoding to a single pass and handled tolerated end-tag whitespace; two fixtures prove literal nested entities remain literal and non-rendered script/style text cannot satisfy the content check. No rule was disabled or alert dismissed. Updated exact-head security checks remain required before merge.

@@ -1,4 +1,5 @@
-name: Deploy publication snapshot
+name: Blog publish (Cloudflare)
+run-name: "${{ github.event_name == 'repository_dispatch' && 'Content changed' || 'Manual publish' }} · ${{ github.actor }}"
 
 on:
   repository_dispatch:

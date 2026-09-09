@@ -28,6 +28,7 @@ Set `EXPECTED_CONTENT_COUNT` to your own expected count or omit it. The director
 | `src/components/shell/Sidebar.astro` | Visible author name |
 | `src/pages/posts/[id].astro` | Giscus repository/category IDs and themes; connect your own discussion repository |
 | `scripts/historical-url-map.json` | Your redirects; use `{}` when you have no historical routes |
+| `vercel.json` | The author disabled the old Vercel demo’s automatic Git deployments; change this explicit opt-out if your fork intentionally uses Vercel Git integration |
 | `public/favicon.svg`, `public/favicon.ico` | Your site icon |
 | `src/content/blog/` | Replace demo posts or use external `CONTENT_DIR` |
 
@@ -86,3 +87,11 @@ The owner workflow uses these **GitHub Actions** settings:
 The production site is already live. New content events currently create previews for human review. Automatic production requires both explicit enabling and successful automated online preview verification; a preview behind Access cannot be accepted by treating its login page as blog HTML. Opening the source repository does not open the vault or enable automatic production.
 
 Public Actions logs/artifacts are public surfaces. Send only content that is safe to disclose to this repository's workflow; keep private drafts in the vault. Browser traces and visual-audit output may include full page content and should be reviewed before sharing.
+
+## CI roles
+
+`CI` validates pull requests and main commits using demo Markdown; it does not publish content. `Blog publish (Cloudflare)` handles explicit immutable content events or manual dispatch. GitHub-managed CodeQL scans source, while Dependabot maintains dependency PRs. Routine npm minor/patch and Actions updates are grouped for Monday09:00 Asia/Shanghai; security updates remain enabled independently of that routine schedule. Historical runs remain available as audit evidence.
+
+The old Vercel demo is disabled through [`vercel.json`](../vercel.json), using the supported [Git deployment opt-out](https://vercel.com/docs/project-configuration/git-configuration). CodeQL language jobs and Dependabot updater jobs are security/maintenance activity, not additional blog deployments.
+
+For the verified Sync/timer/GitHub event sequence, read [publication triggers and ownership](publication-pipeline.md).

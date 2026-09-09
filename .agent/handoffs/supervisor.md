@@ -125,3 +125,7 @@ B07 is done, synced/archived and unlocked. Root independently passed the 23 depl
 ## 2026-09-09 open-source release accepted
 
 OSS01 is done and unlocked. PR#8 passed exact-head CI and merged as2405de9; v1.0.0 is publicly released with MIT licensing and preserved upstream notices. Anonymous repository/release access, private-vault visibility and live terminal homepage were verified.112 unit / 24 deployment / 29 real browser tests,206desktop/mobile route checks and162expected historical aliases passed; dependency audit and redacted all-surface secret review found no blocker. GitHub public security controls are enabled. Specs are synced/archived; details and runtime caveats are in the OSS01 report. Existing production remains live and future publication retains false/manual policy. No next implementation task is required for this release.
+
+## 2026-09-09 CI01 supplementary request
+
+User added CI cleanup and current Sync-to-deployment explanation. CI01 is in progress after completed OSS01. Preserve publication policy and validation coverage; inspect live trigger ownership read-only. Scope and acceptance are in tasks.yaml and openspec/changes/ci-workflow-cleanup.

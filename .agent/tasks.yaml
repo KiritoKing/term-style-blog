@@ -1057,7 +1057,7 @@ tasks:
   change: automatic-production-publication
   objective: Enable authorized save-to-production with protected hosted acceptance and conditional recovery
   required_tests: [hosted_identity, access_origin, production_recovery, deployment, chromium, live_sync_e2e]
-  status: blocked
+  status: in_progress
   priority: P0
   deps: [CI01]
   owner_session: root

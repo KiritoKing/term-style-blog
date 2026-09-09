@@ -122,6 +122,6 @@ B07 fixes the real exporter-v1 consumer mismatch without changing producer or sn
 
 B07 is done, synced/archived and unlocked. Root independently passed the 23 deployment tests and exact failed 54-file immutable snapshot. Next: latest-SHA CI, merge and a fresh add/update/delete automatic preview E2E. First-round synthetic source has been deleted and its tree returned to the 53-file baseline; no production cutover occurred.
 
-## 2026-09-09 open-source release
+## 2026-09-09 open-source release accepted
 
-OSS01 in progress on codex/open-source-release-20260909 from a206bc1. User authorizes repository configuration, documentation, licensing and public visibility without another review. Root owns shared files; independent security/provenance reviewers only write outside the source worktree. Preserve live production and private vault. Release gates and scope are in openspec/changes/open-source-release and tasks.yaml. Audit contracts are private operational artifacts, not runtime dependencies.
+OSS01 is done and unlocked. PR#8 passed exact-head CI and merged as2405de9; v1.0.0 is publicly released with MIT licensing and preserved upstream notices. Anonymous repository/release access, private-vault visibility and live terminal homepage were verified.112 unit / 24 deployment / 29 real browser tests,206desktop/mobile route checks and162expected historical aliases passed; dependency audit and redacted all-surface secret review found no blocker. GitHub public security controls are enabled. Specs are synced/archived; details and runtime caveats are in the OSS01 report. Existing production remains live and future publication retains false/manual policy. No next implementation task is required for this release.

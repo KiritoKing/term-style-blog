@@ -86,3 +86,5 @@ Obsidian Sync → Hermes 只读导出 → 独立 Git 内容快照
 小范围修复、阅读体验和文档改进都欢迎。新功能请先通过 Issue 说明使用场景；本项目优先服务个人博客，不承诺成为通用主题平台。参见[贡献指南](CONTRIBUTING.md)和[行为准则](CODE_OF_CONDUCT.md)。安全问题请走[私密报告入口](SECURITY.md)。
 
 原创代码、示例和文档使用 [MIT License](LICENSE)。第三方依赖、字体、图标及 Astro 起始素材遵循各自许可证，见 [NOTICE](NOTICE.md)。在线文章遵循站点标注的内容许可，不能把源码的 MIT 许可延伸到外部文章、截图中的内容或第三方素材；作者名称和个人身份也不是 fork 必须沿用的品牌。
+
+[发布触发与执行角色](docs/publication-pipeline.md)

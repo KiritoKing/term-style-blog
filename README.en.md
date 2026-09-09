@@ -62,3 +62,5 @@ Focused bug fixes, reading improvements and documentation contributions are welc
 Original source, examples and documentation are available under the [MIT License](LICENSE). Third-party components retain their licenses; see [NOTICE](NOTICE.md). The source license does not relicense live articles, content visible in screenshots or external media. Personal identity and branding should be replaced in your fork.
 
 Archived OpenSpec changes and agent reports preserve implementation history. Older Notion plans are historical; the current content source is Markdown.
+
+[Publication triggers and ownership](docs/publication-pipeline.md)

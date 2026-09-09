@@ -1,6 +1,7 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { defineConfig } from 'astro/config';
+import { unified } from '@astrojs/markdown-remark';
 import react from '@astrojs/react';
 import tailwind from '@tailwindcss/vite';
 import icon from 'astro-icon';
@@ -42,6 +43,7 @@ const wikiTargets = markdownFiles(contentDir).flatMap((file) => {
 });
 
 export default defineConfig({
+  compressHTML: true,
   site: 'https://chlorinec.top/',
   trailingSlash: 'never',
   redirects,
@@ -61,12 +63,14 @@ export default defineConfig({
   ],
   markdown: {
     shikiConfig: { theme: 'dracula-soft' },
-    remarkPlugins: [
-      remarkGfm,
-      remarkDropLeadingTitle,
-      remarkPublicationAssets,
-      [remarkObsidianWikilinks, { targets: wikiTargets }],
-    ],
+    processor: unified({
+      remarkPlugins: [
+        remarkGfm,
+        remarkDropLeadingTitle,
+        remarkPublicationAssets,
+        [remarkObsidianWikilinks, { targets: wikiTargets }],
+      ],
+    }),
   },
   vite: {
     plugins: [tailwind()],

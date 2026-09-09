@@ -1,5 +1,7 @@
 # AI Agent Delivery Plan
 
+> Historical planning baseline (2026-06). Several risks and task states below predate the completed Markdown migration and first production cutover. For current setup use [README](../README.md), [content contract](content.md), active OpenSpec specs and recent task reports. The application no longer reads Notion. OSS01 is the explicitly authorized 2026-09 open-source release; the historical plan is retained for provenance.
+
 本文档用于把终端风格博客在三天内交给 AI agent 执行的工作拆清楚。它不是正式 OpenSpec change，只是一个控制面计划：列出需求、优先级、依赖关系、迭代顺序和验收边界。
 
 ## 目标

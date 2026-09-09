@@ -18,7 +18,12 @@ pnpm-debug.log*
 
 # environment variables
 .env
-.env.production
+.env.*
+!.env.example
+*.pem
+*.key
+.wrangler/
+.vercel/
 
 # macOS-specific files
 .DS_Store
@@ -26,9 +31,8 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 
-# duplicate ai context
-.trae
-!.trae/mcp.json
+# obsolete editor state
+.trae/
 
 # notion cache
 src/assets

@@ -35,7 +35,7 @@ export function validateFixture(frontmatter: unknown): {
   
   return {
     success: false,
-    errors: result.error.errors.map(
+    errors: result.error.issues.map(
       (e) => `${e.path.join('.')}: ${e.message}`
     ),
   };

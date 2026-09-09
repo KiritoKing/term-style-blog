@@ -141,3 +141,7 @@ PR #11 merged at f23f5b7 after final CI 34335563463 and all CodeQL checks passed
 ## AUTO01 Access accepted; runtime integration repair
 
 Browser recovered, scoped Service Auth saved, protected preview34350240034 passed103 routes and production policy enabled. Real save propagated correctly into normal dispatch34350956620; production upload was blocked by missing pnpm on its independent runner. Root's bounded workflow fix installs pinned pnpm/Node and adds a failing-then-passing regression (43/43 tests). Code integration and repeat save/restoration acceptance remain pending. No production-success claim.
+
+## 2026-09-09 AUTO01 accepted and archived
+
+AUTO01 is done and unlocked. PR11/12/13 deliver protected hosted acceptance, independent production runtime setup and deterministic concurrency fixtures. Actual save run34352329632 and byte-exact restoration run34352935115 both succeeded from normal Hermes repository_dispatch events, checking103 public production routes and8 extra desktop/mobile visits each. Current production8d60c430 serves framework6c462769 and contentd1bd7e2. All54 source articles match pre-test bytes. Policy remains true/automatic; human preview protection remains. Details and the two retained pre-deployment failures are in AUTO01 report. OpenSpec is synced/archived as2026-09-09-automatic-production-publication. No further implementation or plan adjustment is proposed; only this docs/spec closeout merge remains.

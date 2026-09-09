@@ -1039,14 +1039,14 @@ tasks:
   priority: P1
   objective: Remove legacy CI deployment noise and document actual publication triggers
   deps: [OSS01]
-  status: in_progress
-  owner_session: codex-root
+  status: done
+  owner_session: null
   branch: codex/ci-cleanup-20260909
   allowed_paths: [.github/**, vercel.json, docs/**, README.md, README.en.md, openspec/**, .agent/**]
-  locked_paths: [.github/**, vercel.json]
-  relevant_specs: [openspec/changes/ci-workflow-cleanup, openspec/specs/publication-deployment/spec.md]
+  locked_paths: []
+  relevant_specs: [openspec/changes/archive/2026-09-09-ci-workflow-cleanup, openspec/specs/publication-deployment/spec.md]
   required_tests: [configuration_parse, deployment_boundary, ci_readback, live_pipeline_readback, openspec_validation]
-  acceptance_commands: [pnpm test:deployment, openspec validate ci-workflow-cleanup --strict, git diff --check]
+  acceptance_commands: [pnpm test:deployment, openspec validate ci-workflow-roles --type spec --strict, git diff --check]
   report: .agent/reports/CI01-workflow-cleanup.md
   handoff: .agent/handoffs/CI01-workflow-cleanup.md
   blocked_by: []

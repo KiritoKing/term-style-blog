@@ -37,7 +37,7 @@ Headless Sync is a continuous enabled service with restart-on-failure after 15 s
 
 ## Preview and production
 
-Current repository variables are `PUBLICATION_PRODUCTION_ENABLED=false` and `PUBLICATION_PREVIEW_REVIEW=manual`. A successful automatic event therefore deploys a preview and records human acceptance as pending. It does not move the `chlorinec.top` production deployment. The Access-protected preview must not be accepted by mistaking its login page for rendered blog HTML.
+Current repository variables are `PUBLICATION_PRODUCTION_ENABLED=false` and `PUBLICATION_PREVIEW_REVIEW=manual`. A successful automatic event therefore deploys a preview and records human acceptance as pending. It does not move the `chlorinec.top` production deployment. This is a policy stop, not a pending GitHub environment approval: the production environment has no reviewer protection rules, and manual `production-retry` is rejected while production is disabled or preview review remains manual. The Access-protected preview must not be accepted by mistaking its login page for rendered blog HTML.
 
 Each dispatch binds the framework to the immutable main tip at that event. Before any enabled production upload, the workflow checks that framework main and the publication branch still match the candidate. A framework source change on main takes effect in a later publication build; source CI alone does not deploy the live blog. Production remains subject to a separately authorized policy change and the existing deployment gates. See [configuration and deployment](getting-started.md) for the immutable input contract and fork setup.
 

@@ -1,6 +1,6 @@
 # AUTO01 automatic production publication
 
-Status: in_progress
+Status: blocked
 
 ## Authorization and scope
 The owner explicitly requested saving approved Obsidian content to update the formal site. On 2026-09-09 the owner also approved the required Cloudflare account setup. Root owns shared workflow, project configuration and live integration. The bounded verifier worker owns the hosted verifier/test only.
@@ -24,3 +24,11 @@ Exact-head CI/merge, Access policy binding, protected preview acceptance, explic
 ## CI security follow-up
 
 Initial head 8dbee31 passed source CI but CodeQL flagged double entity decoding and incomplete script-end-tag text extraction. Root changed title decoding to a single pass and handled tolerated end-tag whitespace; two fixtures prove literal nested entities remain literal and non-rendered script/style text cannot satisfy the content check. No rule was disabled or alert dismissed. Updated exact-head security checks remain required before merge.
+
+## Merged implementation; activation checkpoint
+
+PR #11 merged as `f23f5b74cabe294f54f213415eee416a6d034ce6`. Candidate `4386ecdceda909614a46d212508e6060e57b35c5` passed CI run `34335563463` and all three CodeQL analyses plus the aggregate CodeQL gate. The fetched merge tree is identical to the accepted candidate. No alerts were dismissed.
+
+On 2026-09-09, live GitHub variables remain `PUBLICATION_PRODUCTION_ENABLED=false` and `PUBLICATION_PREVIEW_REVIEW=manual`. Cloudflare Zero Trust free activation succeeded with explicit user billing authorization; both Access secrets are stored, but the service token is not yet bound to the existing Pages application. Native Chrome exposes only a window title, and a fresh extension connection timed out. Screen lock is suspected, not proven. No source-save canary has run; automatic production is not yet enabled or accepted.
+
+Resume from branch `codex/automatic-production-activation-20260909` in `/tmp/term-blog-open-source-20260909`. Bind the existing token using a Service Auth policy while retaining human access, enable automatic preview review with production still disabled, accept an actual immutable protected preview, then enable production and observe source-save plus byte-exact restoration through the normal Sync/exporter events. Private recovery state and the guarded probe are under `/tmp/term-blog-open-source-audit-20260909/auto-production`. Do not recreate the existing service token or archive the change before live acceptance.

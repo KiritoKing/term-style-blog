@@ -1,0 +1,7 @@
+# Test design
+
+- Unit (Node built-in fixtures): complete route inventory and identity; stale/wrong identity; Access login 200; redirect credentials never forwarded; incomplete auth rejected; policy mismatch; missing routes/revision rejected.
+- Workflow regression: automatic-only stamp/verification, both modes, no secret artifacts, existing source freshness and serialization.
+- Existing deployment, unit, Astro check and strict build gates remain.
+- Hosted preview: real Access machine auth, all generated HTML routes, robots and immutable identity before production enabled.
+- E2E: preserve one eligible source file, save an exportable metadata change locally, observe Sync receiver + bridge + repository_dispatch + verified production revision, restore metadata and prove final site revision. Existing Chromium desktop/mobile interactions run in publication CI and one production browser smoke.

@@ -61,10 +61,10 @@ pnpm build:content
 
 ```text
 Obsidian Sync → Hermes 只读导出 → 独立 Git 内容快照
-             → GitHub Actions 校验与构建 → Cloudflare Pages 预览
+             → GitHub Actions 校验与构建 → 受保护预览逐页验收 → 正式站
 ```
 
-活跃 vault 以 Markdown 为事实源，Git 不向它反向同步。博客源代码仓库不包含真实 vault 或部署密钥。正式站已上线，后续内容变化目前先生成待验收的预览；自动生产保持关闭。
+活跃 vault 以 Markdown 为事实源，Git 不向它反向同步。博客源代码仓库不包含真实 vault 或部署密钥。正式站已上线；启用自动生产后，已准出文章的保存、更新和普通删除通过逐页验收后更新正式站。未配置实例仍默认关闭自动生产，失败与回退规则见[发布链路](docs/publication-pipeline.md)。
 
 **Fork 后先改个人配置再部署。** 域名、作者信息、Giscus、历史路径以及发布 workflow 都包含本站配置；不会因为 fork 就自动成为你的站点。详见[配置清单与部署边界](docs/getting-started.md)。
 

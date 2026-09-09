@@ -132,6 +132,8 @@ jobs:
         run: |
           test "$DEPLOYMENT_ENVIRONMENT" = production
           node operation/.agent/operations/cutover-20260909.mjs verify
+      - name: Wait for public routes to converge after deployment
+        run: node operation/.agent/operations/wait-production-ready.mjs
       - name: Verify public production indexing and content
         run: |
           curl --fail --retry 3 --max-time 45 https://chlorinec.top/ -o "$RUNNER_TEMP/blog-cutover/index.html"
@@ -141,8 +143,6 @@ jobs:
           ! grep -Eiq 'noindex' "$RUNNER_TEMP/blog-cutover/index.html"
           grep -Eq '^Allow: /$' "$RUNNER_TEMP/blog-cutover/robots.txt"
           ! grep -Eq '^Disallow: /$' "$RUNNER_TEMP/blog-cutover/robots.txt"
-      - name: Wait for public routes to converge after deployment
-        run: node operation/.agent/operations/wait-production-ready.mjs
       - name: Verify public production in real Chromium
         working-directory: framework
         env:

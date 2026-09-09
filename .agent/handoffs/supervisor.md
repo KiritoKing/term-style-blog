@@ -133,3 +133,11 @@ CI01 is done and unlocked; integration is PR #10. Legacy Vercel auto-deployment/
 ## AUTO01 authorized automatic production
 
 User explicitly requested save-to-production completion. Root owns workflow, Access configuration and live integration; verifier worker has exclusive script/test files. Default policy remains disabled until real protected preview acceptance. Plan/test design: openspec/changes/automatic-production-publication.
+
+## AUTO01 merged; live activation blocked
+
+PR #11 merged at f23f5b7 after final CI 34335563463 and all CodeQL checks passed; merge tree matches accepted candidate 4386ecd. Zero Trust free plan activated with user authorization and machine secrets stored. Browser controls remain unavailable, so the existing token is not yet bound to Service Auth and production remains false/manual. AUTO01 is blocked, with no source canary executed; implementation is accepted but live integration is pending. Root owns remaining activation work on codex/automatic-production-activation-20260909. See AUTO01 report/handoff for exact resume sequence. No additional plan adjustment proposed.
+
+## AUTO01 Access accepted; runtime integration repair
+
+Browser recovered, scoped Service Auth saved, protected preview34350240034 passed103 routes and production policy enabled. Real save propagated correctly into normal dispatch34350956620; production upload was blocked by missing pnpm on its independent runner. Root's bounded workflow fix installs pinned pnpm/Node and adds a failing-then-passing regression (43/43 tests). Code integration and repeat save/restoration acceptance remain pending. No production-success claim.

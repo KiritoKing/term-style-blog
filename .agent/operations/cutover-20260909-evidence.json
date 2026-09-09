@@ -1,0 +1,1763 @@
+{
+  "production": {
+    "framework_sha": "a206bc1d8fd631d48a85e3450985b1651a0c1e23",
+    "content_sha": "d9dbbe357e528ae654f5474046675fb45c0dfdbc",
+    "manifest_sha256": "75e86ac4805dc56a00113de367fd758f903814fae9217d8f31bce0260289a098",
+    "source_tree_hash": "7d2ae41c519325a28cfe3ad68e4c202821f4b89819d761ec81c01f8249aeb86c",
+    "deployment_id": "95b35f2f-6e71-42f9-a317-0d7a2e6cb374",
+    "environment": "production",
+    "url": "https://chlorinec.top",
+    "rollback_deployment": "b812bb89-7cb1-486c-85ba-511accf29896",
+    "old_git_production_enabled": false
+  },
+  "rollback": {
+    "deployment_id": "b812bb89-7cb1-486c-85ba-511accf29896",
+    "production_deployments_enabled": true,
+    "source_owner": "KiritoKing",
+    "source_repo": "notion-astro-rev",
+    "domains": [
+      "notion-astro-rev.pages.dev",
+      "chlorinec.top",
+      "www.chlorinec.top"
+    ]
+  },
+  "propagation-ready": {
+    "consecutive": 2,
+    "checks": [
+      {
+        "path": "/",
+        "status": 200,
+        "ready": true
+      },
+      {
+        "path": "/posts/KeePass",
+        "status": 200,
+        "ready": true
+      },
+      {
+        "path": "/posts/KeePass/",
+        "status": 200,
+        "ready": true
+      },
+      {
+        "path": "/search?q=rust",
+        "status": 200,
+        "ready": true
+      },
+      {
+        "path": "/search/?q=rust",
+        "status": 200,
+        "ready": true
+      }
+    ]
+  },
+  "completed_at": "2026-09-09T06:28:32.190760+00:00",
+  "ci": {
+    "run": 34318692710,
+    "url": "https://github.com/KiritoKing/term-style-blog/actions/runs/34318692710",
+    "operation_sha": "6446d4f8aa037a4ec55f51d4e3b32e337d78a4d7",
+    "conclusion": "success",
+    "unit_tests": 112,
+    "local_browser_tests": 26,
+    "hosted_browser_tests": 25,
+    "separate_historical_301_assertion": "passed",
+    "rollback_step": "skipped"
+  },
+  "production_route_verification": {
+    "total": 103,
+    "passed": 103,
+    "failed": [],
+    "routes": [
+      {
+        "route": "/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/__cutover_missing_page_20260909",
+        "status": 404,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow",
+        "artifact_route": "/404.html"
+      },
+      {
+        "route": "/posts/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/rog-ally-xbox-x-掌机折腾记录/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/评-不能继续助长部分中国大学生的好逸恶劳思潮/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/blog-solution/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/permutation/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/monorepo/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/optimize-terminal-with-opencode/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/page/6/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/page/4/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/page/3/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/page/2/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/page/5/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/deep-dive-react-redux/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/shell-shebang/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/flexbox-scroll-min-height/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/bun-hands-on/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/covariant-and-contravarirant/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/edge-model-runtime/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/all-about-dts/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/ssr-from-scratch/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/html-form/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/how-node-resolve-modules/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/what-is-best-leetcode-lang/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/js-event-loop/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/pnpm/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/deep-dive-react-hooks/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/reshaper-alternatives/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/my-brand-new-blog-system/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/do-u-need-memo-and-callback/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/npm-patch/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/edm/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/hands-on-docker/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/javascript-fundamentals/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/microservice-hands-on/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/arc-browser-alternative/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/win-dev-drive-hands-on/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/front-end-without-toolchain/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/ai-productivity-paradigm/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/yarn-berry/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/KeePass/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/hands-on-csx/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/js-debounce-and-throttle/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/my-ai-tools-recommendation/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/qmk-and-via-hands-on/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/module-for-browsers/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/global-types-in-monorepo/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/nvm-auto-switch/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/npm-peer-dependency/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/personal-review-fe-in-2023/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/weclone-practice/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/birthday-20th/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/vscode-profile/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/web-socket/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/network-fundamentals/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/codex-security-vertical-agent-customization/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/python-dev-env/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/npm/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/ref-callback/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/posts/shell-optimize/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/archive/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/about/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/tags/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/tags/monorepo/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/tags/nodejs/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/tags/page/2/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/tags/前端工具链/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/tags/架构设计/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/tags/opc/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/tags/ai硬件/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/tags/开发环境/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/tags/超级个体/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/tags/css/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/tags/typescript/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/tags/codex/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/tags/agent/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/tags/dotnet/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/tags/cicd/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/tags/端侧模型/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/tags/harness/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/tags/大模型/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/tags/软件工程/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/tags/ai/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/tags/linux/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/tags/每日一技/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/tags/本地推理/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/tags/javascript/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/tags/javascript/page/2/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/tags/ai agent/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/tags/全栈/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/tags/react/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/search/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/categories/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/categories/technology/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/categories/development/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/categories/development/page/4/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/categories/development/page/3/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/categories/development/page/2/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/categories/development/page/5/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/categories/life/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/categories/algorithm/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      },
+      {
+        "route": "/categories/ai/",
+        "status": 200,
+        "ok": true,
+        "title_matches": true,
+        "terminal": true,
+        "robots": "index, follow"
+      }
+    ],
+    "initial_failures": [
+      {
+        "route": "/404.html",
+        "status": 308,
+        "ok": false,
+        "title_matches": false,
+        "terminal": false,
+        "robots": ""
+      },
+      {
+        "route": "/posts/hands-on-docker/",
+        "ok": false,
+        "error": "URLError"
+      }
+    ]
+  },
+  "production_redirect_verification": {
+    "total": 162,
+    "passed": 162,
+    "failed": [],
+    "routes": [
+      {
+        "source": "/blog/nvm-auto-switch",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/nvm-auto-switch",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/my-ai-tools-recommendation",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/my-ai-tools-recommendation",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/module-for-browsers",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/module-for-browsers",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/all-about-dts",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/all-about-dts",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/vscode-profile",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/vscode-profile",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/my-brand-new-blog-system",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/my-brand-new-blog-system",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/arc-browser-alternative",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/arc-browser-alternative",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/2023/04/22/Development/blog-solution",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/post/development/blog-solution",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog-solution",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/blog-solution",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/2023/10/24/Development/bun-hands-on",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/post/development/bun-hands-on",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/bun-hands-on",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/bun-hands-on",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/2023/01/24/Development/covariant-and-contravarirant",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/post/development/covariant-and-contravarirant",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/covariant-and-contravarirant",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/covariant-and-contravarirant",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/2023/06/1/Development/deep-dive-react-hooks",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/post/development/deep-dive-react-hooks",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/deep-dive-react-hooks",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/deep-dive-react-hooks",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/2023/08/14/Development/deep-dive-react-redux",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/post/development/deep-dive-react-redux",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/deep-dive-react-redux",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/deep-dive-react-redux",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/2023/08/24/Development/do-u-need-memo-and-callback",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/post/development/do-u-need-memo-and-callback",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/do-u-need-memo-and-callback",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/do-u-need-memo-and-callback",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/2023/03/20/Development/edm",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/post/development/edm",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/edm",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/edm",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/2024/03/30/Development/front-end-without-toolchain",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/post/development/front-end-without-toolchain",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/front-end-without-toolchain",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/front-end-without-toolchain",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/2023/07/11/Development/hands-on-docker",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/post/development/hands-on-docker",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/hands-on-docker",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/hands-on-docker",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/2024/02/18/Development/how-node-resolve-modules",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/post/development/how-node-resolve-modules",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/how-node-resolve-modules",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/how-node-resolve-modules",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/2023/05/31/Development/html-form",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/post/development/html-form",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/html-form",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/html-form",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/2023/05/16/Development/javascript-fundamentals",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/post/development/javascript-fundamentals",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/javascript-fundamentals",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/javascript-fundamentals",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/2023/05/24/Development/js-debounce-and-throttle",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/post/development/js-debounce-and-throttle",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/js-debounce-and-throttle",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/js-debounce-and-throttle",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/2023/04/26/Development/js-event-loop",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/post/development/js-event-loop",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/js-event-loop",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/js-event-loop",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/2023/05/25/Development/microservice-hands-on",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/post/development/microservice-hands-on",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/microservice-hands-on",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/microservice-hands-on",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/2023/08/6/Development/mobile-web-dev",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/post/development/mobile-web-dev",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/mobile-web-dev",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/mobile-web-dev",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/2023/05/26/Development/monorepo",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/post/development/monorepo",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/monorepo",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/monorepo",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/2023/05/24/Development/npm-peer-dependency",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/post/development/npm-peer-dependency",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/npm-peer-dependency",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/npm-peer-dependency",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/2023/05/18/Development/network-fundamentals",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/post/development/network-fundamentals",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/network-fundamentals",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/network-fundamentals",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/2024/01/30/Development/personal-review-fe-in-2023",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/post/development/personal-review-fe-in-2023",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/personal-review-fe-in-2023",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/personal-review-fe-in-2023",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/2023/06/9/Development/pnpm",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/post/development/pnpm",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/pnpm",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/pnpm",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/2023/06/6/Development/npm",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/post/development/npm",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/npm",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/npm",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/2023/09/4/Development/ref-callback",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/post/development/ref-callback",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/ref-callback",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/ref-callback",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/2023/07/13/Development/shell-shebang",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/post/development/shell-shebang",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/shell-shebang",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/shell-shebang",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/2023/09/21/Development/ssr-from-scratch",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/post/development/ssr-from-scratch",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/ssr-from-scratch",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/ssr-from-scratch",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/2023/04/12/Development/what-is-best-leetcode-lang",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/post/development/what-is-best-leetcode-lang",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/what-is-best-leetcode-lang",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/what-is-best-leetcode-lang",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/2023/07/9/Development/web-socket",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/post/development/web-socket",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/web-socket",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/web-socket",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/2023/06/8/Development/yarn-berry",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/post/development/yarn-berry",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/yarn-berry",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/yarn-berry",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/2022/01/28/Life/评好逸恶劳大学生",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/post/life/评好逸恶劳大学生",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/评好逸恶劳大学生",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/评好逸恶劳大学生",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/2021/12/2/Life/20岁随笔",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/post/life/20岁随笔",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/20岁随笔",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/20岁随笔",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/2023/04/19/Research/permutation",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/post/research/permutation",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/permutation",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/permutation",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/2023/05/23/Technology/KeePass",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/post/technology/keepass",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/KeePass",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/KeePass",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/2023/04/11/Technology/hands-on-csx",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/post/technology/hands-on-csx",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/hands-on-csx",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/hands-on-csx",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/2023/07/9/Technology/python-dev-env",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/post/technology/python-dev-env",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/python-dev-env",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/python-dev-env",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/2023/02/14/Technology/reshaper-alternatives",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/post/technology/reshaper-alternatives",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/reshaper-alternatives",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/reshaper-alternatives",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/2023/08/6/Technology/shell-optimize",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/post/technology/shell-optimize",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/shell-optimize",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/shell-optimize",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/2023/11/15/Technology/win-dev-drive-hands-on",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/post/technology/win-dev-drive-hands-on",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/win-dev-drive-hands-on",
+        "status": 301,
+        "ok": true
+      },
+      {
+        "source": "/blog/win-dev-drive-hands-on",
+        "status": 301,
+        "ok": true
+      }
+    ],
+    "initial_failures": [
+      {
+        "source": "/reshaper-alternatives",
+        "ok": false,
+        "error": "URLError"
+      }
+    ]
+  },
+  "endpoints": {
+    "www": {
+      "status": 200,
+      "url": "https://www.chlorinec.top/",
+      "terminal": true
+    },
+    "rss": {
+      "status": 200,
+      "url": "https://chlorinec.top/rss.xml",
+      "article_count": 53
+    },
+    "sitemap": {
+      "status": 200,
+      "url": "https://chlorinec.top/sitemap.xml",
+      "urls": 91
+    },
+    "robots": {
+      "status": 200,
+      "url": "https://chlorinec.top/robots.txt",
+      "allows_indexing": true
+    }
+  },
+  "future_publication_policy": {
+    "PUBLICATION_PRODUCTION_ENABLED": "false",
+    "PUBLICATION_PREVIEW_REVIEW": "manual"
+  }
+}

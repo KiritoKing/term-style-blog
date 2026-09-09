@@ -1,0 +1,31 @@
+name: Bug report / 问题反馈
+description: Report a reproducible problem with the blog source.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: 'Security issue? Please use the private reporting link in SECURITY.md. Do not include credentials or private notes.'
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit / 版本
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce / 复现步骤
+      description: Use a minimal example with synthetic Markdown.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected and actual behavior / 预期与实际表现
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment / 环境
+      description: Browser, OS, viewport, Node.js and pnpm versions; sanitized screenshots if relevant.

@@ -1,2 +1,2 @@
-overrides:
-  '@ntcho/notion-astro-loader': link:../../../Library/pnpm/global/5/node_modules/@ntcho/notion-astro-loader
+# Single-package site; dependencies are resolved only through pnpm-lock.yaml.
+{}

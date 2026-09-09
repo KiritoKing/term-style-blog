@@ -485,3 +485,18 @@ test("package and both workflows run the deployment validator suite", async () =
     /Run publication deployment validator tests[\s\S]+run: pnpm test:deployment/,
   );
 });
+
+test("public pull requests and forks cannot enter the personal deployment path", async () => {
+  const publication = await readFile(new URL("../.github/workflows/deploy-publication.yml", import.meta.url), "utf8");
+  const offline = await readFile(new URL("../.github/workflows/ci.yml", import.meta.url), "utf8");
+  const prepare = publication.slice(publication.indexOf("  prepare:"), publication.indexOf("  build_preview:"));
+  assert.match(prepare, /if: github\.repository == 'KiritoKing\/term-style-blog' && github\.ref == 'refs\/heads\/main'/);
+  assert.doesNotMatch(publication, /pull_request(?:_target)?:/);
+  assert.match(offline, /pull_request:/);
+  assert.doesNotMatch(offline, /pull_request_target|secrets\.|VAULT_CONTENTS_READ_KEY|CLOUDFLARE_API_TOKEN|self-hosted/);
+  assert.match(offline, /permissions:\n  contents: read/);
+  assert.match(offline, /persist-credentials: false/);
+  const actions = [...offline.matchAll(/uses:\s*([^\s#]+)/g)].map((match) => match[1]);
+  assert.ok(actions.length >= 3);
+  for (const action of actions) assert.match(action, /^[\w.-]+\/[\w.-]+@[a-f0-9]{40}$/);
+});

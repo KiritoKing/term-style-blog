@@ -45,6 +45,7 @@ defaults:
 
 jobs:
   prepare:
+    if: github.repository == 'KiritoKing/term-style-blog' && github.ref == 'refs/heads/main'
     name: Validate immutable inputs
     runs-on: ubuntu-latest
     timeout-minutes: 5

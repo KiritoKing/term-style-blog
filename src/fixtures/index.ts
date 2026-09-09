@@ -84,7 +84,7 @@ export function getFixturePost(slug: string): BlogPostFixture | null {
   const result = blogPostFixtureSchema.safeParse(frontmatter);
   
   if (!result.success) {
-    console.warn(`Fixture "${slug}" has invalid schema:`, result.error.errors);
+    console.warn(`Fixture "${slug}" has invalid schema:`, result.error.issues);
     return null;
   }
   

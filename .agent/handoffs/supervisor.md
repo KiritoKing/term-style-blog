@@ -121,3 +121,7 @@ B07 fixes the real exporter-v1 consumer mismatch without changing producer or sn
 ## 2026-09-09 Root accepted B07
 
 B07 is done, synced/archived and unlocked. Root independently passed the 23 deployment tests and exact failed 54-file immutable snapshot. Next: latest-SHA CI, merge and a fresh add/update/delete automatic preview E2E. First-round synthetic source has been deleted and its tree returned to the 53-file baseline; no production cutover occurred.
+
+## 2026-09-09 open-source release
+
+OSS01 in progress on codex/open-source-release-20260909 from a206bc1. User authorizes repository configuration, documentation, licensing and public visibility without another review. Root owns shared files; independent security/provenance reviewers only write outside the source worktree. Preserve live production and private vault. Release gates and scope are in openspec/changes/open-source-release and tasks.yaml. Audit contracts are private operational artifacts, not runtime dependencies.

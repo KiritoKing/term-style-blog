@@ -1020,14 +1020,14 @@ tasks:
   priority: P1
   objective: Publish the personal blog source with verified licensing, docs and public contribution boundaries
   deps: [B07]
-  status: in_progress
-  owner_session: codex-root
-  branch: codex/open-source-release-20260909
-  allowed_paths: [README.md, README.en.md, LICENSE, NOTICE.md, CONTRIBUTING.md, SECURITY.md, CODE_OF_CONDUCT.md, CHANGELOG.md, astro.config.mjs, src/fixtures/index.ts, src/fixtures/schema.ts, package.json, pnpm-workspace.yaml, pnpm-lock.yaml, .env.example, .gitignore, .github/**, docs/**, tests/validate-publication-snapshot.test.mjs, openspec/**, .agent/**]
-  locked_paths: [astro.config.mjs, src/fixtures/index.ts, src/fixtures/schema.ts, package.json, pnpm-workspace.yaml, pnpm-lock.yaml, .github/**, tests/validate-publication-snapshot.test.mjs]
-  relevant_specs: [openspec/specs/publication-deployment/spec.md, openspec/changes/open-source-release]
+  status: done
+  owner_session: null
+  branch: codex/open-source-release-closeout-20260909
+  allowed_paths: [README.md, README.en.md, LICENSE, NOTICE.md, CONTRIBUTING.md, SECURITY.md, CODE_OF_CONDUCT.md, CHANGELOG.md, astro.config.mjs, src/fixtures/index.ts, src/fixtures/schema.ts, package.json, pnpm-workspace.yaml, pnpm-lock.yaml, .env.example, .gitignore, .github/**, docs/**, tests/validate-publication-snapshot.test.mjs, tests/e2e/terminal-security.spec.ts, openspec/**, .agent/**]
+  locked_paths: []
+  relevant_specs: [openspec/specs/publication-deployment/spec.md, openspec/changes/archive/2026-09-09-open-source-release]
   required_tests: [history_secret_review, attribution_review, workflow_boundary, fixture_build, unit, deployment, browser, documentation_links, public_readback]
-  acceptance_commands: [pnpm install --frozen-lockfile, pnpm test, pnpm test:deployment, pnpm check, pnpm build, pnpm test:e2e, openspec validate open-source-release --strict, git diff --check]
+  acceptance_commands: [pnpm install --frozen-lockfile, pnpm test, pnpm test:deployment, pnpm check, pnpm build, pnpm test:e2e, openspec validate open-source-distribution --type spec --strict, git diff --check]
   report: .agent/reports/OSS01-open-source-release.md
   handoff: .agent/handoffs/OSS01-open-source-release.md
   blocked_by: []

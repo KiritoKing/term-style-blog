@@ -152,8 +152,9 @@ jobs:
           cat > playwright.production.config.ts <<'CONFIG'
           import { defineConfig } from '@playwright/test';
           import base from './playwright.config';
-          export default defineConfig({...base, webServer: undefined, use: {...base.use, baseURL: 'https://chlorinec.top'}});
+          export default defineConfig({...base, testDir: './tests/hosted-e2e', webServer: undefined, use: {...base.use, baseURL: 'https://chlorinec.top'}});
           CONFIG
+          node ../operation/.agent/operations/prepare-hosted-tests.mjs .
           pnpm exec playwright test --config playwright.production.config.ts --grep-invert "serves historical redirects as 301"
           node --input-type=module -e 'import assert from "node:assert/strict";const r=await fetch("https://chlorinec.top/post/technology/keepass",{redirect:"manual"});assert.equal(r.status,301);assert.equal(new URL(r.headers.get("location"),"https://chlorinec.top").href,"https://chlorinec.top/posts/KeePass");'
       - name: Restore captured state if deployment or acceptance fails

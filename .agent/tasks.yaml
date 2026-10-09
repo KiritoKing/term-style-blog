@@ -1117,3 +1117,22 @@ tasks:
   blocked_by: []
   unblock_when: Code and protected synthetic review preview authorized; parent owns public hosting approval and Portal login/submission
   last_updated: 2026-10-09
+
+- id: DEMO01
+  change: public-theme-demo
+  objective: Publish an independent anonymous synthetic-only Astro theme demo using existing controlled Pages capability
+  priority: P1
+  deps: [OSS02]
+  status: in_progress
+  owner_session: codex-cloud-public-demo-20261009
+  branch: feat/public-theme-demo
+  allowed_paths: [.github/workflows/public-theme-demo.yml, scripts/public-demo, tests/deployment/public-demo.test.mjs, docs, README.md, README.en.md, openspec/changes/public-theme-demo, openspec/specs/public-theme-demo, .agent]
+  locked_paths: [.github/workflows/public-theme-demo.yml, scripts/public-demo, tests/deployment/public-demo.test.mjs]
+  relevant_specs: [openspec/specs/ci-workflow-roles/spec.md, openspec/specs/publication-deployment/spec.md, openspec/specs/open-source-distribution/spec.md, openspec/changes/public-theme-demo]
+  required_tests: [quota_contract, anonymous_origin, static_limits, workflow_boundary, frozen_install, unit, deployment, check, both_profile_build, chromium, anonymous_hosted, openspec_validation]
+  acceptance_commands: ["pnpm install --frozen-lockfile", "pnpm test", "pnpm test:deployment", "pnpm check", "pnpm build", "pnpm test:e2e", "SITE_PROFILE=chlorine pnpm build", "SITE_PROFILE=chlorine pnpm test:e2e", "openspec validate public-theme-demo --strict", "git diff --check"]
+  report: .agent/reports/DEMO01-public-theme-demo.md
+  handoff: .agent/handoffs/DEMO01-public-theme-demo.md
+  blocked_by: []
+  unblock_when: Owner explicitly approved dedicated Pages creation on 2026-10-09; existing permissions and account quota must pass controlled checks
+  last_updated: 2026-10-09

@@ -20,7 +20,7 @@ async function get(path) {
 }
 validateIdentity(JSON.parse(await get('/_feature-preview.json')));
 assert.equal(JSON.parse(await get('/_feature-preview.json')).framework_sha, local.framework_sha);
-verifyHtml(await get('/posts/image-lightbox-demo'), local.framework_sha);
+verifyHtml(await get('/posts/image-lightbox-demo/'), local.framework_sha);
 assert.match(await get('/robots.txt'), /Disallow:\s*\//);
 
 await mkdir('preview-evidence', { recursive: true });
@@ -39,7 +39,7 @@ try {
         await route.continue({ headers: { ...request.headers(), ...headers } });
       });
       const page = await context.newPage();
-      await page.goto(`${origin}/posts/image-lightbox-demo`);
+      await page.goto(`${origin}/posts/image-lightbox-demo/`);
       assert.equal(await page.locator('html').getAttribute('data-feature-preview-sha'), local.framework_sha);
       await page.waitForFunction((dark) => document.documentElement.classList.contains('dark') === dark, dark);
       const opener = page.locator('.article-image-trigger').first();
@@ -67,6 +67,6 @@ try {
 } finally {
   await browser.close();
 }
-const record = { framework_sha: local.framework_sha, preview_url: origin, fixture_url: `${origin}/posts/image-lightbox-demo`, mode: 'preview', content_source: 'repository-demo', browser: 'Chromium', hosted_acceptance: 'passed', measurements };
+const record = { framework_sha: local.framework_sha, preview_url: origin, fixture_url: `${origin}/posts/image-lightbox-demo/`, mode: 'preview', content_source: 'repository-demo', browser: 'Chromium', hosted_acceptance: 'passed', measurements };
 await writeFile('preview-evidence/deployment-record.json', JSON.stringify(record, null, 2) + '\n');
 console.log(JSON.stringify(record));

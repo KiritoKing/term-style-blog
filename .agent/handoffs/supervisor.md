@@ -190,3 +190,8 @@ PR20add0d508(CI48) andPR1610a2c054(CI50)bothconfigurations pass and exact-head A
 ## 2026-10-09 DEMO01 accepted
 
 Authorized project term-style-blog-demo created after7/100quota check; only public-demo preview contains neutral synthetic/noindex output, reserved production branch unused. Integrated dependency SHA bd42568 passes CI52 and anonymous demo5run37907255584,25routes/fourChromiumwidththemes with gestures/Escape/focus/repeat/Astro/links. Hosted screenshot artifact11605325948 and four separately captured same-code local Library screenshots recorded in report; local hosted-artifact download blocked403, no bypass. New two-requirement spec synced/archived,DEMOdone/locksreleased. Final documentation SHA acceptance tracked in PR25 metadata. No merge/production/oldblogAccess/privatecontent/Notion/newcredential/OAuth/paidchange. Owner Portal login/admin and stacked PR review remain. No additional plan adjustment suggested.
+
+
+## DEMO01 QA raster identity correction
+
+Owner QA found a personalized username inside landscape image pixels. Root neutralizes only title region to guest@blog with zero unrelated pixel changes, updates catalogue viewer screenshot and same Library identity(version1). Test-first anonymous image-byte digest regression12/68passes;122unit/check/build/15relatedChromium/33specpasses, audit3unchanged. Existing neutral synthetic public-demo contract governs; no new plan/UI/browser-dependency change. Exact correctionSHA receives CI/anonymoushash+stableimage/browserproof before final delivery, recorded in PR25/externalJSON. No merge/production/Access operation.

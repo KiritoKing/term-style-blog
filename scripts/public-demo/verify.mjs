@@ -3,7 +3,7 @@ import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 import { join, relative } from 'node:path';
 import { chromium } from '@playwright/test';
 import { validateIdentity, verifyHtml } from '../feature-preview/identity.mjs';
-import { PUBLIC_ORIGIN, validatePublicOrigin, fetchAnonymous } from './control.mjs';
+import { PUBLIC_ORIGIN, validatePublicOrigin, fetchAnonymous, verifyAssetBytes } from './control.mjs';
 
 const local = validateIdentity(JSON.parse(await readFile('dist/_feature-preview.json', 'utf8')));
 assert.equal(local.framework_sha, process.env.FRAMEWORK_SHA);
@@ -43,6 +43,16 @@ validateIdentity(JSON.parse(await get('/_feature-preview.json')));
 assert.equal(JSON.parse(await get('/_feature-preview.json')).framework_sha, local.framework_sha);
 verifyHtml(await get('/posts/image-lightbox-demo/'), local.framework_sha);
 assert.match(await get('/robots.txt'), /Disallow:\s*\//);
+// HTML identity cannot reveal old text baked into a cached raster image.
+const assetSha256 = {};
+for (const name of ['lightbox-landscape.png', 'lightbox-portrait.png']) {
+  const expected = await readFile(join('dist/demo', name));
+  for (const base of [origin, PUBLIC_ORIGIN]) {
+    const response = await fetchAnonymous(`${base}/demo/${name}`, propagation);
+    assert.equal(response.status, 200, 'Reviewed synthetic raster must load anonymously');
+    assetSha256[name] = verifyAssetBytes(Buffer.from(await response.arrayBuffer()), expected);
+  }
+}
 if (isThemePreview) {
   const home = await get('/');
   assert.match(home, /<meta name="author" content="Demo Author"/);
@@ -175,6 +185,6 @@ try {
 } finally {
   await browser.close();
 }
-const record = { framework_sha: local.framework_sha, preview_url: origin, fixture_url: `${origin}/posts/image-lightbox-demo/`, mode: 'preview', content_source: 'repository-demo', profile: 'template', browser: 'Chromium', hosted_acceptance: 'passed', anonymous: true, stable_url: PUBLIC_ORIGIN, html_routes: routes.length, measurements };
+const record = { framework_sha: local.framework_sha, preview_url: origin, fixture_url: `${origin}/posts/image-lightbox-demo/`, mode: 'preview', content_source: 'repository-demo', profile: 'template', browser: 'Chromium', hosted_acceptance: 'passed', anonymous: true, stable_url: PUBLIC_ORIGIN, html_routes: routes.length, asset_sha256: assetSha256, measurements };
 await writeFile('preview-evidence/deployment-record.json', JSON.stringify(record, null, 2) + '\n');
 console.log(JSON.stringify(record));

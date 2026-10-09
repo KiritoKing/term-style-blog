@@ -124,3 +124,10 @@ test('public demo workflow is owned, synthetic, SHA-bound, secret-free before de
   assert.doesNotMatch(workflow.split('\n  deploy:')[0], /secrets\./);
   assert.doesNotMatch(workflow, /CF_ACCESS|VAULT|PRIVATE_CONTENT|CONTENT_DEPLOY_KEY|environment: production|pull_request_target|--branch=main|--branch=reserved/);
 });
+
+
+test('anonymous raster acceptance rejects a stale image and records exact approved bytes', async () => {
+  const { verifyAssetBytes } = await import('../../scripts/public-demo/control.mjs');
+  assert.match(verifyAssetBytes(Buffer.from('neutral approved PNG'), Buffer.from('neutral approved PNG')), /^[a-f0-9]{64}$/);
+  assert.throws(() => verifyAssetBytes(Buffer.from('old personalized PNG'), Buffer.from('neutral approved PNG')), /stale.*asset/i);
+});

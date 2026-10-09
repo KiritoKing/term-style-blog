@@ -1,15 +1,15 @@
 # Handoff: DEMO01 public-theme-demo
 
-Status: in_progress
-Owner: Codex Cloud integration
+Status: done
+Owner: none
 Branch: feat/public-theme-demo
 Last updated: 2026-10-09
 
 Objective: independent anonymous synthetic theme demo.
-Relevant specs: public-theme-demo active, existing publication/CI/open-source specs.
-Allowed paths and locks: see tasks.yaml DEMO01; no package/lock/source/production workflow changes.
-Completed: test-first8 Node,64 deployment,122 unit,check,both builds,template33/owner32 Chromium,actionlint and strict spec.
-In progress: draft stacked PR and controlled quota/create/deploy.
-Blocked by: none yet; report permission/quota/Access issues without widening.
-Next actions: inspect exact-SHA remote results, anonymous browser, screenshots, docs/spec/state closeout.
-Risks: Chromium only; no private corpus. No merge, production, Access, OAuth, token extraction or paid-plan change.
+Relevant specs: openspec/specs/public-theme-demo/spec.md and archive/2026-10-09-public-theme-demo; publication/CI/open-source specs.
+Allowed paths and locks: tasks.yaml DEMO01; all released. Reviewed dependency integration included package/lock as authorized.
+Completed: test-first11Node/67deployment/122unit,0errorcheck,template33owner32Chromium,bothbuilds,strictspec/actionlint.
+Remote: CI52 and demo5run37907255584 passed on bd42568c161243c3bad2668b7e9475b11392e6cf. Anonymous public-demo.term-style-blog-demo.pages.dev and4662320b hash validate25routes/fourwidththeme combinations. Hosted artifact11605325948 preserves actual screenshots. Four same-code local screenshots saved to Library; hosted attachment local download blocked403.
+Blocked by: no deployment blocker; Portal login/submission is owner-only.
+Next actions: owner reviews stacked PR24→20→16→25, retarget after merges;18independent,22superseded. Never auto-merge. Final documentation SHA gets fresh remote acceptance in PR25 body and /workspace/public-demo-delivery.json.
+Risks: Chromium only/private corpus skipped; audit3plus unconfirmed http-cache risk per dependency-review.md. No new browser JS/direct dependency or production/private/Access/credential/paid operation.

@@ -6,6 +6,8 @@
 
 A reusable **Astro 7, React 19, TypeScript and Tailwind CSS 4** blog theme with a retro terminal interface. Start with a neutral identity and synthetic Markdown posts, then customize one typed `site.config.ts` file. Comments and inherited owner redirects are disabled by default.
 
+[Public demo](https://public-demo.term-style-blog-demo.pages.dev/) · [Image viewer demo](https://public-demo.term-style-blog-demo.pages.dev/posts/image-lightbox-demo/). This independent Pages project serves only neutral synthetic content; the personal blog and protected review preview remain separate.
+
 ![Neutral synthetic homepage in dark mode](docs/images/terminal-blog.png)
 
 ## Features
@@ -62,7 +64,7 @@ Upload `dist/` to a static host. Use `PUBLIC_DEPLOYMENT_ENV=preview` for noindex
 
 Screenshots show only synthetic examples: [article/light](docs/images/article-light.png), [mobile/dark](docs/images/mobile-dark.png), [viewer/light](docs/images/viewer-light.png). Attribution is in [NOTICE](NOTICE.md).
 
-[Astro Themes submission material](docs/astro-theme-submission.md) contains a description, setup and asset checklist. The current authenticated review preview is not a public catalogue demo. Public demo hosting and Portal submission remain maintainer steps.
+[Astro Themes submission material](docs/astro-theme-submission.md) contains a description, setup and asset checklist. The independent anonymous demo is ready. The protected review preview remains separate; Portal login/OAuth/submission/admin review belong to the maintainer.
 
 ## License and contribution
 

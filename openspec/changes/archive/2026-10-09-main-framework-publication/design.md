@@ -27,7 +27,7 @@ All tests use synthetic environments, injected fetch responses, temporary git re
 - node unit: push mode true/automatic and defaults, deleted/non-main/fork/PR rejection, immutable SHA and missing input failures; existing event/manual tests remain.
 - workflow regression: main trigger/no PR, exact SHA handoff, fixed sparse checkout, failure dependencies, read-only permissions, production environment, locks, two freshness checks and acceptance order.
 - concurrency integration: execute actual freshness shell with temporary git remotes; current candidate passes, advanced framework/content or wrong checkout fails before upload.
-- real-corpus browser acceptance: synthetic demo suite is fixture-only; discover unlinked body image routes from built publication HTML and test open/zoom/Escape/focus/Astro navigation/repeated close. No private article slug hardcoded.
+- real-corpus browser acceptance: synthetic demo suite is fixture-only; discover unlinked body image routes from built publication HTML and test open/zoom/Escape/focus/Astro navigation/repeated close. No private article slug hardcoded. Valid snapshots without unlinked body images skip only this specialized check; synthetic fixture CI still covers the feature.
 - openspec_validation, complete deployment/unit suites, Astro type check and public fixture build. Existing browser acceptance remains in publication and CI; no UI implementation changes.
 
 ## Migration Plan

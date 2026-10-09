@@ -135,6 +135,7 @@ test("publication browser acceptance never requires the synthetic demo route", a
   assert.match(real, /test\.skip\(process\.env\.E2E_REAL_CORPUS !== '1'/);
   assert.doesNotMatch(real, /\/posts\/image-lightbox-demo|KiritoKing\/llm-obsidian|CONTENT_DIR/);
   assert.match(real, /imageArticles\(/);
+  assert.match(real, /test\.skip\(!article,/);
 });
 
 test("actual workflow freshness gate rejects older branch tips and wrong checkout before upload", async () => {

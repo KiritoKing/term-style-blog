@@ -25,6 +25,8 @@ Test design was written before implementation. New initial RED: 1 pass / 6 fail 
 - Node --check all three changed scripts: pass.
 - OpenSpec change strict validation and git diff --check: pass.
 
+- Real-only image acceptance against a text-only derivative of the public synthetic artifact: 1 expected skip; original built HTML restored byte-for-byte. Valid all-text content cannot be blocked by this specialized image gate.
+
 No dependencies/client JS added. No secrets read, copied or created. GITHUB_TOKEN remains contents:read. Implementation commit fd373197ddbc6c129effef72161f7dd5d5426ab5 passed exact-head CI #38: https://github.com/KiritoKing/term-style-blog/actions/runs/37896199094. Draft PR #23: https://github.com/KiritoKing/term-style-blog/pull/23. Specs synced and change archived at openspec/changes/archive/2026-10-09-main-framework-publication; locks released. Final documentation/archive commit CI evidence will be bound to the final PR head in the PR description.
 
 ## Deployment effects and limits

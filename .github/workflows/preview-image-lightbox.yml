@@ -1,0 +1,122 @@
+name: Isolated image viewer preview
+
+on:
+  push:
+    branches: [feat/post-image-lightbox]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: feature-preview-image-lightbox
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.repository == 'KiritoKing/term-style-blog' && github.ref == 'refs/heads/feat/post-image-lightbox'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CI: true
+      CONTENT_DIR: src/content/blog
+      PUBLIC_DEPLOYMENT_ENV: preview
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - run: test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+        with:
+          version: 10.28.0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24.14.0
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test
+      - run: pnpm test:deployment
+      - run: pnpm check
+      - run: pnpm build
+      - run: node scripts/validate-publication-snapshot.mjs site --root dist --mode preview
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm test:e2e
+      - name: Stamp immutable public-demo identity
+        env:
+          FRAMEWORK_SHA: ${{ github.sha }}
+        run: node scripts/feature-preview/stamp.mjs
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: image-viewer-preview-${{ github.sha }}
+          path: dist
+          if-no-files-found: error
+          retention-days: 7
+      - name: Preserve public browser screenshots
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: image-viewer-browser-${{ github.sha }}
+          path: test-results/**/*.png
+          if-no-files-found: ignore
+          retention-days: 7
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+        with:
+          version: 10.28.0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24.14.0
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: image-viewer-preview-${{ github.sha }}
+          path: dist
+      - name: Verify downloaded identity and preview policy
+        env:
+          FRAMEWORK_SHA: ${{ github.sha }}
+        run: |
+          node --input-type=module -e 'import fs from "node:fs";import assert from "node:assert/strict";import {validateIdentity} from "./scripts/feature-preview/identity.mjs";const identity=validateIdentity(JSON.parse(fs.readFileSync("dist/_feature-preview.json","utf8")));assert.equal(identity.framework_sha,process.env.FRAMEWORK_SHA);'
+          node scripts/validate-publication-snapshot.mjs site --root dist --mode preview
+      - name: Deploy public demo to isolated Pages branch
+        id: preview
+        uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: 4.130.0
+          command: >-
+            pages deploy dist
+            --project-name=notion-astro-rev
+            --branch=feature-image-lightbox
+            --commit-hash=${{ github.sha }}
+            --commit-message="public image viewer demo"
+      - run: pnpm exec playwright install --with-deps chromium
+      - name: Verify exact hosted image viewer through existing Access
+        env:
+          FRAMEWORK_SHA: ${{ github.sha }}
+          PREVIEW_URL: ${{ steps.preview.outputs.deployment-url }}
+          DEPLOYMENT_ENVIRONMENT: ${{ steps.preview.outputs.pages-environment }}
+          CF_ACCESS_CLIENT_ID: ${{ secrets.CF_ACCESS_CLIENT_ID }}
+          CF_ACCESS_CLIENT_SECRET: ${{ secrets.CF_ACCESS_CLIENT_SECRET }}
+        run: |
+          test "$DEPLOYMENT_ENVIRONMENT" = preview
+          node scripts/feature-preview/verify.mjs
+          cat preview-evidence/deployment-record.json >> "$GITHUB_STEP_SUMMARY"
+      - name: Preserve hosted screenshots and SHA evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: image-viewer-hosted-${{ github.sha }}
+          path: preview-evidence
+          if-no-files-found: ignore
+          retention-days: 30

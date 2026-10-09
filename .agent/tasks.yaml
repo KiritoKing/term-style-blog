@@ -555,39 +555,51 @@ tasks:
 - id: R13
   change: image-lightbox-viewer
   priority: P2
-  objective: Add keyboard-accessible image lightbox viewing for body images and covers.
-  deps:
-  - R12
-  status: blocked
+  objective: User-authorized body-image viewer with operation-only footer and isolated public-demo preview; historical cover scope remains outside this delivery.
+  deps: [R12]
+  status: done
   owner_session: null
-  branch: codex/R13-image-lightbox-viewer
+  branch: feat/post-image-lightbox
   allowed_paths:
-  - src/components/**
-  - src/styles/**
-  - tests/**
+  - src/components/ImageLightbox.astro
+  - src/scripts/image-lightbox.ts
+  - src/scripts/image-panzoom.ts
+  - src/pages/posts/[id].astro
+  - src/styles/global.css
+  - src/content/blog/image-lightbox-demo.md
+  - public/demo/**
+  - package.json
+  - pnpm-lock.yaml
+  - playwright.config.ts
+  - tests/e2e/image-lightbox.spec.ts
+  - tests/deployment/feature-preview.test.mjs
+  - scripts/feature-preview/**
+  - .github/workflows/preview-image-lightbox.yml
   - openspec/changes/**
+  - openspec/specs/image-lightbox-viewer/**
+  - openspec/specs/ci-workflow-roles/spec.md
   - .agent/**
-  locked_paths:
-  - src/components/**
-  - tests/**
+  locked_paths: []
   relevant_specs:
-  - openspec/specs/blog-post-pages/spec.md
   - openspec/specs/typography-rendering/spec.md
-  required_tests:
-  - component_or_e2e
-  - keyboard_accessibility
+  - openspec/specs/mobile-reading-experience/spec.md
+  - openspec/specs/publication-deployment/spec.md
+  - openspec/specs/ci-workflow-roles/spec.md
+  - openspec/changes/archive/2026-10-09-image-lightbox-viewer
+  required_tests: [component_or_e2e, keyboard_accessibility, axe_smoke, deployment_policy]
   acceptance_commands:
-  - pnpm test:unit
-  - pnpm test:e2e -- --grep lightbox
-  - pnpm astro check
+  - pnpm test
+  - pnpm test:deployment
+  - pnpm check
+  - pnpm build
+  - pnpm test:e2e
+  - openspec validate image-lightbox-viewer --type spec --strict
   - git diff --check
   report: .agent/reports/R13-image-lightbox-viewer.md
   handoff: .agent/handoffs/R13-image-lightbox-viewer.md
-  blocked_by:
-  - R12
-  - phase-gate:P1
-  unblock_when: Cover image pipeline and P1 launch baseline are accepted.
-  last_updated: 2026-06-08T23:51:08+0800
+  blocked_by: []
+  unblock_when: Explicit user body-image scope authorization supersedes historical R12/P1 gate; current Markdown image pipeline and Chromium harness exist on accepted main.
+  last_updated: 2026-10-09
 - id: R14
   change: post-navigation-and-archive
   priority: P2

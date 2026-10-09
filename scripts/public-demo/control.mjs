@@ -12,6 +12,23 @@ export function validatePublicOrigin(value) {
   return url.origin;
 }
 
+export async function fetchAnonymous(value, { fetcher = fetch, deadline = Date.now() + 180000, pause = ms => new Promise(resolve => setTimeout(resolve, ms)), onRetry = () => {} } = {}) {
+  const url = new URL(value);
+  validatePublicOrigin(url.origin);
+  assert.ok(!url.username && !url.password, 'Anonymous request cannot carry URL credentials');
+  for (let attempt = 1; attempt <= 18; attempt++) {
+    try {
+      return await fetcher(url, { redirect: 'manual', signal: AbortSignal.timeout(30000) });
+    } catch (error) {
+      const code = error?.cause?.code;
+      const transient = ['ERR_SSL_SSL/TLS_ALERT_HANDSHAKE_FAILURE', 'ECONNRESET', 'ENOTFOUND', 'UND_ERR_CONNECT_TIMEOUT', 'ETIMEDOUT'].includes(code);
+      if (!transient || attempt === 18 || Date.now() + 10000 > deadline) throw new Error(`Secure anonymous HTTPS failed (${transient ? code : 'non-transient certificate/network error'}); no TLS bypass or credential fallback`);
+      onRetry(attempt);
+      await pause(10000);
+    }
+  }
+}
+
 function validateProject(project) {
   assert.ok(project?.name === PROJECT && project.subdomain === `${PROJECT}.pages.dev` && project.production_branch === PRODUCTION_BRANCH && Date.parse(project.created_on) >= Date.parse('2026-10-09T00:00:00Z') && !project.source, 'Dedicated demo project contract differs; stop without changing it');
   for (const config of Object.values(project.deployment_configs ?? {})) {

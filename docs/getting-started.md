@@ -91,7 +91,7 @@ Public Actions logs/artifacts are public surfaces. Send only content that is saf
 
 ## CI roles
 
-`CI` validates pull requests and main commits using demo Markdown; it does not publish content. `Blog publish (Cloudflare)` handles explicit immutable content events or manual dispatch. GitHub-managed CodeQL scans source, while Dependabot maintains dependency PRs. Routine npm minor/patch and Actions updates are grouped for Monday09:00 Asia/Shanghai; security updates remain enabled independently of that routine schedule. Historical runs remain available as audit evidence.
+`CI` validates pull requests and main commits using demo Markdown; it does not publish content. `Blog publish (Cloudflare)` handles owner main updates, explicit immutable content events or manual dispatch. Main updates reuse the accepted public production content reference and revalidate its immutable snapshot; PRs never enter publication. GitHub-managed CodeQL scans source, while Dependabot maintains dependency PRs. Routine npm minor/patch and Actions updates are grouped for Monday09:00 Asia/Shanghai; security updates remain enabled independently of that routine schedule. Historical runs remain available as audit evidence.
 
 The old Vercel demo is disabled through [`vercel.json`](../vercel.json), using the supported [Git deployment opt-out](https://vercel.com/docs/project-configuration/git-configuration). CodeQL language jobs and Dependabot updater jobs are security/maintenance activity, not additional blog deployments.
 

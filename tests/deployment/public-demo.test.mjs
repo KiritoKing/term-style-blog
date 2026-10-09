@@ -20,7 +20,7 @@ test('creation first checks paginated count and creates only one fixed free stat
   const fetcher = async (url, request) => {
     calls.push({ url, request });
     assert.equal(request.redirect, 'error');
-    if (request.method === 'GET') assert.equal(new URL(url).searchParams.get('per_page'), '20', 'Use the documented Pages pagination example size');
+    if (request.method === 'GET') assert.equal(new URL(url).searchParams.get('per_page'), '10', 'Use the official Wrangler Pages project-list page size');
     if (request.method === 'POST') {
       assert.deepEqual(JSON.parse(request.body), { name: PROJECT, production_branch: PRODUCTION_BRANCH });
       return reply(project);
@@ -38,6 +38,17 @@ test('quota refuses creation without a paid-plan fallback', async () => {
   let calls = 0;
   await assert.rejects(ensureDemoProject(options(async () => { calls++; return reply(Array.from({ length: 100 }, (_, i) => ({ name: `project-${i}` })), { total_pages: 1 }); })), /quota/i);
   assert.equal(calls, 1);
+});
+
+test('Pages responses without result_info are exhausted in official ten-project pages', async () => {
+  let reads = 0;
+  const evidence = await ensureDemoProject(options(async (_url, request) => {
+    if (request.method === 'POST') return reply(project);
+    reads++;
+    return reply(reads === 1 ? Array.from({ length: 10 }, (_, i) => ({ name: `existing-${i}` })) : [{ name: 'last-existing' }]);
+  }));
+  assert.equal(reads, 2);
+  assert.equal(evidence.project_count_before, 11);
 });
 
 test('dedicated project rerun reuses a verified contract without update or creation', async () => {

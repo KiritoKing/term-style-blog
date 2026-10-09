@@ -24,3 +24,5 @@ Risks: existing token creation permission, account quota, domain-wide Access pol
 Follow-ups: push draft stacked PR, inspect sanitized quota/create evidence, anonymously verify hash/stable URLs, preserve screenshots and source SHA; finish docs/spec archive. Dependency review is independent and does not authorize merge.
 
 Remote first attempt: PR25 / SHA f54abfbb1d5b27e2ceedacbddc33272624007db2; CI46 run37905152657 succeeded. Demo run37905057364 build113736415311 succeeded, deploy113736857775 stopped during GET project pagination with HTTP400/code8000024 before any creation/upload. Changed per_page100 to official API example20 after a failing regression, then 8 tests pass. This is an input adjustment, not a permission change; quota/create/anonymous proof remain pending.
+
+Second attempt58f7d337 run37905406226 also rejects per_page20 before mutation. Official Cloudflare workers-sdk/src/pages/projects.ts listProjects uses per_page10 and exhausts pages without depending on result_info. Follow that primary implementation, add RED/GREEN missing-metadata pagination and duplicate-page rejection; 9 tests pass. No raw API response/config or credential is printed.

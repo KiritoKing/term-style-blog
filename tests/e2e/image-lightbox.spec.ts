@@ -1,6 +1,8 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 
+test.skip(process.env.E2E_REAL_CORPUS === '1', 'Synthetic demo is covered by public fixture CI; real publication has separate image acceptance.');
+
 const demo = '/posts/image-lightbox-demo';
 const dialog = (page: Page) => page.getByRole('dialog', { name: '图片查看器' });
 const invokers = (page: Page) => page.locator('.prose-terminal button[command="show-modal"]');

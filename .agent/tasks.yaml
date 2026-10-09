@@ -555,7 +555,7 @@ tasks:
 - id: R13
   change: image-lightbox-viewer
   priority: P2
-  objective: User-authorized body-image viewer and isolated public-demo preview; historical cover scope remains outside this delivery.
+  objective: User-authorized body-image viewer with operation-only footer and isolated public-demo preview; historical cover scope remains outside this delivery.
   deps: [R12]
   status: done
   owner_session: null

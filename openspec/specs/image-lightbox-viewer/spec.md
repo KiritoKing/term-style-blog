@@ -10,7 +10,7 @@ The system MUST enhance unlinked `.prose-terminal` images with accessible button
 
 #### Scenario: Open an unlinked body image
 - **WHEN** a reader clicks or activates the image button with Enter or Space
-- **THEN** the modal SHALL display that image and its title or alt caption without changing the original image attributes
+- **THEN** the modal SHALL display that image and expose its title or alt caption to assistive technology without changing the original image attributes
 
 #### Scenario: Preserve image links and unsupported browsers
 - **WHEN** an image already belongs to a link or native command support is absent or JavaScript is disabled
@@ -24,7 +24,7 @@ The system MUST provide an accessible dialog name, visible close control, native
 - **THEN** the modal SHALL close and focus SHALL return to the corresponding image button
 
 ### Requirement: Viewer SHALL fit both themes and mobile viewports
-The system MUST reuse terminal panel/button styling, light blue and dark green, contain images within the viewport, keep caption and close control reachable, and prevent background document and terminal scrolling while open.
+The system MUST reuse terminal panel/button styling, light blue and dark green, contain images within the viewport, keep close control reachable and expose caption/help to assistive technology, show only operation buttons in its visible footer, and prevent background document and terminal scrolling while open.
 
 #### Scenario: View wide and tall images
 - **WHEN** the viewport is desktop or 390 CSS pixels wide in either theme

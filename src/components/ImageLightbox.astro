@@ -2,7 +2,7 @@
   id="article-image-viewer"
   class="image-lightbox pixel-panel font-console"
   aria-label="图片查看器"
-  aria-describedby="image-viewer-help"
+  aria-describedby="image-viewer-caption image-viewer-help"
   data-image-lightbox
   data-pagefind-ignore
 >
@@ -17,12 +17,12 @@
   </div>
   <fieldset class="image-lightbox-controls" aria-label="图片缩放控制" disabled data-panzoom-controls>
     <button type="button" class="pixel-btn" aria-label="缩小图片" data-zoom-out>−</button>
-    <output aria-label="缩放比例" data-zoom-level>100%</output>
+    <output class="sr-only" aria-label="缩放比例" data-zoom-level>100%</output>
     <button type="button" class="pixel-btn" aria-label="放大图片" data-zoom-in>+</button>
     <button type="button" class="pixel-btn" aria-label="重置适配视图" data-zoom-reset>适配 [0]</button>
   </fieldset>
-  <figure class="image-lightbox-description">
-    <figcaption data-image-caption></figcaption>
+  <figure class="sr-only">
+    <figcaption id="image-viewer-caption" data-image-caption></figcaption>
     <p id="image-viewer-help">滚轮 / 双指缩放 · 拖拽移动 · + / − 缩放 · 方向键移动</p>
   </figure>
 </dialog>

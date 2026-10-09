@@ -86,7 +86,7 @@
 
   .image-lightbox[open] {
     display: grid;
-    grid-template-rows: auto minmax(0, 1fr) auto auto;
+    grid-template-rows: auto minmax(0, 1fr) auto;
   }
 
   .image-lightbox::backdrop {
@@ -143,22 +143,6 @@
   .image-lightbox .pixel-btn:disabled {
     opacity: 0.5;
     cursor: default;
-  }
-
-  .image-lightbox-controls output {
-    min-width: 4ch;
-    text-align: center;
-  }
-
-  .image-lightbox-description {
-    @apply text-center px-3 pb-3;
-    max-height: 7rem;
-    overflow: auto;
-    overflow-wrap: anywhere;
-  }
-
-  .image-lightbox-description p {
-    @apply text-sm text-gray-600 dark:text-gray-400 mt-1;
   }
 
   .post-nav-link {

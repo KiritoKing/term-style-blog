@@ -153,3 +153,7 @@ Explicit user scope authorizes body-only R13, advanced gestures and isolated pub
 ## 2026-10-09 R13 accepted within explicit draft/preview scope
 
 R13's authorized body viewer and advanced gestures pass local/remote fixture validation and exact-SHA hosted acceptance; draft PR #21 remains unmerged. 112 unit, 45 deployment, check/build/policy, 31 Chromium E2E (11 private-corpus skips) and four online theme/width combinations pass. Hosted implementation SHA 3fde0bc is bound to run 37884280269, HTML/identity and artifact digests recorded in the report. Four local screenshots have successful Library IDs after user-authorized direct fallback. Specs sync/archive complete and R13 locks released. This does not authorize merge, production, cover work or unrelated task/dependency changes. No plan adjustment beyond the explicitly authorized body scope is proposed. Documentation closeout HEAD gets its own SHA-bound preview verification before final delivery.
+
+## R13 review refinement: footer buttons only
+
+User explicitly requested removing all visible viewer footer descriptions on the same draft PR #21. Minimal Astro/CSS changes retain caption/help/scale for AT and all previously accepted gestures. Tests first record RED, then 13 viewer E2E pass; check/build/spec/diff and before/after Library writes pass. Isolated preview/online verifier checks the new footer against the exact revision SHA before final return; PR body contains the current acceptance evidence. Production and unrelated plans/dependencies are untouched.

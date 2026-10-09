@@ -74,6 +74,15 @@ for (const theme of ['light', 'dark']) {
         await invokers(page).nth(index).click();
         await expect(dialog(page)).toBeVisible();
         const image = dialog(page).locator('img');
+        // Footer has only operation buttons; context stays available to AT.
+        const controls = dialog(page).locator('[data-panzoom-controls]');
+        await expect(controls.getByRole('button')).toHaveCount(3);
+        for (const auxiliary of [dialog(page).locator('figure'), controls.locator('output')]) {
+          const bounds = await auxiliary.boundingBox();
+          expect(bounds?.width).toBeLessThanOrEqual(1);
+          expect(bounds?.height).toBeLessThanOrEqual(1);
+        }
+        await expect(dialog(page)).toHaveAccessibleDescription(/滚轮.*双指缩放/);
         await expect.poll(() => image.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
         const geometry = await dialog(page).evaluate((element) => {
           const img = element.querySelector('img');

@@ -43,3 +43,11 @@ Resolved during remote acceptance: initial test-helper TypeScript annotations an
 
 
 OpenSpec: image-lightbox-viewer and explicit public-demo CI exception synchronized and archived under openspec/changes/archive/2026-10-09-image-lightbox-viewer. No merge or production deployment authorized.
+
+## User revision: footer operation buttons only
+
+The user requested removal of every visible footer description on PR #21. The footer now shows only minus/plus/fit buttons. Caption, gesture help and scale output are visually clipped for assistive technology; aria-describedby includes the image caption. Three grid rows reclaim the removed description space. Existing viewer/gesture runtime scripts and dependencies are unchanged; added runtime JavaScript: 0 B. CSS description rules are removed.
+
+Regression updated first: desktop/light footer geometry fails against the prior build (/tmp/lightbox-footer-red.log). After the minimal Astro/CSS change, all 13 viewer Chromium cases pass, including both themes at desktop/390px, all existing gestures/keyboard/navigation and axe. Check: 0 errors/0 warnings (31 existing hints); public preview build, strict updated spec and diff lint pass. Hosted acceptance also checks that only the three operation buttons occupy the footer. Current revision commit/URL and exact-SHA hosted outcome are recorded in PR #21 and its isolated Actions run (avoiding self-referential report commits).
+
+Before/after screenshots are local public-fixture browser screenshots. Existing before IDs: desktop libfile_aa01f23011788191a5935e62a5c99652; mobile libfile_f6027ed440348191a7b8da09a14db0bf. New after IDs, all confirmed saved: desktop libfile_2517fa5d28a881919470695f2824170b; mobile libfile_80680b8ce01c8191b444914099e66fe8. No merge/production/private-content change.

@@ -46,6 +46,12 @@ try {
       await opener.click();
       const dialog = page.getByRole('dialog', { name: '图片查看器' });
       await dialog.waitFor({ state: 'visible' });
+      const toolbar = dialog.locator('[data-panzoom-controls]');
+      assert.equal(await toolbar.getByRole('button').count(), 3);
+      for (const auxiliary of [dialog.locator('figure'), toolbar.locator('output')]) {
+        const bounds = await auxiliary.boundingBox();
+        assert.ok(bounds && bounds.width <= 1 && bounds.height <= 1, 'Footer descriptions must be visually clipped');
+      }
       const zoomIn = dialog.getByRole('button', { name: '放大图片' });
       await zoomIn.waitFor();
       await page.waitForFunction(() => !document.querySelector('[data-panzoom-controls]').disabled);

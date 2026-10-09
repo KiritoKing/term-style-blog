@@ -1126,7 +1126,7 @@ tasks:
   status: done
   owner_session: null
   branch: feat/public-theme-demo
-  allowed_paths: [.github/workflows/public-theme-demo.yml, scripts/public-demo, tests/deployment/public-demo.test.mjs, package.json, pnpm-lock.yaml, docs, README.md, README.en.md, openspec/changes/public-theme-demo, openspec/specs/public-theme-demo, .agent]
+  allowed_paths: [public/demo, docs/images, .github/workflows/public-theme-demo.yml, scripts/public-demo, tests/deployment/public-demo.test.mjs, package.json, pnpm-lock.yaml, docs, README.md, README.en.md, openspec/changes/public-theme-demo, openspec/specs/public-theme-demo, .agent]
   locked_paths: []
   relevant_specs: [openspec/specs/ci-workflow-roles/spec.md, openspec/specs/publication-deployment/spec.md, openspec/specs/open-source-distribution/spec.md, openspec/specs/public-theme-demo/spec.md, openspec/changes/archive/2026-10-09-public-theme-demo]
   required_tests: [quota_contract, anonymous_origin, static_limits, workflow_boundary, frozen_install, unit, deployment, check, both_profile_build, chromium, anonymous_hosted, openspec_validation]

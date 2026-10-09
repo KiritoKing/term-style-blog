@@ -1,10 +1,18 @@
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { readdir, lstat } from 'node:fs/promises';
 import { join, relative } from 'node:path';
 
 export const PROJECT = 'term-style-blog-demo';
 export const PRODUCTION_BRANCH = 'reserved-public-demo-20261009';
 export const PUBLIC_ORIGIN = 'https://public-demo.term-style-blog-demo.pages.dev';
+
+export function verifyAssetBytes(remote, local) {
+  const digest = bytes => createHash('sha256').update(bytes).digest('hex');
+  const expected = digest(local);
+  assert.equal(digest(remote), expected, 'Stale public demo asset differs from the reviewed build');
+  return expected;
+}
 
 export function validatePublicOrigin(value) {
   const url = new URL(value);

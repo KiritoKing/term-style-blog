@@ -26,12 +26,14 @@ Terminal Blog combines a pixel-inspired shell with responsive long-form reading.
 
 ## Screenshots
 
-These four original screenshots show only the neutral profile and synthetic demo posts/assets. Use the files themselves for upload; combined size is 385,087 bytes (below 8 MB).
+These four original screenshots show only the neutral profile and synthetic demo posts/assets. Use the files themselves for upload; combined size is 384,752 bytes (below 8 MB).
 
 1. [Homepage, desktop dark](images/terminal-blog.png)
 2. [Article, desktop light](images/article-light.png)
 3. [Article, mobile dark](images/mobile-dark.png)
 4. [Image viewer, desktop light](images/viewer-light.png)
+
+The landscape fixture uses the neutral `guest@blog` identity inside its pixels. Its 1600×900 size and every pixel outside the title region are preserved. The public verifier compares both demo PNGs byte-for-byte against the reviewed build at the immutable origin and stable alias; HTML metadata alone cannot detect stale or personalized image pixels.
 
 ## Accepted independent public demo
 

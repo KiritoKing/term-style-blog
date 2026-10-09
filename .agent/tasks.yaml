@@ -1094,7 +1094,7 @@ tasks:
   locked_paths: []
   relevant_specs: [openspec/specs/publication-deployment/spec.md, openspec/specs/ci-workflow-roles/spec.md, openspec/changes/archive/2026-10-09-main-framework-publication]
   required_tests: [input_policy, reference_resolution, snapshot_tamper, main_pr_boundary, freshness_git, workflow_syntax, deployment, unit, fixture_build, openspec_validation]
-  acceptance_commands: ["pnpm test:deployment", "pnpm test", "pnpm check", "pnpm build", "openspec validate main-framework-publication --strict", "git diff --check"]
+  acceptance_commands: ["pnpm test:deployment", "pnpm test", "pnpm check", "pnpm build", "openspec validate publication-deployment --type spec --strict", "openspec validate ci-workflow-roles --type spec --strict", "pnpm test:e2e", "E2E_REAL_CORPUS=1 pnpm exec playwright test tests/e2e/publication-image-lightbox.spec.ts", "git diff --check"]
   report: .agent/reports/AUTO02-main-framework-publication.md
   handoff: .agent/handoffs/AUTO02-main-framework-publication.md
   last_updated: 2026-10-09

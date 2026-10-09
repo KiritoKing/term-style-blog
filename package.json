@@ -23,6 +23,7 @@
   "dependencies": {
     "@astrojs/markdown-remark": "^7.3.1",
     "@astrojs/react": "^6.0.5",
+    "@panzoom/panzoom": "4.6.2",
     "@shikijs/rehype": "^3.23.0",
     "astro": "^7.3.2",
     "gray-matter": "^4.0.3",
@@ -35,6 +36,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
+    "@axe-core/playwright": "^4.13.0",
     "@iconify-json/lucide": "^1.2.94",
     "@playwright/test": "^1.63.0",
     "@tailwindcss/typography": "^0.5.19",

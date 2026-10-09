@@ -2,6 +2,7 @@
 import { render } from 'astro:content';
 import LucideIcon from '@/components/icons/LucideIcon.astro';
 import Comments from '@/components/react/Comments';
+import ImageLightbox from '@/components/ImageLightbox.astro';
 import {
   formatDate,
   getAdjacentPosts,
@@ -149,6 +150,8 @@ const giscusConfig = {
       <LucideIcon name="chevron-right" size={18} /> cd ../
     </a>
   </div>
+
+  <ImageLightbox />
 
   {hasToc && (
     <aside

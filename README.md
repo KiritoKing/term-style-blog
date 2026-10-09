@@ -6,6 +6,8 @@
 
 可复用的终端风格 Astro 博客主题，使用 **Astro 7、React 19、TypeScript 和 Tailwind CSS 4**。默认采用中性身份与合成示例文章；作者信息、终端用户名、About、Network、评论和跳转集中在 [`site.config.ts`](site.config.ts)。默认关闭评论，不继承原作者的历史 URL。
 
+[免登录公开 demo](https://public-demo.term-style-blog-demo.pages.dev/) · [正文图片演示](https://public-demo.term-style-blog-demo.pages.dev/posts/image-lightbox-demo/)。专用 Pages 项目只托管中性合成内容；既有个人博客与 Access 配置独立保留。
+
 ![中性示例首页，深色主题](docs/images/terminal-blog.png)
 
 ## 功能

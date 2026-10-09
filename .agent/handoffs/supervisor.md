@@ -185,3 +185,8 @@ Owner explicitly authorizes compatible dependency upgrades and approve without m
 ## 2026-10-09 DEP01 review accepted
 
 PR20add0d508(CI48) andPR1610a2c054(CI50)bothconfigurations pass and exact-head APPROVED; PR18d842d280CI/source/contracts/deploysmoke passes andAPPROVED. #22alreadycoveredSharppatch remains untouched with supersedenceCOMMENT. No merge/close/production operation. DEP01done/locksreleased; root integrates reviewed dependency heads into the independent synthetic demo branch and revalidates for one final publicSHA. No forcedoverride.
+
+
+## 2026-10-09 DEMO01 accepted
+
+Authorized project term-style-blog-demo created after7/100quota check; only public-demo preview contains neutral synthetic/noindex output, reserved production branch unused. Integrated dependency SHA bd42568 passes CI52 and anonymous demo5run37907255584,25routes/fourChromiumwidththemes with gestures/Escape/focus/repeat/Astro/links. Hosted screenshot artifact11605325948 and four separately captured same-code local Library screenshots recorded in report; local hosted-artifact download blocked403, no bypass. New two-requirement spec synced/archived,DEMOdone/locksreleased. Final documentation SHA acceptance tracked in PR25 metadata. No merge/production/oldblogAccess/privatecontent/Notion/newcredential/OAuth/paidchange. Owner Portal login/admin and stacked PR review remain. No additional plan adjustment suggested.

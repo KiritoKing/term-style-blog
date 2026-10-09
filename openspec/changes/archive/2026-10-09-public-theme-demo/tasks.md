@@ -8,10 +8,10 @@
 
 - [x] 2.1 Implement isolated anonymous origin/all-route/image/browser verification and evidence capture.
 - [x] 2.2 Run frozen install, unit, deployment, type/build and both configuration Chromium regressions.
-- [ ] 2.3 Push a draft stacked PR, check quota and create/deploy the dedicated preview through controlled Actions.
-- [ ] 2.4 Verify anonymous stable/hash URLs, full SHA, desktop/mobile light/dark images/navigation/focus and upload screenshots.
+- [x] 2.3 Push a draft stacked PR, check quota and create/deploy the dedicated preview through controlled Actions.
+- [x] 2.4 Verify anonymous stable/hash URLs, full SHA, desktop/mobile light/dark images/navigation/focus and upload screenshots.
 
 ## 3. Closeout
 
-- [ ] 3.1 Update catalogue/docs with accepted public URL, risks, source/workflow SHA and exact CI evidence.
-- [ ] 3.2 Sync/archive OpenSpec, release locks and deliver dependency review status separately without merging.
+- [x] 3.1 Update catalogue/docs with accepted public URL, risks, source/workflow SHA and exact CI evidence.
+- [x] 3.2 Sync/archive OpenSpec, release locks and deliver dependency review status separately without merging.

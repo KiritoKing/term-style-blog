@@ -113,3 +113,9 @@ Public Actions logs/artifacts are public surfaces. Send only content that is saf
 The old Vercel demo is disabled through [`vercel.json`](../vercel.json), using the supported [Git deployment opt-out](https://vercel.com/docs/project-configuration/git-configuration). CodeQL language jobs and Dependabot updater jobs are security/maintenance activity, not additional blog deployments.
 
 For the verified Sync/timer/GitHub event sequence, read [publication triggers and ownership](publication-pipeline.md).
+
+## Maintainer public catalogue demo
+
+[The independent demo](https://public-demo.term-style-blog-demo.pages.dev/) uses the neutral synthetic repository collection and preview/noindex output. `.github/workflows/public-theme-demo.yml` runs only on the explicitly authorized owned feature branch, validates a full source SHA/artifact, checks existing Pages quota/free static limits and uploads preview branch `public-demo` in dedicated project `term-style-blog-demo`. Its reserved production branch is never uploaded. Anonymous verification uses a separate project-only origin guard, no Access headers, bounded secure TLS propagation and all-route/browser/image proof.
+
+This workflow does not replace the owner publication pipeline or authorize PR/fork secrets. The existing blog/Access/private snapshot duties stay; no credential values are read into local development. A fresh clone does not need this maintainer-only infrastructure. Current source SHA/CI/hash URL are recorded in [PR #25](https://github.com/KiritoKing/term-style-blog/pull/25). Maintainer handles all merges and Portal OAuth/submission personally.

@@ -1118,21 +1118,40 @@ tasks:
   unblock_when: Code and protected synthetic review preview authorized; parent owns public hosting approval and Portal login/submission
   last_updated: 2026-10-09
 
+- id: DEMO01
+  change: public-theme-demo
+  objective: Publish an independent anonymous synthetic-only Astro theme demo using existing controlled Pages capability
+  priority: P1
+  deps: [OSS02]
+  status: done
+  owner_session: null
+  branch: feat/public-theme-demo
+  allowed_paths: [public/demo, docs/images, .github/workflows/public-theme-demo.yml, scripts/public-demo, tests/deployment/public-demo.test.mjs, package.json, pnpm-lock.yaml, docs, README.md, README.en.md, openspec/changes/public-theme-demo, openspec/specs/public-theme-demo, .agent]
+  locked_paths: []
+  relevant_specs: [openspec/specs/ci-workflow-roles/spec.md, openspec/specs/publication-deployment/spec.md, openspec/specs/open-source-distribution/spec.md, openspec/specs/public-theme-demo/spec.md, openspec/changes/archive/2026-10-09-public-theme-demo]
+  required_tests: [quota_contract, anonymous_origin, static_limits, workflow_boundary, frozen_install, unit, deployment, check, both_profile_build, chromium, anonymous_hosted, openspec_validation]
+  acceptance_commands: ["pnpm install --frozen-lockfile", "pnpm test", "pnpm test:deployment", "pnpm check", "pnpm build", "pnpm test:e2e", "SITE_PROFILE=chlorine pnpm build", "SITE_PROFILE=chlorine pnpm test:e2e", "openspec validate public-theme-demo --type spec --strict", "git diff --check"]
+  report: .agent/reports/DEMO01-public-theme-demo.md
+  handoff: .agent/handoffs/DEMO01-public-theme-demo.md
+  blocked_by: []
+  unblock_when: Static binding review locally passed with 13 official maps and 82 deployment tests; exact-commit CI and isolated hosted proof tracked in PR25 and external delivery evidence
+  last_updated: 2026-10-09
+
 - id: DEP01
   change: dependabot-safe-review
   objective: Refresh and review compatible Dependabot updates without losing PR24 security resolutions or merging
   priority: P1
   deps: [OSS02]
-  status: review
-  owner_session: codex-cloud-dependency-20261009
+  status: done
+  owner_session: null
   branch: dependabot/npm_and_yarn/npm-minor-patch-d7f2cb3ce9
   allowed_paths: [package.json, pnpm-lock.yaml, docs/dependency-review.md, .agent]
-  locked_paths: [package.json, pnpm-lock.yaml]
+  locked_paths: []
   relevant_specs: [openspec/specs/ci-workflow-roles/spec.md, openspec/specs/publication-deployment/spec.md, openspec/specs/typography-rendering/spec.md]
   required_tests: [frozen_install, unit, publication_regression, astro_check, both_profile_build, chromium, audit, diff]
   acceptance_commands: ["pnpm install --frozen-lockfile", "pnpm test", "pnpm test:deployment", "pnpm check", "pnpm build", "pnpm test:e2e", "SITE_PROFILE=chlorine pnpm build", "SITE_PROFILE=chlorine pnpm test:e2e", "git diff --check"]
   report: .agent/reports/DEP01-dependabot-safe-review.md
   handoff: .agent/handoffs/DEP01-dependabot-safe-review.md
   blocked_by: []
-  unblock_when: Owner authorized upgrades and approve; exact refreshed remote head CI is required before approval
+  unblock_when: Exact-head PR20CI48 and PR16CI50 passed both profiles; reviews APPROVED and no merge performed
   last_updated: 2026-10-09

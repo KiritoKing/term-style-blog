@@ -174,6 +174,24 @@ Parent completed actual production desktop/narrow, themes, image gesture/keyboar
 
 Independent draft PR24 from main7577a11e passes local122 unit/56 deployment,0-error check, frozen install, template33/owner32 Chromium browser tests and remote CI44 (required verify retained). Existing controlled Pages preview215fe0c4 serves exact aed3afc9 with neutral synthetic/noindex output; hosted four theme/width combinations and SHA pass in run37901443074. Four original screenshots385,087 bytes saved to Library, licenses/attribution retained; redacted candidate/history scan0 findings. Astro7.3.8 compatible updates reduce audit16→4; four paths and remaining risks documented. Four specs synced/archive complete, OSS02 locks released. Final docs/archive head gets fresh CI/preview in PR metadata before handoff. Protected preview is not public catalogue hosting; parent must approve/provide an independent anonymous demo target and personally handle Portal login/OAuth/submission/admin review. No production operation, Access change, private snapshot, new credential/service or merge performed. No unrelated plan adjustment proposed.
 
+## 2026-10-09 DEMO01 authorized
+
+Owner explicitly approves one independent public Pages project using existing controlled credentials, synthetic demo only; no production/Access/credential/paid-plan change. DEMO01 starts on feat/public-theme-demo stacked on unmerged PR24 afb1a845. Test-first Node regressions record RED then 8 PASS, bounded creation and anonymous verifier implemented. Independent read-only Dependabot review runs in /tmp and owns no shared files; parent owns upgrades/reviews, never merge. Existing priorities/dependencies unchanged except this explicitly authorized task.
+
 ## 2026-10-09 DEP01 authorized safe review
 
 Owner explicitly authorizes compatible dependency upgrades and approve without merge. Root refreshes PR20on unmerged reviewed PR24, preserving newer security resolutions; final headCI precedes approve. Isolated local tests pass122unit/56deployment/check and template33owner32Chromium; audit3plus unconfirmed http-cache high-risk note retained. Original#16/#20/#22heads are conflicted; #22patch is alreadycovered. Separate read-only agent verifies#18action/source/CI. No production/private content/Access/credential/forcedoverride operation. Existing plan priorities remain.
+
+## 2026-10-09 DEP01 review accepted
+
+PR20add0d508(CI48) andPR1610a2c054(CI50)bothconfigurations pass and exact-head APPROVED; PR18d842d280CI/source/contracts/deploysmoke passes andAPPROVED. #22alreadycoveredSharppatch remains untouched with supersedenceCOMMENT. No merge/close/production operation. DEP01done/locksreleased; root integrates reviewed dependency heads into the independent synthetic demo branch and revalidates for one final publicSHA. No forcedoverride.
+
+
+## 2026-10-09 DEMO01 accepted
+
+Authorized project term-style-blog-demo created after7/100quota check; only public-demo preview contains neutral synthetic/noindex output, reserved production branch unused. Integrated dependency SHA bd42568 passes CI52 and anonymous demo5run37907255584,25routes/fourChromiumwidththemes with gestures/Escape/focus/repeat/Astro/links. Hosted screenshot artifact11605325948 and four separately captured same-code local Library screenshots recorded in report; local hosted-artifact download blocked403, no bypass. New two-requirement spec synced/archived,DEMOdone/locksreleased. Final documentation SHA acceptance tracked in PR25 metadata. No merge/production/oldblogAccess/privatecontent/Notion/newcredential/OAuth/paidchange. Owner Portal login/admin and stacked PR review remain. No additional plan adjustment suggested.
+
+
+## DEMO01 QA raster identity correction
+
+Owner QA found a personalized username inside landscape image pixels. Root neutralizes only title region to guest@blog with zero unrelated pixel changes, updates catalogue viewer screenshot and same Library identity(version1). Test-first anonymous image-byte digest regression12/68passes;122unit/check/build/15relatedChromium/33specpasses, audit3unchanged. Existing neutral synthetic public-demo contract governs; no new plan/UI/browser-dependency change. Exact correctionSHA receives CI/anonymoushash+stableimage/browserproof before final delivery, recorded in PR25/externalJSON. No merge/production/Access operation.

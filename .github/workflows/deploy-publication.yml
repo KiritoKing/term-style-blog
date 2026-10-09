@@ -1,7 +1,9 @@
 name: Blog publish (Cloudflare)
-run-name: "${{ github.event_name == 'repository_dispatch' && 'Content changed' || 'Manual publish' }} · ${{ github.actor }}"
+run-name: "${{ github.event_name == 'push' && 'Framework main updated' || github.event_name == 'repository_dispatch' && 'Content changed' || 'Manual publish' }} · ${{ github.actor }}"
 
 on:
+  push:
+    branches: [main]
   repository_dispatch:
     types: [content_published_changed]
   workflow_dispatch:
@@ -46,7 +48,7 @@ defaults:
 
 jobs:
   prepare:
-    if: github.repository == 'KiritoKing/term-style-blog' && github.ref == 'refs/heads/main'
+    if: github.repository == 'KiritoKing/term-style-blog' && github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'repository_dispatch' || github.event_name == 'workflow_dispatch')
     name: Validate immutable inputs
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -71,17 +73,48 @@ jobs:
           persist-credentials: false
           path: framework
 
+      - name: Resolve accepted production content reference
+        if: github.event_name == 'push'
+        id: published
+        env:
+          GITHUB_EVENT_DELETED: ${{ github.event.deleted }}
+        run: node framework/scripts/resolve-main-publication.mjs reference
+
+      - name: Checkout accepted immutable publication snapshot
+        if: github.event_name == 'push'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: KiritoKing/llm-obsidian
+          ref: ${{ steps.published.outputs.content_sha }}
+          ssh-key: ${{ secrets.VAULT_CONTENTS_READ_KEY }}
+          persist-credentials: false
+          fetch-depth: 1
+          sparse-checkout: |
+            blog-publish-manifest.json
+            20-writing/published
+          sparse-checkout-cone-mode: false
+          path: accepted-content
+
+      - name: Verify accepted immutable snapshot
+        if: github.event_name == 'push'
+        id: published_snapshot
+        env:
+          GITHUB_EVENT_DELETED: ${{ github.event.deleted }}
+          MANIFEST_SHA256: ${{ steps.published.outputs.manifest_sha256 }}
+        run: node framework/scripts/resolve-main-publication.mjs snapshot accepted-content
+
       - name: Normalize and validate trigger inputs
         id: inputs
         env:
           GITHUB_EVENT_ACTION: ${{ github.event.action }}
-          INPUT_CONTENT_REPOSITORY: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.content_repository || inputs.content_repository }}
-          INPUT_CONTENT_SHA: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.content_sha || inputs.content_sha }}
-          INPUT_MANIFEST_SHA256: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.manifest_sha256 || inputs.manifest_sha256 }}
-          INPUT_SOURCE_TREE_HASH: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.source_tree_hash || inputs.source_tree_hash }}
-          INPUT_PUBLICATION_BRANCH: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.publication_branch || inputs.publication_branch }}
+          GITHUB_EVENT_DELETED: ${{ github.event.deleted }}
+          INPUT_CONTENT_REPOSITORY: ${{ github.event_name == 'push' && steps.published.outputs.content_repository || github.event_name == 'repository_dispatch' && github.event.client_payload.content_repository || inputs.content_repository }}
+          INPUT_CONTENT_SHA: ${{ github.event_name == 'push' && steps.published.outputs.content_sha || github.event_name == 'repository_dispatch' && github.event.client_payload.content_sha || inputs.content_sha }}
+          INPUT_MANIFEST_SHA256: ${{ github.event_name == 'push' && steps.published.outputs.manifest_sha256 || github.event_name == 'repository_dispatch' && github.event.client_payload.manifest_sha256 || inputs.manifest_sha256 }}
+          INPUT_SOURCE_TREE_HASH: ${{ github.event_name == 'push' && steps.published_snapshot.outputs.source_tree_hash || github.event_name == 'repository_dispatch' && github.event.client_payload.source_tree_hash || inputs.source_tree_hash }}
+          INPUT_PUBLICATION_BRANCH: ${{ github.event_name == 'push' && steps.published.outputs.publication_branch || github.event_name == 'repository_dispatch' && github.event.client_payload.publication_branch || inputs.publication_branch }}
           INPUT_DISPATCH_ID: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.dispatch_id || '' }}
-          INPUT_DEPLOY_MODE: ${{ github.event_name == 'repository_dispatch' && 'production' || inputs.deploy_mode }}
+          INPUT_DEPLOY_MODE: ${{ (github.event_name == 'push' || github.event_name == 'repository_dispatch') && 'production' || inputs.deploy_mode }}
           PUBLICATION_PRODUCTION_ENABLED: ${{ vars.PUBLICATION_PRODUCTION_ENABLED }}
           PUBLICATION_PREVIEW_REVIEW: ${{ vars.PUBLICATION_PREVIEW_REVIEW }}
           INPUT_CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
@@ -89,6 +122,8 @@ jobs:
         run: node framework/scripts/validate-publication-snapshot.mjs inputs
 
   build_preview:
+    env:
+      SITE_PROFILE: chlorine
     name: Build and deploy isolated preview
     needs: prepare
     runs-on: ubuntu-latest
@@ -311,6 +346,8 @@ jobs:
           retention-days: 7
 
   deploy_production:
+    env:
+      SITE_PROFILE: chlorine
     name: Serialize and deploy current production candidate
     needs: [prepare, build_preview]
     if: needs.prepare.outputs.deploy_mode == 'production' && needs.prepare.outputs.production_enabled == 'true' && needs.prepare.outputs.preview_review == 'automatic'
@@ -405,6 +442,19 @@ jobs:
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 24.14.0
+
+      - name: Recheck freshness immediately before production upload
+        env:
+          CONTENT_SHA: ${{ needs.prepare.outputs.content_sha }}
+          FRAMEWORK_SHA: ${{ needs.prepare.outputs.framework_sha }}
+          PUBLICATION_BRANCH: ${{ needs.prepare.outputs.publication_branch }}
+        run: |
+          framework_tip="$(git -C framework ls-remote --exit-code origin refs/heads/main | cut -f1)"
+          content_tip="$(git -C content ls-remote --exit-code origin "refs/heads/$PUBLICATION_BRANCH" | cut -f1)"
+          test "$framework_tip" = "$FRAMEWORK_SHA"
+          test "$content_tip" = "$CONTENT_SHA"
+          test "$(git -C framework rev-parse HEAD)" = "$FRAMEWORK_SHA"
+          test "$(git -C content rev-parse HEAD)" = "$CONTENT_SHA"
 
       - name: Deploy production to Cloudflare Pages
         id: production

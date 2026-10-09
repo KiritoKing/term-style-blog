@@ -1,5 +1,7 @@
 import { expect, test } from '@playwright/test';
 
+import { siteConfig } from '../../site.config';
+
 const postSlug = process.env.E2E_POST_SLUG ?? 'hello-world';
 
 test('preserves the terminal shell and exact slug route', async ({ page }) => {
@@ -8,7 +10,7 @@ test('preserves the terminal shell and exact slug route', async ({ page }) => {
   await expect(page.locator('[data-terminal-shell]')).toBeVisible();
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
     'href',
-    `https://chlorinec.top/posts/${postSlug}`,
+    `${siteConfig.site.origin}/posts/${postSlug}`,
   );
 });
 
@@ -32,8 +34,12 @@ test('terminal cat preserves the exact post slug case', async ({ page }) => {
 
 test('serves historical redirects as 301', async ({ request }) => {
   const response = await request.get('/post/technology/keepass', { maxRedirects: 0 });
-  expect(response.status()).toBe(301);
-  expect(response.headers().location).toBe('/posts/KeePass');
+  if (siteConfig.redirectsFile) {
+    expect(response.status()).toBe(301);
+    expect(response.headers().location).toBe('/posts/KeePass');
+  } else {
+    expect(response.status()).toBe(404);
+  }
 });
 
 test('search finds Chinese article content', async ({ page }) => {
@@ -47,8 +53,12 @@ test('giscus preserves historical pathname mapping', async ({ page }) => {
   await page.route('https://giscus.app/client.js', (route) => route.abort());
   await page.goto(`/posts/${postSlug}`);
   const script = page.locator('.giscus-terminal script[data-mapping="pathname"]');
-  await expect(script).toHaveAttribute('data-repo', 'KiritoKing/notion-astro-rev');
-  await expect(script).toHaveAttribute('data-category', 'Announcements');
+  if (siteConfig.giscus) {
+    await expect(script).toHaveAttribute('data-repo', siteConfig.giscus.repo);
+    await expect(script).toHaveAttribute('data-category', siteConfig.giscus.category);
+  } else {
+    await expect(page.locator('.giscus-terminal, script[src*="giscus"], iframe.giscus-frame')).toHaveCount(0);
+  }
 });
 
 test('article has no page-level horizontal overflow at mobile width', async ({ page }) => {

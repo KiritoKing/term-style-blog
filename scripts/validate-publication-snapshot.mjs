@@ -96,11 +96,22 @@ function publicationPolicy(environment) {
   return { productionEnabled, previewReview };
 }
 
+export function assertMainPush(environment) {
+  if (environment.GITHUB_EVENT_NAME !== "push" ||
+      environment.GITHUB_REPOSITORY !== FRAMEWORK_REPOSITORY ||
+      environment.GITHUB_REF !== "refs/heads/main" ||
+      environment.GITHUB_EVENT_DELETED === "true") {
+    reject("WRONG_FRAMEWORK_PUSH", "framework push must update the owned main branch");
+  }
+  validateSha(environment.GITHUB_SHA, "framework_sha");
+}
+
 export function resolveInputs(environment = process.env) {
   const eventName = requiredString(environment.GITHUB_EVENT_NAME, "GITHUB_EVENT_NAME");
-  if (!new Set(["repository_dispatch", "workflow_dispatch"]).has(eventName)) {
+  if (!new Set(["push", "repository_dispatch", "workflow_dispatch"]).has(eventName)) {
     reject("UNSUPPORTED_EVENT", `unsupported event ${eventName}`);
   }
+  if (eventName === "push") assertMainPush(environment);
   if (environment.GITHUB_REPOSITORY !== FRAMEWORK_REPOSITORY) {
     reject("WRONG_FRAMEWORK_REPOSITORY", "workflow must run in KiritoKing/term-style-blog");
   }
@@ -154,6 +165,14 @@ export function resolveInputs(environment = process.env) {
     deployMode = productionEnabled === "true" && previewReview === "automatic"
       ? "production"
       : "preview";
+  } else if (eventName === "push") {
+    if (requestedMode !== "production") {
+      reject("INVALID_INPUT", "framework push deploy_mode must be production");
+    }
+    deployMode = productionEnabled === "true" && previewReview === "automatic"
+      ? "production"
+      : "preview";
+    dispatchId = `framework-push:${frameworkSha}`;
   } else {
     if (!new Set(["preview", "production-retry"]).has(requestedMode)) {
       reject("INVALID_INPUT", "manual deploy_mode must be preview or production-retry");

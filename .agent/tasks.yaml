@@ -1081,3 +1081,20 @@ tasks:
   report: .agent/reports/AUTO01-automatic-production.md
   handoff: .agent/handoffs/AUTO01-automatic-production.md
   last_updated: 2026-09-09
+
+- id: AUTO02
+  change: main-framework-publication
+  objective: Publish main updates using revalidated immutable already-published content
+  priority: P0
+  deps: [AUTO01]
+  status: review
+  owner_session: codex-cloud-main-publication
+  branch: feat/main-publication-autodeploy
+  allowed_paths: [.github/workflows/deploy-publication.yml, scripts, tests/deployment, tests/e2e, docs/publication-pipeline.md, docs/getting-started.md, openspec, .agent]
+  locked_paths: [.github/workflows/deploy-publication.yml, scripts/validate-publication-snapshot.mjs, scripts/verify-hosted-publication.mjs]
+  relevant_specs: [openspec/specs/publication-deployment/spec.md, openspec/specs/ci-workflow-roles/spec.md, openspec/changes/main-framework-publication]
+  required_tests: [input_policy, reference_resolution, snapshot_tamper, main_pr_boundary, freshness_git, workflow_syntax, deployment, unit, fixture_build, openspec_validation]
+  acceptance_commands: ["pnpm test:deployment", "pnpm test", "pnpm check", "pnpm build", "openspec validate main-framework-publication --strict", "git diff --check"]
+  report: .agent/reports/AUTO02-main-framework-publication.md
+  handoff: .agent/handoffs/AUTO02-main-framework-publication.md
+  last_updated: 2026-10-09

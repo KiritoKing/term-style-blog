@@ -1,4 +1,5 @@
 ---
+import { siteConfig } from '../../../site.config';
 import TerminalPanelInteractive from '@/components/react/TerminalPanel';
 
 interface Props {
@@ -13,6 +14,8 @@ const { promptPath, route, postIndex } = Astro.props;
 <TerminalPanelInteractive
   client:load
   promptPath={promptPath}
+  username={siteConfig.terminal.username}
+  hostname={siteConfig.terminal.hostname}
   route={route}
   postIndex={postIndex}
 />

@@ -1,8 +1,5 @@
-# personal-site-metadata Specification
+## MODIFIED Requirements
 
-## Purpose
-TBD - created by archiving change obsidian-personal-blog-cutover. Update Purpose after archive.
-## Requirements
 ### Requirement: Pages SHALL expose verified personal site metadata
 The system MUST emit configured language, page title, description, canonical, Open Graph, Twitter, author and structured-data metadata based on the selected typed profile.
 

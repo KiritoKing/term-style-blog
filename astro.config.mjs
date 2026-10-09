@@ -12,10 +12,11 @@ import {
   remarkObsidianWikilinks,
   remarkPublicationAssets,
 } from './src/lib/remark-obsidian-wikilinks.mjs';
+import { siteConfig } from './site.config.ts';
 import { compileRedirectRules } from './src/lib/redirects.ts';
 
 const contentDir = path.resolve(process.env.CONTENT_DIR || 'src/content/blog');
-const map = JSON.parse(readFileSync('./scripts/historical-url-map.json', 'utf8'));
+const map = siteConfig.redirectsFile ? JSON.parse(readFileSync(siteConfig.redirectsFile, 'utf8')) : {};
 const redirects = Object.fromEntries(
   compileRedirectRules(map).map(({ from, to, status }) => [
     from,
@@ -44,14 +45,11 @@ const wikiTargets = markdownFiles(contentDir).flatMap((file) => {
 
 export default defineConfig({
   compressHTML: true,
-  site: 'https://chlorinec.top/',
+  site: siteConfig.site.origin,
   trailingSlash: 'never',
   redirects,
   image: {
-    remotePatterns: [
-      { protocol: 'https', hostname: 'img.chlorinec.top' },
-      { protocol: 'https', hostname: '**.amazonaws.com' },
-    ],
+    remotePatterns: siteConfig.remoteImages,
     service: {
       entrypoint: 'astro/assets/services/sharp',
       config: { limitInputPixels: false },

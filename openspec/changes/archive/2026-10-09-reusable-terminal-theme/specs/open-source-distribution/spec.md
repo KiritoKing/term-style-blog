@@ -1,8 +1,5 @@
-# open-source-distribution Specification
+## MODIFIED Requirements
 
-## Purpose
-Define a licensed, documented and reproducible public source release while preserving private content and deployment boundaries.
-## Requirements
 ### Requirement: Public source SHALL be runnable without private services
 The repository MUST provide a license, attribution and documented frozen-install development/build commands using the bundled Markdown collection without requiring private vault access or deployment secrets.
 
@@ -22,6 +19,7 @@ The repository MUST run unprivileged fixture validation for pull requests and li
 - **WHEN** the personal publication workflow is dispatched outside KiritoKing/term-style-blog main
 - **THEN** the prepare job SHALL be skipped before secret-bearing dependent jobs run
 
+## ADDED Requirements
 
 ### Requirement: Catalogue material SHALL describe reproducible public theme assets
 The repository MUST provide accurate installation and English submission material, with no more than four original synthetic screenshots totaling at most 8 MB. A protected acceptance preview MUST NOT be described as a public catalogue demo.

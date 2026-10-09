@@ -122,6 +122,8 @@ jobs:
         run: node framework/scripts/validate-publication-snapshot.mjs inputs
 
   build_preview:
+    env:
+      SITE_PROFILE: chlorine
     name: Build and deploy isolated preview
     needs: prepare
     runs-on: ubuntu-latest
@@ -344,6 +346,8 @@ jobs:
           retention-days: 7
 
   deploy_production:
+    env:
+      SITE_PROFILE: chlorine
     name: Serialize and deploy current production candidate
     needs: [prepare, build_preview]
     if: needs.prepare.outputs.deploy_mode == 'production' && needs.prepare.outputs.production_enabled == 'true' && needs.prepare.outputs.preview_review == 'automatic'

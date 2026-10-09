@@ -1,9 +1,5 @@
-# giscus-comments
+## MODIFIED Requirements
 
-## Purpose
-
-为文章详情页提供基于 GitHub Discussions 的评论能力，并限制加载范围与映射方式。 用于指导后续变更、校验实现行为，并保持与现有终端风格博客约束一致。
-## Requirements
 ### Requirement: 文章详情页必须提供评论区
 系统 MUST 在配置了 giscus 的 profile 的文章详情页展示评论区；默认模板 MUST 关闭评论且不输出评论 island、脚本或 iframe。
 

@@ -27,6 +27,6 @@ Independent `preview-image-lightbox.yml` runs only this owned feature branch. Bu
 
 ## Delivery update
 
-Draft PR, exact-head CI, hosted preview and Library screenshot identifiers: pending remote delivery. No localhost or build success is treated as deployed acceptance.
+Draft PR: https://github.com/KiritoKing/term-style-blog/pull/21 . Initial preview run 37883841154 caught a CDP test-helper TypeScript annotation error introduced during final touch-input refinement; corrected with literal event types and typed coordinates. Hosted preview remains pending. Library helper fails before upload preparation with hosted-app network discovery unavailable, including an unsandboxed retry; no Library IDs have been created. Public screenshot PNGs are retained in Actions artifacts and /workspace/lightbox-deliverables. No localhost or build success is treated as deployed acceptance.
 
 OpenSpec: image-lightbox-viewer and explicit public-demo CI exception; synchronize/archive after delivery outcome is recorded. No merge or production deployment authorized.

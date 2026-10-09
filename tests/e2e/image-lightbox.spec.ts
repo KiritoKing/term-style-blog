@@ -263,7 +263,7 @@ test('lightbox mobile two-finger pinch and one-finger pan use real touch input',
   if (!box) throw new Error('Missing touch stage');
   const center = { x: box.x + box.width / 2, y: box.y + box.height / 2 };
   const session = await context.newCDPSession(page);
-  const dispatch = async (type: string, touchPoints: object[]) => {
+  const dispatch = async (type: 'touchStart' | 'touchMove' | 'touchEnd', touchPoints: { x: number; y: number; id: number }[]) => {
     await session.send('Input.dispatchTouchEvent', { type, touchPoints });
     await page.evaluate(() => new Promise(requestAnimationFrame));
   };

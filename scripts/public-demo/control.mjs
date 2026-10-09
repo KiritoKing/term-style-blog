@@ -7,6 +7,14 @@ export const PROJECT = 'term-style-blog-demo';
 export const PRODUCTION_BRANCH = 'reserved-public-demo-20261009';
 export const PUBLIC_ORIGIN = 'https://public-demo.term-style-blog-demo.pages.dev';
 
+// Binding maps in the Pages project API, including build/runtime env vars:
+// https://developers.cloudflare.com/api/resources/pages/subresources/projects/methods/get/
+const RUNTIME_BINDING_FIELDS = new Set([
+  'env_vars', 'ai_bindings', 'analytics_engine_datasets', 'browsers',
+  'd1_databases', 'durable_object_namespaces', 'hyperdrive_bindings', 'kv_namespaces',
+  'mtls_certificates', 'queue_producers', 'r2_buckets', 'services', 'vectorize_bindings',
+]);
+
 export function verifyAssetBytes(remote, local) {
   const digest = bytes => createHash('sha256').update(bytes).digest('hex');
   const expected = digest(local);
@@ -41,7 +49,7 @@ function validateProject(project) {
   assert.ok(project?.name === PROJECT && project.subdomain === `${PROJECT}.pages.dev` && project.production_branch === PRODUCTION_BRANCH && Date.parse(project.created_on) >= Date.parse('2026-10-09T00:00:00Z') && !project.source, 'Dedicated demo project contract differs; stop without changing it');
   for (const config of Object.values(project.deployment_configs ?? {})) {
     for (const [key, value] of Object.entries(config)) {
-      if (/env_vars|namespaces|buckets|databases|services|durable|ai_bindings|analytics|hyperdrive|queues/.test(key)) assert.ok(!value || Object.keys(value).length === 0, 'Dedicated demo project contract contains runtime bindings');
+      if (RUNTIME_BINDING_FIELDS.has(key)) assert.ok(!value || Object.keys(value).length === 0, 'Dedicated demo project contract contains runtime bindings');
     }
   }
 }

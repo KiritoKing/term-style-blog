@@ -1134,7 +1134,7 @@ tasks:
   report: .agent/reports/DEMO01-public-theme-demo.md
   handoff: .agent/handoffs/DEMO01-public-theme-demo.md
   blocked_by: []
-  unblock_when: Exact-head CI52 and public demo run37907255584 passed anonymously; four local neutral screenshots saved to Library
+  unblock_when: Static binding review locally passed with 13 official maps and 82 deployment tests; exact-commit CI and isolated hosted proof tracked in PR25 and external delivery evidence
   last_updated: 2026-10-09
 
 - id: DEP01

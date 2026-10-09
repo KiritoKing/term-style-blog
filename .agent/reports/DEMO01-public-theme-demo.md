@@ -22,3 +22,5 @@ Commands/results:
 OpenSpec impact: public-theme-demo active, remote acceptance pending.
 Risks: existing token creation permission, account quota, domain-wide Access policy and anonymous origin propagation remain to be verified by controlled Actions. Existing protected verifier and production workflow have no diff from PR24. Only Chromium is covered.
 Follow-ups: push draft stacked PR, inspect sanitized quota/create evidence, anonymously verify hash/stable URLs, preserve screenshots and source SHA; finish docs/spec archive. Dependency review is independent and does not authorize merge.
+
+Remote first attempt: PR25 / SHA f54abfbb1d5b27e2ceedacbddc33272624007db2; CI46 run37905152657 succeeded. Demo run37905057364 build113736415311 succeeded, deploy113736857775 stopped during GET project pagination with HTTP400/code8000024 before any creation/upload. Changed per_page100 to official API example20 after a failing regression, then 8 tests pass. This is an input adjustment, not a permission change; quota/create/anonymous proof remain pending.

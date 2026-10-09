@@ -41,7 +41,7 @@ export async function ensureDemoProject({ accountId, token, fetcher = fetch }) {
   const projects = [];
   let pages = 1;
   for (let page = 1; page <= pages; page++) {
-    const data = await request('GET', `${base}?page=${page}&per_page=100`);
+    const data = await request('GET', `${base}?page=${page}&per_page=20`);
     assert.ok(Array.isArray(data.result), 'Invalid project listing; cannot verify quota');
     projects.push(...data.result);
     const total = data.result_info?.total_pages ?? 1;

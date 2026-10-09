@@ -20,6 +20,7 @@ test('creation first checks paginated count and creates only one fixed free stat
   const fetcher = async (url, request) => {
     calls.push({ url, request });
     assert.equal(request.redirect, 'error');
+    if (request.method === 'GET') assert.equal(new URL(url).searchParams.get('per_page'), '20', 'Use the documented Pages pagination example size');
     if (request.method === 'POST') {
       assert.deepEqual(JSON.parse(request.body), { name: PROJECT, production_branch: PRODUCTION_BRANCH });
       return reply(project);

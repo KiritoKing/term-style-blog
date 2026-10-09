@@ -41,12 +41,15 @@ export async function ensureDemoProject({ accountId, token, fetcher = fetch }) {
   const projects = [];
   let pages = 1;
   for (let page = 1; page <= pages; page++) {
-    const data = await request('GET', `${base}?page=${page}&per_page=20`);
+    // The official Wrangler listProjects implementation uses ten-item pages.
+    // The live Pages API rejects larger sizes with 8000024 despite generic examples.
+    const data = await request('GET', `${base}?page=${page}&per_page=10`);
     assert.ok(Array.isArray(data.result), 'Invalid project listing; cannot verify quota');
     projects.push(...data.result);
-    const total = data.result_info?.total_pages ?? 1;
+    const total = data.result_info?.total_pages ?? (data.result.length === 10 ? page + 1 : page);
     assert.ok(Number.isInteger(total) && total >= page && total <= 100, 'Invalid pagination; cannot verify quota');
     pages = total;
+    assert.equal(new Set(projects.map(project => project.name)).size, projects.length, 'Repeated project page; cannot verify quota');
   }
   const existing = projects.filter(project => project.name === PROJECT);
   assert.ok(existing.length <= 1, 'Duplicate dedicated project contract');

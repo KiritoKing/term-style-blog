@@ -145,3 +145,7 @@ Browser recovered, scoped Service Auth saved, protected preview34350240034 passe
 ## 2026-09-09 AUTO01 accepted and archived
 
 AUTO01 is done and unlocked. PR11/12/13 deliver protected hosted acceptance, independent production runtime setup and deterministic concurrency fixtures. Actual save run34352329632 and byte-exact restoration run34352935115 both succeeded from normal Hermes repository_dispatch events, checking103 public production routes and8 extra desktop/mobile visits each. Current production8d60c430 serves framework6c462769 and contentd1bd7e2. All54 source articles match pre-test bytes. Policy remains true/automatic; human preview protection remains. Details and the two retained pre-deployment failures are in AUTO01 report. OpenSpec is synced/archived as2026-09-09-automatic-production-publication. No further implementation or plan adjustment is proposed; only this docs/spec closeout merge remains.
+
+## 2026-10-09 R13 authorized body-image delivery
+
+Explicit user scope authorizes body-only R13, advanced gestures and isolated public-demo preview on the existing Pages preview project; historical cover dependency does not block this bounded delivery. Implementation and tests are in feat/post-image-lightbox from eefd2ba; production workflow/private content remain untouched. Report/handoff capture RED, local verification and Chromium limitations. Remote draft PR/preview acceptance and spec archive remain pending; no merge or production action is authorized.

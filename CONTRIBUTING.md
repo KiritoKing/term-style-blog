@@ -1,6 +1,6 @@
 # Contributing / 参与贡献
 
-欢迎通过 Issue 和 Pull Request 改善这个个人博客。中文或英文都可以。适合的贡献包括可复现的渲染错误、键盘与移动端体验、内容校验、测试和文档修正。大型功能先开 Issue 讨论；项目不承诺扩展为通用 CMS。
+欢迎通过 Issue 和 Pull Request 改善这个终端博客主题。中文或英文都可以。适合的贡献包括可复现的渲染错误、键盘与移动端体验、内容校验、测试和文档修正。大型功能先开 Issue 讨论；项目不承诺扩展为通用 CMS。
 
 ## 本地验证
 
@@ -33,4 +33,4 @@ PR CI 只读取仓库中的演示内容，不使用生产部署密钥。维护�
 
 ## English
 
-Focused fixes and documentation improvements are welcome. Discuss substantial changes before implementation. Follow the commands above using the bundled Markdown collection, include a regression test for behavioral fixes, and preserve the terminal design. Never include private content or credentials. Contributions are provided under the repository's MIT license; retain third-party notices. Use the private security-reporting channel for vulnerabilities.
+Focused fixes and documentation improvements are welcome. Discuss substantial changes before implementation. Follow the commands above using the bundled Markdown collection, include a regression test for behavioral fixes, and preserve the terminal design and test both neutral defaults and explicit owner settings when changing configuration. Never include private content or credentials. Contributions are provided under the repository's MIT license; retain third-party notices. Use the private security-reporting channel for vulnerabilities.

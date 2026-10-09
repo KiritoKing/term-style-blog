@@ -21,18 +21,18 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
-    "@astrojs/markdown-remark": "^7.3.1",
+    "@astrojs/markdown-remark": "^7.3.2",
     "@astrojs/react": "^6.0.5",
     "@panzoom/panzoom": "4.6.2",
     "@shikijs/rehype": "^3.23.0",
-    "astro": "^7.3.2",
+    "astro": "^7.3.8",
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.546.0",
     "mermaid": "^11.17.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "remark-gfm": "^4.0.1",
-    "sharp": "^0.35.4"
+    "sharp": "^0.35.5"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
@@ -52,10 +52,10 @@
     "vitest": "^5.0.0"
   },
   "private": true,
-  "description": "A personal terminal-style Astro blog powered by Obsidian Markdown, React and Tailwind CSS.",
+  "description": "A reusable terminal-style Astro blog theme with Markdown, search and an interactive shell.",
   "license": "MIT",
   "author": "ChlorineC (KiritoKing)",
-  "homepage": "https://chlorinec.top",
+  "homepage": "https://github.com/KiritoKing/term-style-blog",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/KiritoKing/term-style-blog.git"

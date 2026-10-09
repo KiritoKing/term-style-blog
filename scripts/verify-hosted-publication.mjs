@@ -285,7 +285,7 @@ function publicationWithoutRevision(identity, robotsSha256, routes) {
   };
 }
 
-function expectedPublication(identity, robotsSha256, routes) {
+export function expectedPublication(identity, robotsSha256, routes) {
   const base = publicationWithoutRevision(identity, robotsSha256, routes);
   return {
     ...base,
@@ -366,7 +366,7 @@ async function inspectDist(distDir, identity, requireRevision) {
   return { absoluteDist, documents, publication, robots };
 }
 
-function assertPublicationSchema(publication) {
+export function assertPublicationSchema(publication) {
   exactKeys(publication, PUBLICATION_KEYS, "publication.json");
   if (
     publication.schema_version !== 1 ||

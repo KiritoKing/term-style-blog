@@ -1081,3 +1081,39 @@ tasks:
   report: .agent/reports/AUTO01-automatic-production.md
   handoff: .agent/handoffs/AUTO01-automatic-production.md
   last_updated: 2026-09-09
+
+- id: AUTO02
+  change: main-framework-publication
+  objective: Publish main updates using revalidated immutable already-published content
+  priority: P0
+  deps: [AUTO01]
+  status: done
+  owner_session: null
+  branch: feat/main-publication-autodeploy
+  allowed_paths: [.github/workflows/deploy-publication.yml, scripts, tests/deployment, tests/e2e, docs/publication-pipeline.md, docs/getting-started.md, openspec, .agent]
+  locked_paths: []
+  relevant_specs: [openspec/specs/publication-deployment/spec.md, openspec/specs/ci-workflow-roles/spec.md, openspec/changes/archive/2026-10-09-main-framework-publication]
+  required_tests: [input_policy, reference_resolution, snapshot_tamper, main_pr_boundary, freshness_git, workflow_syntax, deployment, unit, fixture_build, openspec_validation]
+  acceptance_commands: ["pnpm test:deployment", "pnpm test", "pnpm check", "pnpm build", "openspec validate publication-deployment --type spec --strict", "openspec validate ci-workflow-roles --type spec --strict", "pnpm test:e2e", "E2E_REAL_CORPUS=1 pnpm exec playwright test tests/e2e/publication-image-lightbox.spec.ts", "git diff --check"]
+  report: .agent/reports/AUTO02-main-framework-publication.md
+  handoff: .agent/handoffs/AUTO02-main-framework-publication.md
+  last_updated: 2026-10-09
+
+- id: OSS02
+  change: reusable-terminal-theme
+  objective: Prepare a neutral reusable Astro theme while preserving the explicit owner publication profile
+  priority: P1
+  deps: [OSS01, AUTO02]
+  status: done
+  owner_session: null
+  branch: feat/reusable-astro-theme
+  allowed_paths: [site.config.ts, src, public, scripts/generate-redirects.ts, scripts/feature-preview, tests, astro.config.mjs, package.json, pnpm-lock.yaml, .env.example, .gitignore, .github/workflows/ci.yml, .github/workflows/deploy-publication.yml, .github/workflows/preview-theme.yml, README.md, README.en.md, NOTICE.md, CONTRIBUTING.md, docs, openspec, .agent]
+  locked_paths: []
+  relevant_specs: [openspec/specs/open-source-distribution/spec.md, openspec/specs/personal-site-metadata/spec.md, openspec/specs/giscus-comments/spec.md, openspec/specs/historical-url-compatibility/spec.md, openspec/changes/archive/2026-10-09-reusable-terminal-theme]
+  required_tests: [profile_unit, workflow_static, frozen_install, fixture_build, chromium, axe_smoke, redacted_history_scan, attribution_review, openspec_validation]
+  acceptance_commands: ["pnpm install --frozen-lockfile", "pnpm test", "pnpm test:deployment", "pnpm check", "pnpm build", "pnpm test:e2e", "SITE_PROFILE=chlorine pnpm build", "SITE_PROFILE=chlorine pnpm test:e2e", "git diff --check"]
+  report: .agent/reports/OSS02-reusable-terminal-theme.md
+  handoff: .agent/handoffs/OSS02-reusable-terminal-theme.md
+  blocked_by: []
+  unblock_when: Code and protected synthetic review preview authorized; parent owns public hosting approval and Portal login/submission
+  last_updated: 2026-10-09

@@ -12,6 +12,7 @@ import {
   getPostPathSegment,
   normalizeBlogPost,
 } from '@/data/blog';
+import { siteConfig } from '../../../site.config';
 import { site } from '@/lib/site';
 import ShellLayout from '@/layouts/ShellLayout.astro';
 
@@ -37,11 +38,8 @@ const tocItems = headings.map((heading) => ({
   level: heading.depth - minDepth,
 }));
 const siteOrigin = Astro.site?.toString() ?? site.origin;
-const giscusConfig = {
-  repo: 'KiritoKing/notion-astro-rev',
-  repoId: 'R_kgDONmCW3w',
-  category: 'Announcements',
-  categoryId: 'DIC_kwDONmCW384CpTzw',
+const giscusConfig = siteConfig.giscus && {
+  ...siteConfig.giscus,
   themeLight: new URL('/giscus-terminal-light.css', siteOrigin).toString(),
   themeDark: new URL('/giscus-terminal-dark.css', siteOrigin).toString(),
 };
@@ -122,7 +120,7 @@ const giscusConfig = {
       {next && <a class="post-nav-link sm:text-right" href={getPostPath(next)}>{next.title} →</a>}
     </nav>
 
-    <section class="mt-8 pixel-panel p-4 md:p-8 text-gray-700 dark:text-gray-300" data-pagefind-ignore>
+    {giscusConfig && <section class="mt-8 pixel-panel p-4 md:p-8 text-gray-700 dark:text-gray-300" data-pagefind-ignore>
       <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-4">
         <span class="font-pixel text-xs">COMMENTS</span>
         <span class="text-blue-600 dark:text-green-400"># giscus</span>
@@ -139,12 +137,12 @@ const giscusConfig = {
           reactionsEnabled="1"
           emitMetadata="0"
           inputPosition="top"
-          lang="zh-CN"
+          lang={giscusConfig.lang}
           themeLight={giscusConfig.themeLight}
           themeDark={giscusConfig.themeDark}
         />
       </div>
-    </section>
+    </section>}
 
     <a href="/posts" class="post-nav-link mt-6 w-fit">
       <LucideIcon name="chevron-right" size={18} /> cd ../

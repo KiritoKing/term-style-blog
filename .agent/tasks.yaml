@@ -1104,12 +1104,12 @@ tasks:
   objective: Prepare a neutral reusable Astro theme while preserving the explicit owner publication profile
   priority: P1
   deps: [OSS01, AUTO02]
-  status: in_progress
-  owner_session: codex-cloud-root
+  status: done
+  owner_session: null
   branch: feat/reusable-astro-theme
   allowed_paths: [site.config.ts, src, public, scripts/generate-redirects.ts, scripts/feature-preview, tests, astro.config.mjs, package.json, pnpm-lock.yaml, .env.example, .gitignore, .github/workflows/ci.yml, .github/workflows/deploy-publication.yml, .github/workflows/preview-theme.yml, README.md, README.en.md, NOTICE.md, CONTRIBUTING.md, docs, openspec, .agent]
-  locked_paths: [site.config.ts, astro.config.mjs, package.json, pnpm-lock.yaml, .github/workflows/deploy-publication.yml]
-  relevant_specs: [openspec/specs/open-source-distribution/spec.md, openspec/specs/personal-site-metadata/spec.md, openspec/specs/giscus-comments/spec.md, openspec/specs/historical-url-compatibility/spec.md, openspec/changes/reusable-terminal-theme]
+  locked_paths: []
+  relevant_specs: [openspec/specs/open-source-distribution/spec.md, openspec/specs/personal-site-metadata/spec.md, openspec/specs/giscus-comments/spec.md, openspec/specs/historical-url-compatibility/spec.md, openspec/changes/archive/2026-10-09-reusable-terminal-theme]
   required_tests: [profile_unit, workflow_static, frozen_install, fixture_build, chromium, axe_smoke, redacted_history_scan, attribution_review, openspec_validation]
   acceptance_commands: ["pnpm install --frozen-lockfile", "pnpm test", "pnpm test:deployment", "pnpm check", "pnpm build", "pnpm test:e2e", "SITE_PROFILE=chlorine pnpm build", "SITE_PROFILE=chlorine pnpm test:e2e", "git diff --check"]
   report: .agent/reports/OSS02-reusable-terminal-theme.md

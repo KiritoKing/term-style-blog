@@ -12,5 +12,5 @@
 - [x] 3.1 Verify frozen install, unit/deployment tests, type checks and both synthetic profile builds.
 - [x] 3.2 Run Chromium desktop/mobile, themes, navigation/image viewer and axe smoke.
 - [x] 3.3 Verify workflow syntax, OpenSpec and whitespace; review source/history scan and remaining advisories.
-- [ ] 3.4 Push independent feature branch, create draft PR and verify exact hosted preview SHA.
-- [ ] 3.5 Upload synthetic screenshots and record public-demo/OAuth parent-owned blockers; sync/archive specs and handoff.
+- [x] 3.4 Push independent feature branch, create draft PR and verify exact hosted preview SHA.
+- [x] 3.5 Upload synthetic screenshots and record public-demo/OAuth parent-owned blockers; sync/archive specs and handoff.

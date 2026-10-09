@@ -1,5 +1,6 @@
 ---
 import LucideIcon from '@/components/icons/LucideIcon.astro';
+import { site } from '@/lib/site';
 import { networkLinks } from '@/data/network';
 
 interface Props {
@@ -21,8 +22,8 @@ const { navActive } = Astro.props;
  |||||  
 `}
     </pre>
-    <h1 class="font-pixel text-xl text-gray-900 dark:text-white mb-1 text-glow-white">ChlorineC</h1>
-    <p class="text-sm text-blue-600 dark:text-green-600 mb-4">Coding With Passion</p>
+    <h1 class="font-pixel text-xl text-gray-900 dark:text-white mb-1 text-glow-white">{site.author}</h1>
+    <p class="text-sm text-blue-600 dark:text-green-600 mb-4">{site.subtitle}</p>
 
     <div class="w-full h-px bg-gray-300 dark:bg-[#333] my-2"></div>
 

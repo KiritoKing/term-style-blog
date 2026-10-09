@@ -1,24 +1,24 @@
 ---
-title: Rewriting everything in Rust
+title: Rust CLI notes
 slug: learning-rust
 status: published
 date: "2026-02-15"
 category: Tech
 tags: ["rust", "programming"]
-summary: A quick story about embracing Rust and the benefits that followed.
+summary: A synthetic Markdown example with a small Rust code block.
 related_content: []
 publish:
   target: blog
 ---
 
-It finally happened. I succumbed to the crab. Here is my journey of rewriting my side projects in Rust.
+This is a synthetic sample article for testing code highlighting and navigation. It does not describe a real migration or measured performance result.
 
-The borrow checker is notoriously difficult to grasp at first, but once it clicks, it feels like you have a superpower. No more null pointer dereferences, no more data races. Just pure, unadulterated performance and safety.
+## A small command
 
 ```rust
 fn main() {
-    println!("Hello, world!");
+    println!("Hello, terminal!");
 }
 ```
 
-I started by porting a small CLI tool I wrote in Node.js. The performance difference was staggering. What used to take 500ms now takes 12ms. I am officially a Rustacean.
+Use this space for your own notes. Keep each published post's slug stable so existing links continue to work.

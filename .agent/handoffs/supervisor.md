@@ -157,3 +157,23 @@ R13's authorized body viewer and advanced gestures pass local/remote fixture val
 ## R13 review refinement: footer buttons only
 
 User explicitly requested removing all visible viewer footer descriptions on the same draft PR #21. Minimal Astro/CSS changes retain caption/help/scale for AT and all previously accepted gestures. Tests first record RED, then 13 viewer E2E pass; check/build/spec/diff and before/after Library writes pass. Isolated preview/online verifier checks the new footer against the exact revision SHA before final return; PR body contains the current acceptance evidence. Production and unrelated plans/dependencies are untouched.
+
+## 2026-10-09 AUTO02 authorized
+
+Owner explicitly requests automatic main publication after PR21 merge. New isolated branch starts at 79737bce. AUTO02 owns bounded publication workflow/validators/tests/docs; prior task priorities and dependencies are unchanged. No production trigger, direct main write, external permission change or automatic merge is authorized. Tests and PR review precede merge; OSS cleanup/catalogue work remains deferred until online acceptance.
+
+## 2026-10-09 AUTO02 implementation accepted
+
+Draft PR #23 introduces owner main publication using canonical accepted content references plus complete immutable snapshot validation, retaining all existing policy/environment/preview/serialization/recovery gates and read-only permissions. 53 deployment,112 unit,31 Chromium fixture tests plus a separate real-corpus image acceptance exercised on the public synthetic build pass. CI #38 for implementation fd373197ddbc6c129effef72161f7dd5d5426ab5 passed. The missing real-publication demo-route gate is repaired by fixture/real-corpus suite boundaries. Specs synced and archived; task done and locks released. Documentation/archive head CI is recorded in PR body. No production operation or external permission change occurred. Next action is owner review/merge then main-run/online acceptance; OSS/Astro catalogue work remains deferred. No additional plan adjustment suggested.
+
+## 2026-10-09 OSS02 explicitly authorized after online acceptance
+
+Parent completed actual production desktop/narrow, themes, image gesture/keyboard/focus/scroll and repeat acceptance for AUTO02. The canonical identity browser read was client-blocked; controlled successful Actions SHA evidence remains authoritative. OSS02 starts from latest main 7577a11e on feat/reusable-astro-theme, default neutral profile plus explicitly preserved owner settings; original publication gates and private content remain. No routine questions/delegation, production operation or catalogue login is needed. Code/tests/docs and existing protected synthetic preview are authorized. Public anonymous demo requires parent approval of a separate public hosting target; existing Access remains. See OSS02 report/handoff.
+
+## 2026-10-09 OSS02 source/theme review accepted
+
+Independent draft PR24 from main7577a11e passes local122 unit/56 deployment,0-error check, frozen install, template33/owner32 Chromium browser tests and remote CI44 (required verify retained). Existing controlled Pages preview215fe0c4 serves exact aed3afc9 with neutral synthetic/noindex output; hosted four theme/width combinations and SHA pass in run37901443074. Four original screenshots385,087 bytes saved to Library, licenses/attribution retained; redacted candidate/history scan0 findings. Astro7.3.8 compatible updates reduce audit16→4; four paths and remaining risks documented. Four specs synced/archive complete, OSS02 locks released. Final docs/archive head gets fresh CI/preview in PR metadata before handoff. Protected preview is not public catalogue hosting; parent must approve/provide an independent anonymous demo target and personally handle Portal login/OAuth/submission/admin review. No production operation, Access change, private snapshot, new credential/service or merge performed. No unrelated plan adjustment proposed.
+
+## 2026-10-09 DEP01 authorized safe review
+
+Owner explicitly authorizes compatible dependency upgrades and approve without merge. Root refreshes PR20on unmerged reviewed PR24, preserving newer security resolutions; final headCI precedes approve. Isolated local tests pass122unit/56deployment/check and template33owner32Chromium; audit3plus unconfirmed http-cache high-risk note retained. Original#16/#20/#22heads are conflicted; #22patch is alreadycovered. Separate read-only agent verifies#18action/source/CI. No production/private content/Access/credential/forcedoverride operation. Existing plan priorities remain.

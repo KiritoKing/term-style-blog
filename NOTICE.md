@@ -106,7 +106,7 @@ SOFTWARE.
 
 ## Dependencies and development tools
 
-Packages in `pnpm-lock.yaml` retain their own licenses. Notable direct dependencies include Astro, React, Tailwind, Mermaid, Shiki, Pagefind, Gray Matter and Remark (MIT); Lucide (ISC); and Sharp, TypeScript and Playwright (Apache-2.0). This source release does not bundle `node_modules`, compiled site assets or native binaries. If redistributing a built bundle, include the notices required by the exact bundled dependency versions; use `pnpm licenses list` to inspect the installed graph.
+Packages in `pnpm-lock.yaml` retain their own licenses. Notable direct dependencies include Astro, React, Tailwind, Mermaid, Shiki, Pagefind, Gray Matter, Remark and Panzoom (MIT); Lucide (ISC); and Sharp, TypeScript and Playwright (Apache-2.0). This source release does not bundle `node_modules`, compiled site assets or native binaries. If redistributing a built bundle, include the notices required by the exact bundled dependency versions; use `pnpm licenses list` to inspect the installed graph.
 
 Generated OpenSpec skills in `.agents/skills/` retain their `author: openspec` and `license: MIT` metadata. Giscus is loaded from its hosted service and is not vendored in this repository. Named fallback fonts are not bundled font files.
 
@@ -114,4 +114,4 @@ Generated OpenSpec skills in `.agents/skills/` retain their `author: openspec` a
 
 The included demo Markdown and synthetic test fixtures are provided with the source under MIT. Actual articles live in a separate publication source. The author's online article footer specifies [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/); external media may have its own attribution or license. The source MIT license does not relicense those articles or third-party material.
 
-`docs/images/terminal-blog.png` is an unmodified screenshot of the public blog for documentation. The software interface follows the source license; article text visible within it retains its article-content license. Replace the author's name, links, domain and comment configuration when publishing a fork.
+`public/demo/lightbox-landscape.png` and `lightbox-portrait.png` are original synthetic geometry/image-viewer fixtures. The four current `docs/images/*.png` theme screenshots are original captures of the neutral template and these synthetic demo posts/assets, provided under MIT. They contain no owner publication snapshot. The prior personal-blog screenshot retained in Git history has its original article-content license; this update does not relicense historical personal content. The `chlorine` configuration preserves the owner identity only for explicit owner builds. No font files are redistributed.

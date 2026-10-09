@@ -39,3 +39,6 @@ src/assets
 
 # reference project
 reference/
+
+# Generated from the selected site profile on each build
+public/_redirects

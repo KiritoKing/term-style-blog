@@ -1,6 +1,6 @@
 # Configuration and deployment / 配置与部署
 
-This is the source of a personal site. Local development is self-contained; the owner's private publication infrastructure is not needed to run a fork.
+This reusable terminal blog theme starts with neutral synthetic content. The original owner's publication profile is preserved separately; private infrastructure is not needed to run a fork.
 
 ## Local content
 
@@ -18,31 +18,48 @@ pnpm build:content
 
 Set `EXPECTED_CONTENT_COUNT` to your own expected count or omit it. The directory must contain only approved Markdown, including nested files. Read the [content contract](content.md) before pointing the build at your own notes.
 
-## Change these before publishing a fork
+## Configure a fork in one file
 
-| File | What to replace |
+Edit the `template` profile in [`site.config.ts`](../site.config.ts). Existing components import this configuration through their data wrappers; you do not need to edit the shell or article components.
+
+| Configuration | Purpose |
 | --- | --- |
-| `astro.config.mjs` | `site` origin and allowed remote image hosts |
-| `src/lib/site.ts` | Origin, title, author, description, GitHub URL and your article license |
-| `src/data/about.ts`, `src/data/network.ts` | Personal biography and links |
-| `src/components/shell/Sidebar.astro` | Visible author name |
-| `src/pages/posts/[id].astro` | Giscus repository/category IDs and themes; connect your own discussion repository |
-| `scripts/historical-url-map.json` | Your redirects; use `{}` when you have no historical routes |
-| `vercel.json` | The author disabled the old Vercel demo’s automatic Git deployments; change this explicit opt-out if your fork intentionally uses Vercel Git integration |
-| `public/favicon.svg`, `public/favicon.ico` | Your site icon |
-| `src/content/blog/` | Replace demo posts or use external `CONTENT_DIR` |
+| `site` | Origin, title, subtitle, description, author, public author URL (`github`), language and article-content license |
+| `terminal` | Username and hostname shared by the top bar, prompt, `pwd`, `cd` and `whoami` |
+| `about`, `network` | Biography, skills and typed public links; an empty network hides the panel |
+| `giscus` | `null` disables comments entirely; enable with your own public repo/category IDs and language |
+| `redirectsFile` | `null` emits no historical redirects; otherwise a repository-relative JSON map of exact slug to alias arrays |
+| `remoteImages` | Allowed HTTPS image hosts for Astro image processing; direct remote body images keep lazy loading |
 
-Keep the two site origins consistent. `pnpm build` regenerates `public/_redirects` from the historical map, so do not maintain generated rules by hand. This repository's old aliases deliberately refer to the author's own posts and are not meaningful in a fresh fork.
+Replace the Markdown demo collection and `public/favicon.svg`/`.ico`. Preserve LICENSE/NOTICE copyright when distributing source.
 
-Giscus IDs are public configuration, not secrets. Configure Giscus for your own repository and domain before inviting comments; leaving the author's settings is not a shared comment service. The site has no authentication server or CMS backend.
+`SITE_PROFILE` defaults to `template`; unknown profiles fail the build. `SITE_URL` optionally overrides the selected origin and must be an HTTPS origin (HTTP localhost is allowed for development), with no credentials, path, query or fragment. Export variables in the shell: `.env` alone is not read by the prebuild validators. For example:
+
+```sh
+SITE_URL=https://blog.example.org PUBLIC_DEPLOYMENT_ENV=preview pnpm build
+```
+
+Giscus IDs are public configuration, not secrets. Enable GitHub Discussions for your own repository using [Giscus setup](https://giscus.app/), paste the generated repo/category IDs into `giscus`, and configure allowed origins before inviting comments. Pathname mapping and same-origin terminal light/dark theme CSS remain available. No script or iframe is emitted when comments are off.
+
+`pnpm build` generates ignored `public/_redirects` from the selected map. An example map is `{ "hello-world": ["/old/hello"] }`; do not edit generated rules. The unchanged `scripts/historical-url-map.json` belongs to the owner's `chlorine` profile and is not inherited by a fresh template.
+
+### Preserved owner profile
+
+`SITE_PROFILE=chlorine` retains chlorinec.top, ChlorineC's metadata/About/network, the existing Giscus repository/category, article license, image hosts and all 162 historical aliases. Both build jobs in the protected publication workflow explicitly select it. The framework's default template changes neither the private source nor the immutable publication protocol. To check this profile without private content, run:
+
+```sh
+SITE_PROFILE=chlorine PUBLIC_DEPLOYMENT_ENV=preview pnpm build
+SITE_PROFILE=chlorine pnpm test:e2e
+```
 
 ## Static hosting
 
 `pnpm build` produces `dist/` and its Pagefind index. For a site intended to be indexed, explicitly set `PUBLIC_DEPLOYMENT_ENV=production`; previews use `PUBLIC_DEPLOYMENT_ENV=preview` and emit `noindex` and disallow-all robots. Do not mistake those crawler directives for privacy controls.
 
-After changing personal settings and validating your own content:
+After configuring the template and validating your own content:
 
 ```sh
+SITE_URL=https://blog.example.org \
 CONTENT_DIR=/absolute/path/to/published \
 PUBLIC_DEPLOYMENT_ENV=production \
 STRICT_CONTENT_ASSETS=1 \
@@ -91,7 +108,7 @@ Public Actions logs/artifacts are public surfaces. Send only content that is saf
 
 ## CI roles
 
-`CI` validates pull requests and main commits using demo Markdown; it does not publish content. `Blog publish (Cloudflare)` handles explicit immutable content events or manual dispatch. GitHub-managed CodeQL scans source, while Dependabot maintains dependency PRs. Routine npm minor/patch and Actions updates are grouped for Monday09:00 Asia/Shanghai; security updates remain enabled independently of that routine schedule. Historical runs remain available as audit evidence.
+`CI` validates pull requests and main commits using demo Markdown; it does not publish content. `Blog publish (Cloudflare)` handles owner main updates, explicit immutable content events or manual dispatch. Main updates reuse the accepted public production content reference and revalidate its immutable snapshot; PRs never enter publication. GitHub-managed CodeQL scans source, while Dependabot maintains dependency PRs. Routine npm minor/patch and Actions updates are grouped for Monday09:00 Asia/Shanghai; security updates remain enabled independently of that routine schedule. Historical runs remain available as audit evidence.
 
 The old Vercel demo is disabled through [`vercel.json`](../vercel.json), using the supported [Git deployment opt-out](https://vercel.com/docs/project-configuration/git-configuration). CodeQL language jobs and Dependabot updater jobs are security/maintenance activity, not additional blog deployments.
 

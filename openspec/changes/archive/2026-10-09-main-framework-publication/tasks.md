@@ -13,5 +13,5 @@
 ## 3. Acceptance and delivery
 
 - [x] 3.1 Run deployment/unit suites, type check, fixture build, YAML/shell and OpenSpec validation.
-- [ ] 3.2 Update operational docs, sync/archive specs and write report/handoff.
-- [ ] 3.3 Push isolated feature branch, create draft PR and verify exact-head CI; do not merge or deploy.
+- [x] 3.2 Update operational docs, sync/archive specs and write report/handoff.
+- [x] 3.3 Push isolated feature branch, create draft PR and verify exact-head CI; do not merge or deploy.

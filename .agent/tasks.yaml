@@ -1087,12 +1087,12 @@ tasks:
   objective: Publish main updates using revalidated immutable already-published content
   priority: P0
   deps: [AUTO01]
-  status: review
-  owner_session: codex-cloud-main-publication
+  status: done
+  owner_session: null
   branch: feat/main-publication-autodeploy
   allowed_paths: [.github/workflows/deploy-publication.yml, scripts, tests/deployment, tests/e2e, docs/publication-pipeline.md, docs/getting-started.md, openspec, .agent]
-  locked_paths: [.github/workflows/deploy-publication.yml, scripts/validate-publication-snapshot.mjs, scripts/verify-hosted-publication.mjs]
-  relevant_specs: [openspec/specs/publication-deployment/spec.md, openspec/specs/ci-workflow-roles/spec.md, openspec/changes/main-framework-publication]
+  locked_paths: []
+  relevant_specs: [openspec/specs/publication-deployment/spec.md, openspec/specs/ci-workflow-roles/spec.md, openspec/changes/archive/2026-10-09-main-framework-publication]
   required_tests: [input_policy, reference_resolution, snapshot_tamper, main_pr_boundary, freshness_git, workflow_syntax, deployment, unit, fixture_build, openspec_validation]
   acceptance_commands: ["pnpm test:deployment", "pnpm test", "pnpm check", "pnpm build", "openspec validate main-framework-publication --strict", "git diff --check"]
   report: .agent/reports/AUTO02-main-framework-publication.md

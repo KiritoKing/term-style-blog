@@ -161,3 +161,7 @@ User explicitly requested removing all visible viewer footer descriptions on the
 ## 2026-10-09 AUTO02 authorized
 
 Owner explicitly requests automatic main publication after PR21 merge. New isolated branch starts at 79737bce. AUTO02 owns bounded publication workflow/validators/tests/docs; prior task priorities and dependencies are unchanged. No production trigger, direct main write, external permission change or automatic merge is authorized. Tests and PR review precede merge; OSS cleanup/catalogue work remains deferred until online acceptance.
+
+## 2026-10-09 AUTO02 implementation accepted
+
+Draft PR #23 introduces owner main publication using canonical accepted content references plus complete immutable snapshot validation, retaining all existing policy/environment/preview/serialization/recovery gates and read-only permissions. 53 deployment,112 unit,31 Chromium fixture tests plus a separate real-corpus image acceptance exercised on the public synthetic build pass. CI #38 for implementation fd373197ddbc6c129effef72161f7dd5d5426ab5 passed. The missing real-publication demo-route gate is repaired by fixture/real-corpus suite boundaries. Specs synced and archived; task done and locks released. Documentation/archive head CI is recorded in PR body. No production operation or external permission change occurred. Next action is owner review/merge then main-run/online acceptance; OSS/Astro catalogue work remains deferred. No additional plan adjustment suggested.

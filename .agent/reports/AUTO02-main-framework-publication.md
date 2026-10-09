@@ -1,6 +1,6 @@
 # Report: AUTO02 main-framework-publication
 
-Status: review
+Status: done (implementation complete; draft PR awaiting owner review/merge)
 Branch: feat/main-publication-autodeploy
 Baseline: 79737bce33fe2d53846187c660a8395c6b667c47 (remote main rechecked before commit).
 Authorization: owner requests main automatic publication. No direct main writes, auto-merge, workflow dispatch, production deploy or external account/permission changes occurred.
@@ -25,7 +25,7 @@ Test design was written before implementation. New initial RED: 1 pass / 6 fail 
 - Node --check all three changed scripts: pass.
 - OpenSpec change strict validation and git diff --check: pass.
 
-No dependencies/client JS added. No secrets read, copied or created. GITHUB_TOKEN remains contents:read. GitHub exact-head CI and final spec archive/writeback pending.
+No dependencies/client JS added. No secrets read, copied or created. GITHUB_TOKEN remains contents:read. Implementation commit fd373197ddbc6c129effef72161f7dd5d5426ab5 passed exact-head CI #38: https://github.com/KiritoKing/term-style-blog/actions/runs/37896199094. Draft PR #23: https://github.com/KiritoKing/term-style-blog/pull/23. Specs synced and change archived at openspec/changes/archive/2026-10-09-main-framework-publication; locks released. Final documentation/archive commit CI evidence will be bound to the final PR head in the PR description.
 
 ## Deployment effects and limits
 
@@ -36,3 +36,15 @@ Latest successful production evidence remains run 37782082059 (2026-10-08), fram
 ## Follow-up
 
 Review/merge PR normally, monitor its main-triggered publication and compare canonical /publication.json framework_sha with the merge SHA. Parent performs online viewer acceptance; OSS/Astro catalogue work remains deferred until that passes.
+
+## Read-only reusable snapshot evidence
+
+The latest successful production run 37782082059 prepare log exposes only these non-secret immutable inputs (reference evidence, never hardcoded as deployment defaults):
+
+- content_repository: KiritoKing/llm-obsidian
+- publication_branch: publish-snapshots
+- content_sha: ce2b8c25eb0cad425964b4087a2043836c60484a
+- manifest_sha256: e80e4cc50c0dab43b1c21304f920567f09d81e1dd99f6cce3c2fd60e8ec65cc6
+- source_tree_hash: 8985e8dda1568f77d46dba5e79042160e0251a64eb6a13d6a3d5371a7f41f6da
+
+Manual retry, if independently authorized, requires all five immutable inputs, deploy_mode=production-retry, and branch main. Main-push publication resolves accepted content dynamically and needs no manual input. Previous run canonical verification succeeded with build_revision 8a1c21ae935f27413cb4c6b5b06a97ce0df0119798410edab3fe167d2278fc92; this is historical evidence rather than a fresh online measurement.

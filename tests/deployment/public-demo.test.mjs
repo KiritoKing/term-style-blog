@@ -66,6 +66,52 @@ test('pre-existing unsafe project, Git integration or runtime bindings stop befo
   }
 });
 
+// Independent fixtures from the Pages project API deployment_configs schema.
+const runtimeBindings = {
+  env_vars: { CONFIG: { type: 'plain_text', value: 'synthetic' } },
+  ai_bindings: { AI: { project_id: 'synthetic-project' } },
+  analytics_engine_datasets: { ANALYTICS: { dataset: 'synthetic-dataset' } },
+  browsers: { BROWSER: {} },
+  d1_databases: { DB: { id: 'synthetic-database' } },
+  durable_object_namespaces: { OBJECT: { namespace_id: 'synthetic-namespace' } },
+  hyperdrive_bindings: { HYPERDRIVE: { id: 'synthetic-hyperdrive' } },
+  kv_namespaces: { KV: { namespace_id: 'synthetic-namespace' } },
+  mtls_certificates: { MTLS: { certificate_id: 'synthetic-certificate' } },
+  queue_producers: { QUEUE: { name: 'synthetic-queue' } },
+  r2_buckets: { BUCKET: { name: 'synthetic-bucket' } },
+  services: { SERVICE: { environment: 'production', service: 'synthetic-worker' } },
+  vectorize_bindings: { VECTORIZE: { index_name: 'synthetic-index' } },
+};
+
+for (const [field, binding] of Object.entries(runtimeBindings)) {
+  test(`static project rejects populated ${field} in either deployment environment before any write`, async () => {
+    for (const environment of ['preview', 'production']) {
+      let calls = 0;
+      await assert.rejects(ensureDemoProject(options(async (_url, request) => {
+        calls++;
+        assert.equal(request.method, 'GET');
+        return reply([{ ...project, deployment_configs: { [environment]: { [field]: binding } } }]);
+      })), /contract contains runtime bindings/i);
+      assert.equal(calls, 1);
+    }
+  });
+}
+
+test('empty or absent binding maps and unrelated deployment metadata remain safe to reuse', async () => {
+  const config = { compatibility_date: '2026-10-09', compatibility_flags: [], build_image_major_version: 3, fail_open: false, usage_model: 'standard' };
+  for (const value of [{}, null]) {
+    let calls = 0;
+    const emptyBindings = Object.fromEntries(Object.keys(runtimeBindings).map(field => [field, value]));
+    const evidence = await ensureDemoProject(options(async (_url, request) => {
+      calls++;
+      assert.equal(request.method, 'GET');
+      return reply([{ ...project, deployment_configs: { preview: { ...config, ...emptyBindings }, production: config } }]);
+    }));
+    assert.equal(evidence.created, false);
+    assert.equal(calls, 1);
+  }
+});
+
 test('API errors expose sanitized codes, never credentials or raw account configuration', async () => {
   await assert.rejects(ensureDemoProject(options(async () => new Response(JSON.stringify({ success: false, errors: [{ code: 10000, message: 'synthetic-test-token PRIVATE CONFIG' }] }), { status: 403 }))), (error) => /403.*10000/.test(error.message) && !/PRIVATE|synthetic-test-token/.test(error.message));
 });

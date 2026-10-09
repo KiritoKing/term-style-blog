@@ -3,7 +3,7 @@ import { mkdtemp, mkdir, writeFile, symlink, rm, readFile } from 'node:fs/promis
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
-import { PROJECT, PRODUCTION_BRANCH, PUBLIC_ORIGIN, validatePublicOrigin, ensureDemoProject, inspectStaticAssets } from '../../scripts/public-demo/control.mjs';
+import { PROJECT, PRODUCTION_BRANCH, PUBLIC_ORIGIN, validatePublicOrigin, ensureDemoProject, inspectStaticAssets, fetchAnonymous } from '../../scripts/public-demo/control.mjs';
 
 const project = { name: 'term-style-blog-demo', subdomain: 'term-style-blog-demo.pages.dev', production_branch: 'reserved-public-demo-20261009', created_on: '2026-10-09T09:00:00Z', source: null };
 const reply = (result, result_info = {}) => new Response(JSON.stringify({ success: true, result, result_info }), { status: 200 });
@@ -68,6 +68,27 @@ test('pre-existing unsafe project, Git integration or runtime bindings stop befo
 
 test('API errors expose sanitized codes, never credentials or raw account configuration', async () => {
   await assert.rejects(ensureDemoProject(options(async () => new Response(JSON.stringify({ success: false, errors: [{ code: 10000, message: 'synthetic-test-token PRIVATE CONFIG' }] }), { status: 403 }))), (error) => /403.*10000/.test(error.message) && !/PRIVATE|synthetic-test-token/.test(error.message));
+});
+
+test('new-domain anonymous TLS propagation retries securely within a fixed bound', async () => {
+  let calls = 0;
+  const response = await fetchAnonymous(`${PUBLIC_ORIGIN}/_feature-preview.json`, { pause: async () => {}, fetcher: async (_url, request) => {
+    calls++;
+    assert.equal(request.redirect, 'manual');
+    assert.equal(request.headers, undefined);
+    if (calls < 3) throw new TypeError('synthetic TLS handshake', { cause: { code: 'ERR_SSL_SSL/TLS_ALERT_HANDSHAKE_FAILURE' } });
+    return reply({ synthetic: true });
+  } });
+  assert.equal(response.status, 200);
+  assert.equal(calls, 3);
+});
+
+test('anonymous propagation does not follow auth redirects or bypass permanent certificate failures', async () => {
+  let calls = 0;
+  const response = await fetchAnonymous(PUBLIC_ORIGIN, { fetcher: async () => { calls++; return new Response('', { status: 302, headers: { location: 'https://login.example.test' } }); } });
+  assert.equal(response.status, 302);
+  assert.equal(calls, 1);
+  await assert.rejects(fetchAnonymous(PUBLIC_ORIGIN, { pause: async () => {}, fetcher: async () => { throw new Error('synthetic permanent TLS', { cause: { code: 'CERT_HAS_EXPIRED' } }); } }), /secure anonymous HTTPS/i);
 });
 
 test('static output accepts ordinary public files and rejects Functions/native/symlinks/oversize', async () => {

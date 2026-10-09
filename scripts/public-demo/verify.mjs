@@ -3,7 +3,7 @@ import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 import { join, relative } from 'node:path';
 import { chromium } from '@playwright/test';
 import { validateIdentity, verifyHtml } from '../feature-preview/identity.mjs';
-import { PUBLIC_ORIGIN, validatePublicOrigin } from './control.mjs';
+import { PUBLIC_ORIGIN, validatePublicOrigin, fetchAnonymous } from './control.mjs';
 
 const local = validateIdentity(JSON.parse(await readFile('dist/_feature-preview.json', 'utf8')));
 assert.equal(local.framework_sha, process.env.FRAMEWORK_SHA);
@@ -11,9 +11,10 @@ const origin = validatePublicOrigin(process.env.PREVIEW_URL);
 const isThemePreview = true;
 assert.ok(!process.env.CF_ACCESS_CLIENT_ID && !process.env.CF_ACCESS_CLIENT_SECRET, 'Anonymous demo verification cannot use Access credentials');
 const headers = {};
+const propagation = { deadline: Date.now() + 180000, onRetry: attempt => console.log(`Anonymous HTTPS propagation pending; bounded retry ${attempt}`) };
 // Anonymous requests never follow redirects or accept an authentication page.
 async function get(path) {
-  const response = await fetch(new URL(path, origin), { headers, redirect: 'manual', signal: AbortSignal.timeout(30000) });
+  const response = await fetchAnonymous(new URL(path, origin), propagation);
   assert.equal(response.status, 200, `Hosted path did not return blog output: ${path}`);
   return response.text();
 }
@@ -35,7 +36,7 @@ for (const path of routes) {
   assert.match(html, /<meta\b[^>]*name="robots"[^>]*content="noindex, nofollow"/);
   assert.doesNotMatch(html, /giscus-terminal|giscus\.app\/client|chlorinec\.top|chlorinec@blog/);
 }
-const stableIdentity = await fetch(`${PUBLIC_ORIGIN}/_feature-preview.json`, { redirect: 'manual', signal: AbortSignal.timeout(30000) });
+const stableIdentity = await fetchAnonymous(`${PUBLIC_ORIGIN}/_feature-preview.json`, propagation);
 assert.equal(stableIdentity.status, 200, 'Stable alias must be anonymous');
 assert.equal(validateIdentity(await stableIdentity.json()).framework_sha, local.framework_sha);
 validateIdentity(JSON.parse(await get('/_feature-preview.json')));
@@ -72,7 +73,7 @@ try {
       const opener = page.locator('.article-image-trigger').first();
       const imageUrl = await opener.locator('img').evaluate(image => image.currentSrc || image.src);
       assert.equal(new URL(imageUrl).origin, origin);
-      const imageResponse = await fetch(imageUrl, { redirect: 'manual', signal: AbortSignal.timeout(30000) });
+      const imageResponse = await fetchAnonymous(imageUrl, propagation);
       assert.equal(imageResponse.status, 200, 'Synthetic article image must load anonymously');
       await opener.click();
       const dialog = page.getByRole('dialog', { name: '图片查看器' });
@@ -139,6 +140,7 @@ try {
         assert.equal(await opener.evaluate(element => element === document.activeElement), true);
       }
       await page.locator('.prose-terminal a:has(img)').first().press('Enter');
+      await page.waitForURL(/\/posts\/hello-world\/?$/);
       assert.ok(page.url().includes('/posts/hello-world'), 'Linked article image must navigate');
       await page.goBack();
       await page.waitForFunction(() => document.querySelectorAll('.article-image-trigger').length === 4);

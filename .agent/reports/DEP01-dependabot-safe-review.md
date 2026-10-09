@@ -14,3 +14,5 @@ Validation on implementation63a65acf061e72875d9c5d7c0efa85ec7be5377b:
 Files: package.json,pnpm-lock.yaml,dependency risk docs,state reports.
 OpenSpec impact: no product behavior contract changes; existing dependency maintenance/fixture/publication/typography specs apply. This maintenance does not create a new behavior specification.
 Risks and follow-ups: three advisories plus retained unconfirmed http-cache high-risk note are detailed in docs/dependency-review.md. Browser coverage Chromium only. Owner handles review/merge order and official Portal authentication.
+
+PR16 refresh: merge PR20add0d508 without force, retain its lock security patches and resolve Lucide1.52.0 only. Implementationaae83674c384cc9dbb33d0dfc9411b61bc65aff6 differs from PR20onlypackage/lock. Officialv1migration removes brand icons; all14usedESMicons are non-brand, existing explicitaria-hidden/focusable,size16/strokeWidth2 remain. Frozen/unit122/deployment56/check0errors0warnings31hints,template33/owner32Chromium(with12/13private-skips) andbothsyntheticbuilds pass. FinalheadCI/approvepending. No productcontractchange/specdelta needed.

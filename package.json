@@ -27,7 +27,7 @@
     "@shikijs/rehype": "^3.23.0",
     "astro": "^7.3.8",
     "gray-matter": "^4.0.3",
-    "lucide-react": "^0.546.0",
+    "lucide-react": "^1.52.0",
     "mermaid": "^11.17.2",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",

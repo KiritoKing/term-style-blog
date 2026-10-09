@@ -149,3 +149,7 @@ AUTO01 is done and unlocked. PR11/12/13 deliver protected hosted acceptance, ind
 ## 2026-10-09 R13 authorized body-image delivery
 
 Explicit user scope authorizes body-only R13, advanced gestures and isolated public-demo preview on the existing Pages preview project; historical cover dependency does not block this bounded delivery. Implementation and tests are in feat/post-image-lightbox from eefd2ba; production workflow/private content remain untouched. Report/handoff capture RED, local verification and Chromium limitations. Remote draft PR/preview acceptance and spec archive remain pending; no merge or production action is authorized.
+
+## 2026-10-09 R13 accepted within explicit draft/preview scope
+
+R13's authorized body viewer and advanced gestures pass local/remote fixture validation and exact-SHA hosted acceptance; draft PR #21 remains unmerged. 112 unit, 45 deployment, check/build/policy, 31 Chromium E2E (11 private-corpus skips) and four online theme/width combinations pass. Hosted implementation SHA 3fde0bc is bound to run 37884280269, HTML/identity and artifact digests recorded in the report. Four local screenshots have successful Library IDs after user-authorized direct fallback. Specs sync/archive complete and R13 locks released. This does not authorize merge, production, cover work or unrelated task/dependency changes. No plan adjustment beyond the explicitly authorized body scope is proposed. Documentation closeout HEAD gets its own SHA-bound preview verification before final delivery.

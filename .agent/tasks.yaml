@@ -557,8 +557,8 @@ tasks:
   priority: P2
   objective: User-authorized body-image viewer and isolated public-demo preview; historical cover scope remains outside this delivery.
   deps: [R12]
-  status: in_progress
-  owner_session: codex-cloud-01a1197f
+  status: done
+  owner_session: null
   branch: feat/post-image-lightbox
   allowed_paths:
   - src/components/ImageLightbox.astro
@@ -579,19 +579,13 @@ tasks:
   - openspec/specs/image-lightbox-viewer/**
   - openspec/specs/ci-workflow-roles/spec.md
   - .agent/**
-  locked_paths:
-  - src/pages/posts/[id].astro
-  - src/styles/global.css
-  - package.json
-  - pnpm-lock.yaml
-  - playwright.config.ts
-  - .github/workflows/preview-image-lightbox.yml
+  locked_paths: []
   relevant_specs:
   - openspec/specs/typography-rendering/spec.md
   - openspec/specs/mobile-reading-experience/spec.md
   - openspec/specs/publication-deployment/spec.md
   - openspec/specs/ci-workflow-roles/spec.md
-  - openspec/changes/image-lightbox-viewer
+  - openspec/changes/archive/2026-10-09-image-lightbox-viewer
   required_tests: [component_or_e2e, keyboard_accessibility, axe_smoke, deployment_policy]
   acceptance_commands:
   - pnpm test
@@ -599,7 +593,7 @@ tasks:
   - pnpm check
   - pnpm build
   - pnpm test:e2e
-  - openspec validate image-lightbox-viewer --strict
+  - openspec validate image-lightbox-viewer --type spec --strict
   - git diff --check
   report: .agent/reports/R13-image-lightbox-viewer.md
   handoff: .agent/handoffs/R13-image-lightbox-viewer.md

@@ -15,5 +15,5 @@
 ## 3. Acceptance and delivery
 
 - [x] 3.1 Run frozen install, Vitest, deployment tests, check, preview build, all Chromium E2E, strict change validation and diff lint.
-- [ ] 3.2 Create draft PR, deploy isolated preview and verify exact SHA/noindex/new feature online; upload screenshots to Library.
-- [ ] 3.3 Write report/handoff/registry, synchronize accepted specs and archive implementation change; record any external blocker explicitly.
+- [x] 3.2 Create draft PR, deploy isolated preview and verify exact SHA/noindex/new feature online; upload screenshots to Library.
+- [x] 3.3 Write report/handoff/registry, synchronize accepted specs and archive implementation change; record any external blocker explicitly.

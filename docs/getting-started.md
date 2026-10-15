@@ -78,12 +78,15 @@ The owner workflow uses these **GitHub Actions** settings:
 | Setting | Kind | Purpose |
 | --- | --- | --- |
 | `VAULT_CONTENTS_READ_KEY` | Secret | Read-only SSH deploy key for the private publication repository |
-| `CLOUDFLARE_API_TOKEN` | Secret | Dedicated Pages deployment access |
+| `CLOUDFLARE_BWS_ACCESS_TOKEN` | Secret | Read-only BSM CI credential for the Pages deployment token |
 | `CF_ACCESS_CLIENT_ID` / `CF_ACCESS_CLIENT_SECRET` | Secrets | Dedicated Service Auth token for protected preview acceptance; both required together |
 | `CLOUDFLARE_ACCOUNT_ID` | Variable | Target account identifier |
 | `CLOUDFLARE_PAGES_PROJECT` | Variable | Pages project name |
+| `CLOUDFLARE_BWS_PROJECT_ID` | Variable | Deployment credential BSM project ID: `2e402f55-2e5e-4297-8776-b4e400ca2c28` |
 | `PUBLICATION_PRODUCTION_ENABLED` | Variable | Defaults to `false` |
 | `PUBLICATION_PREVIEW_REVIEW` | Variable | Defaults to `manual` |
+
+To migrate the deployment credential, add the named `[Cloudflare · Blog Deploy] API Token` entry to the deployment BSM project and configure `CLOUDFLARE_BWS_ACCESS_TOKEN` plus `CLOUDFLARE_BWS_PROJECT_ID`. Keep the existing account and Pages project variables. From `main`, run the manual **Read-only Cloudflare credential check**; it resolves BSM, verifies that the Cloudflare token is active and reads only the configured Pages project metadata. After that check and the next normal preview deployment succeed, remove the old GitHub `CLOUDFLARE_API_TOKEN` secret. The check never deploys or calls Cloudflare write APIs.
 
 The production site is already live. The authorized automatic path requires `true/automatic`, a Service Auth policy limited to the preview application, and successful immutable hosted acceptance of every generated HTML page. It then promotes the separately verified production artifact and checks the public canonical domain. Default `false/manual` remains safe for unconfigured installations; opening the source repository does not open the vault or enable production. See [trigger map, recovery and retry rules](publication-pipeline.md).
 

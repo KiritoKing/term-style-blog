@@ -25,7 +25,6 @@ jobs:
         with:
           ref: ${{ github.sha }}
           persist-credentials: false
-      - uses: ./.github/actions/setup-cloudflare-tools
       - run: test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
       - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
         with:
@@ -88,17 +87,19 @@ jobs:
         run: |
           node --input-type=module -e 'import fs from "node:fs";import assert from "node:assert/strict";import {validateIdentity} from "./scripts/feature-preview/identity.mjs";const identity=validateIdentity(JSON.parse(fs.readFileSync("dist/_feature-preview.json","utf8")));assert.equal(identity.framework_sha,process.env.FRAMEWORK_SHA);'
           node scripts/validate-publication-snapshot.mjs site --root dist --mode preview
-      - name: Resolve and mask the Pages token for the next deploy step
+      - name: Read Engineer credential from Bitwarden
         id: preview_cloudflare_token
-        run: python .github/scripts/cf_secrets.py --profile pages --config cloudflare-secrets.toml --export-github-output
-        env:
-          CLOUDFLARE_BWS_ACCESS_TOKEN: ${{ secrets.CLOUDFLARE_BWS_ACCESS_TOKEN }}
-          CLOUDFLARE_BWS_PROJECT_ID: ${{ vars.CLOUDFLARE_BWS_PROJECT_ID }}
+        uses: bitwarden/sm-action@1238aae8fc64b212641190a9227c8a734ab1a793 # v3.0.1
+        with:
+          access_token: ${{ secrets.CLOUDFLARE_BWS_ACCESS_TOKEN }}
+          secrets: |
+            3d8050c9-478f-41b1-aeb6-b4e400d2a1b8 > CLOUDFLARE_API_TOKEN
+          set_env: false
       - name: Deploy public demo to isolated Pages branch
         id: preview
         uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0
         with:
-          apiToken: ${{ steps.preview_cloudflare_token.outputs.CF_TRANSIENT_API_TOKEN }}
+          apiToken: ${{ steps.preview_cloudflare_token.outputs.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
           wranglerVersion: 4.130.0
           command: >-

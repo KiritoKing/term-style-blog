@@ -165,3 +165,11 @@ Owner explicitly requests automatic main publication after PR21 merge. New isola
 ## 2026-10-09 AUTO02 implementation accepted
 
 Draft PR #23 introduces owner main publication using canonical accepted content references plus complete immutable snapshot validation, retaining all existing policy/environment/preview/serialization/recovery gates and read-only permissions. 53 deployment,112 unit,31 Chromium fixture tests plus a separate real-corpus image acceptance exercised on the public synthetic build pass. CI #38 for implementation fd373197ddbc6c129effef72161f7dd5d5426ab5 passed. The missing real-publication demo-route gate is repaired by fixture/real-corpus suite boundaries. Specs synced and archived; task done and locks released. Documentation/archive head CI is recorded in PR body. No production operation or external permission change occurred. Next action is owner review/merge then main-run/online acceptance; OSS/Astro catalogue work remains deferred. No additional plan adjustment suggested.
+
+## CF02 authorized CI simplification
+
+User approved replacing the custom resolver with the official Bitwarden Action on existing draft PR28. Root owns the bounded workflow/docs/test/spec changes; dependencies are satisfied and no unrelated task priorities or dependencies change. Plan: add credential-boundary tests, implement output-only retrieval, validate offline, then sync/archive. No publication, merge or account changes are authorized.
+
+## CF02 local acceptance
+
+CF02 implementation passes 56 deployment tests, Astro check, YAML/gate comparison and strict change validation. Official retrieval uses only Engineer and output-only injection; sandbox scope remains the accepted general-project scope. No unrelated plan adjustments. Task locks released; exact-head GitHub GET-only acceptance is the remaining submission evidence. Application deployment and PR merge are outside this task.

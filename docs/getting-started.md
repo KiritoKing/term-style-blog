@@ -78,15 +78,15 @@ The owner workflow uses these **GitHub Actions** settings:
 | Setting | Kind | Purpose |
 | --- | --- | --- |
 | `VAULT_CONTENTS_READ_KEY` | Secret | Read-only SSH deploy key for the private publication repository |
-| `CLOUDFLARE_BWS_ACCESS_TOKEN` | Secret | Read-only BSM CI credential for the Pages deployment token |
+| `CLOUDFLARE_BWS_ACCESS_TOKEN` | Secret | Sandbox bootstrap identity; target scope is read-only access to the shared Engineer token item only, with no project-wide access |
 | `CF_ACCESS_CLIENT_ID` / `CF_ACCESS_CLIENT_SECRET` | Secrets | Dedicated Service Auth token for protected preview acceptance; both required together |
 | `CLOUDFLARE_ACCOUNT_ID` | Variable | Target account identifier |
 | `CLOUDFLARE_PAGES_PROJECT` | Variable | Pages project name |
-| `CLOUDFLARE_BWS_PROJECT_ID` | Variable | Deployment credential BSM project ID: `2e402f55-2e5e-4297-8776-b4e400ca2c28` |
+| `CLOUDFLARE_BWS_PROJECT_ID` | Variable | general BSM project ID: `8202bf71-f04d-422a-85e2-b4e5009dc4b7` |
 | `PUBLICATION_PRODUCTION_ENABLED` | Variable | Defaults to `false` |
 | `PUBLICATION_PREVIEW_REVIEW` | Variable | Defaults to `manual` |
 
-To migrate the deployment credential, add the named `[Cloudflare · Blog Deploy] API Token` entry to the deployment BSM project and configure `CLOUDFLARE_BWS_ACCESS_TOKEN` plus `CLOUDFLARE_BWS_PROJECT_ID`. Keep the existing account and Pages project variables. From `main`, run the manual **Read-only Cloudflare credential check**; it resolves BSM, verifies that the Cloudflare token is active and reads only the configured Pages project metadata. After that check and the next normal preview deployment succeed, remove the old GitHub `CLOUDFLARE_API_TOKEN` secret. The check never deploys or calls Cloudflare write APIs.
+The Dagezhang app and this blog share one Cloudflare deployment key: `[Cloudflare · Engineer] API Token` in the general BSM project. The local desktop and GitHub sandbox should use separate BSM identities. Scope the sandbox identity to read-only access to this single Engineer token item; do not grant access to the whole general project, which also contains R2 credentials. Until the PR is merged, each repository keeps its existing GitHub `CLOUDFLARE_API_TOKEN` secret temporarily set to the same Engineer token so the current main branch remains compatible. This is a transition measure; BSM remains the target credential source. Configure the sandbox bootstrap Secret `CLOUDFLARE_BWS_ACCESS_TOKEN` and project Variable `CLOUDFLARE_BWS_PROJECT_ID`; keep the existing account and Pages project variables. From `main`, run the manual **Read-only Cloudflare credential check**; it checks BSM access, token status and Pages metadata without deploying or calling Cloudflare write APIs. Remove the compatibility secret only after the PR is merged and a normal deployment has passed its acceptance checks.
 
 The production site is already live. The authorized automatic path requires `true/automatic`, a Service Auth policy limited to the preview application, and successful immutable hosted acceptance of every generated HTML page. It then promotes the separately verified production artifact and checks the public canonical domain. Default `false/manual` remains safe for unconfigured installations; opening the source repository does not open the vault or enable production. See [trigger map, recovery and retry rules](publication-pipeline.md).
 

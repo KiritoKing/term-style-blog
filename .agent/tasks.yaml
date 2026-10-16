@@ -1098,3 +1098,20 @@ tasks:
   report: .agent/reports/AUTO02-main-framework-publication.md
   handoff: .agent/handoffs/AUTO02-main-framework-publication.md
   last_updated: 2026-10-09
+
+- id: CF02
+  change: use-official-bitwarden-action
+  objective: Replace the custom Cloudflare CI resolver with the official Bitwarden Action
+  priority: P1
+  deps: []
+  status: done
+  owner_session: codex
+  branch: codex/cloudflare-bsm-integration
+  allowed_paths: [.github/workflows, .github/scripts/cf_secrets.py, .github/scripts/test_cf_secrets.py, .github/actions/setup-cloudflare-tools, tests/deployment, docs/getting-started.md, docs/publication-pipeline.md, openspec, .agent]
+  locked_paths: []
+  relevant_specs: [openspec/specs/ci-workflow-roles/spec.md, openspec/specs/publication-deployment/spec.md, openspec/changes/archive/2026-10-16-use-official-bitwarden-action]
+  required_tests: [credential_scope, recovery_wiring, publication_boundary, yaml_parse, openspec_validation]
+  acceptance_commands: ["pnpm test:deployment", "openspec validate use-official-bitwarden-action --strict", "openspec validate ci-workflow-roles --type spec --strict", "git diff --check"]
+  report: .agent/reports/CF02-official-bitwarden-action.md
+  handoff: .agent/handoffs/CF02-official-bitwarden-action.md
+  last_updated: 2026-10-16

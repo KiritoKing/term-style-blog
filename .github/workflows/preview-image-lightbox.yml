@@ -87,11 +87,19 @@ jobs:
         run: |
           node --input-type=module -e 'import fs from "node:fs";import assert from "node:assert/strict";import {validateIdentity} from "./scripts/feature-preview/identity.mjs";const identity=validateIdentity(JSON.parse(fs.readFileSync("dist/_feature-preview.json","utf8")));assert.equal(identity.framework_sha,process.env.FRAMEWORK_SHA);'
           node scripts/validate-publication-snapshot.mjs site --root dist --mode preview
+      - name: Read Engineer credential from Bitwarden
+        id: preview_cloudflare_token
+        uses: bitwarden/sm-action@1238aae8fc64b212641190a9227c8a734ab1a793 # v3.0.1
+        with:
+          access_token: ${{ secrets.CLOUDFLARE_BWS_ACCESS_TOKEN }}
+          secrets: |
+            3d8050c9-478f-41b1-aeb6-b4e400d2a1b8 > CLOUDFLARE_API_TOKEN
+          set_env: false
       - name: Deploy public demo to isolated Pages branch
         id: preview
         uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          apiToken: ${{ steps.preview_cloudflare_token.outputs.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
           wranglerVersion: 4.130.0
           command: >-

@@ -1,0 +1,7 @@
+# Design
+GitHub stores the sandbox bootstrap token. Each Cloudflare job retrieves only the existing Engineer secret UUID with bitwarden/sm-action v3.0.1 pinned to commit 1238aae8fc64b212641190a9227c8a734ab1a793. set_env is false; outputs stay in the job and are mapped only to Wrangler inputs or API-step environment variables. Production backup, upload, verification and conditional recovery reuse the same successfully retrieved output. The read-only workflow performs only token and target metadata GET requests.
+
+Remove cf_secrets.py, its tests and setup-cloudflare-tools; keep the small existing read-only API validator and local cloudflare-secrets.toml. Do not replace the resolver with another custom credential layer. Sandbox currently retains general-project access by user decision; selecting one UUID does not narrow that identity's permission.
+
+# Test design before implementation
+Use synthetic, credential-free workflow contract tests to verify build jobs cannot receive deployment credentials, retrieval is output-only, each API consumer references an existing same-job Action output, and recovery remains reachable only under its original failure condition. Existing freshness and publication-policy tests cover production gates. Validate YAML, full deployment tests and specs locally; exact-head official Action acceptance uses the GET-only workflow. Never run publication for verification.

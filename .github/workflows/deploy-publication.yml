@@ -241,11 +241,19 @@ jobs:
           PUBLICATION_MODE: preview
         run: node framework/scripts/verify-hosted-publication.mjs stamp --dist framework/dist
 
+      - name: Read Engineer credential from Bitwarden
+        id: preview_cloudflare_token
+        uses: bitwarden/sm-action@1238aae8fc64b212641190a9227c8a734ab1a793 # v3.0.1
+        with:
+          access_token: ${{ secrets.CLOUDFLARE_BWS_ACCESS_TOKEN }}
+          secrets: |
+            3d8050c9-478f-41b1-aeb6-b4e400d2a1b8 > CLOUDFLARE_API_TOKEN
+          set_env: false
       - name: Deploy isolated Cloudflare Pages preview
         id: preview
         uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          apiToken: ${{ steps.preview_cloudflare_token.outputs.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ needs.prepare.outputs.cloudflare_account_id }}
           wranglerVersion: 4.130.0
           workingDirectory: framework
@@ -255,7 +263,6 @@ jobs:
             --branch=preview-${{ needs.prepare.outputs.content_sha }}
             --commit-hash=${{ needs.prepare.outputs.framework_sha }}
             --commit-message="preview content ${{ needs.prepare.outputs.content_sha }}"
-
       - name: Validate manual preview deployment outputs
         if: needs.prepare.outputs.preview_review == 'manual'
         env:
@@ -412,12 +419,20 @@ jobs:
           node framework/scripts/validate-publication-snapshot.mjs site
           --root framework/dist --mode production
 
+      - name: Read Engineer credential from Bitwarden
+        id: production_cloudflare_token
+        uses: bitwarden/sm-action@1238aae8fc64b212641190a9227c8a734ab1a793 # v3.0.1
+        with:
+          access_token: ${{ secrets.CLOUDFLARE_BWS_ACCESS_TOKEN }}
+          secrets: |
+            3d8050c9-478f-41b1-aeb6-b4e400d2a1b8 > CLOUDFLARE_API_TOKEN
+          set_env: false
       - name: Capture current production recovery baseline
         id: baseline
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ needs.prepare.outputs.cloudflare_account_id }}
           CLOUDFLARE_PAGES_PROJECT: ${{ needs.prepare.outputs.cloudflare_project }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_API_TOKEN: ${{ steps.production_cloudflare_token.outputs.CLOUDFLARE_API_TOKEN }}
         run: node framework/scripts/publication-production-state.mjs backup
 
       - name: Preserve recovery baseline before upload
@@ -456,7 +471,7 @@ jobs:
         id: production
         uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          apiToken: ${{ steps.production_cloudflare_token.outputs.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ needs.prepare.outputs.cloudflare_account_id }}
           wranglerVersion: 4.130.0
           workingDirectory: framework
@@ -466,7 +481,12 @@ jobs:
             --branch=main
             --commit-hash=${{ needs.prepare.outputs.framework_sha }}
             --commit-message="publication-run-${{ github.run_id }}-${{ github.run_attempt }}"
-
+      - name: Verify production metadata through the read-only API
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ needs.prepare.outputs.cloudflare_account_id }}
+          CLOUDFLARE_PAGES_PROJECT: ${{ needs.prepare.outputs.cloudflare_project }}
+          CLOUDFLARE_API_TOKEN: ${{ steps.production_cloudflare_token.outputs.CLOUDFLARE_API_TOKEN }}
+        run: node framework/scripts/publication-production-state.mjs verify
       - name: Verify production deployment response
         id: acceptance
         env:
@@ -479,10 +499,8 @@ jobs:
           FRAMEWORK_SHA: ${{ needs.prepare.outputs.framework_sha }}
           CLOUDFLARE_ACCOUNT_ID: ${{ needs.prepare.outputs.cloudflare_account_id }}
           CLOUDFLARE_PAGES_PROJECT: ${{ needs.prepare.outputs.cloudflare_project }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
           test "$DEPLOYMENT_ENVIRONMENT" = production
-          node framework/scripts/publication-production-state.mjs verify
           node framework/scripts/verify-hosted-publication.mjs verify --dist framework/dist --url https://chlorinec.top
 
       - name: Recover previous production after failed acceptance
@@ -492,7 +510,7 @@ jobs:
           FRAMEWORK_SHA: ${{ needs.prepare.outputs.framework_sha }}
           CLOUDFLARE_ACCOUNT_ID: ${{ needs.prepare.outputs.cloudflare_account_id }}
           CLOUDFLARE_PAGES_PROJECT: ${{ needs.prepare.outputs.cloudflare_project }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_API_TOKEN: ${{ steps.production_cloudflare_token.outputs.CLOUDFLARE_API_TOKEN }}
         run: node framework/scripts/publication-production-state.mjs rollback
 
       - name: Write non-secret deployment record

@@ -173,3 +173,5 @@ User approved replacing the custom resolver with the official Bitwarden Action o
 ## CF02 local acceptance
 
 CF02 implementation passes 56 deployment tests, Astro check, YAML/gate comparison and strict change validation. Official retrieval uses only Engineer and output-only injection; sandbox scope remains the accepted general-project scope. No unrelated plan adjustments. Task locks released; exact-head GitHub GET-only acceptance is the remaining submission evidence. Application deployment and PR merge are outside this task.
+
+CF02 GitHub acceptance: official retrieval and Pages GET-only check passed at a0807c4a7ed770ec9f96762b44d7f0747663800f (run 38888680859). No publication operation occurred.

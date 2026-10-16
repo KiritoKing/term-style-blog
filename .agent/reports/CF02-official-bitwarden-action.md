@@ -1,6 +1,6 @@
 # Report: CF02 official Bitwarden Action
 
-Status: done (implementation and local acceptance); exact-head GitHub acceptance pending at submission.
+Status: done (implementation, local acceptance and GitHub GET-only acceptance).
 Owner: Codex
 Branch: codex/cloudflare-bsm-integration
 
@@ -19,4 +19,4 @@ Environment note: unqualified pnpm resolves host v11 and attempted a dependency 
 
 OpenSpec impact: ci-workflow-roles adds official retrieval with step scope; delta synced and archived after local acceptance. No unrelated plan priorities/dependencies changed.
 
-Remaining proof: exact-head GitHub official Action + GET-only check. No merge, preview upload, production deployment or Cloudflare/BSM policy mutation performed. Actual writes and conditional rollback remain unexecuted; their existing contracts and gates pass. Sandbox's general-project access is retained by explicit user decision. Existing GitHub CLOUDFLARE_API_TOKEN compatibility secret stays until merge plus authorized normal deployment acceptance.
+GitHub acceptance: official Action retrieval and Pages token/metadata GET succeeded at implementation commit a0807c4a7ed770ec9f96762b44d7f0747663800f in run https://github.com/KiritoKing/term-style-blog/actions/runs/38888680859. No merge, preview upload, production deployment or Cloudflare/BSM policy mutation performed. Actual writes and conditional rollback remain unexecuted; their existing contracts and gates pass. Sandbox's general-project access is retained by explicit user decision. Existing GitHub CLOUDFLARE_API_TOKEN compatibility secret stays until merge plus authorized normal deployment acceptance.

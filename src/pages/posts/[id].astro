@@ -177,39 +177,98 @@ const giscusConfig = {
   )}
 
   <script>
+    import { mountIfCurrent } from '@/lib/pele-lifecycle';
+
     let articleEnhancementRun: Promise<void> | null = null;
     let articleEnhancementQueued = false;
+    let articleGeneration = 0;
+    const mountedPeleDiagrams = new Map<HTMLElement, import('pele/lazy').Mounted>();
+
+    const markDiagramRendered = (diagram: HTMLElement) => {
+      diagram.dataset.blogMermaidComplete = 'true';
+      diagram.dataset.blogMermaidRenderer = 'pele';
+    };
+
+    const destroyPeleDiagrams = () => {
+      articleGeneration += 1;
+      for (const diagram of mountedPeleDiagrams.values()) diagram.destroy();
+      mountedPeleDiagrams.clear();
+    };
 
     const renderArticleMermaid = async () => {
-      const mermaidBlocks = Array.from(
-        document.querySelectorAll('pre[data-language="mermaid"], pre:has(code.language-mermaid)'),
+      const sourceBlocks = Array.from(
+        document.querySelectorAll<HTMLPreElement>(
+          'pre[data-language="mermaid"]:not([data-blog-mermaid-pending]):not([data-blog-mermaid-error]), pre:has(code.language-mermaid):not([data-blog-mermaid-pending]):not([data-blog-mermaid-error])',
+        ),
       );
-      if (mermaidBlocks.length === 0) return;
+      if (sourceBlocks.length === 0) return;
+      const generation = articleGeneration;
 
-      // Claim every source block before the first await. The initial script run and
-      // astro:page-load can otherwise hand the same Mermaid source to two renderers.
-      const diagrams = mermaidBlocks.map((block) => {
+      // Keep the source block in place until Pele has completed successfully.
+      const diagrams = sourceBlocks.map((block) => {
         const diagram = document.createElement('div');
         diagram.className = 'mermaid';
-        diagram.textContent = block.textContent ?? '';
-        block.replaceWith(diagram);
-        return diagram;
+        block.dataset.blogMermaidPending = 'true';
+        block.before(diagram);
+        return { block, diagram, source: block.textContent ?? '' };
       });
+      await Promise.all(
+        diagrams.map(async ({ block, diagram, source }, index) => {
+          const showRenderError = () => {
+            diagram.remove();
+            if (generation !== articleGeneration || !block.isConnected) return;
+            delete block.dataset.blogMermaidPending;
+            block.dataset.blogMermaidError = 'true';
+            const error = document.createElement('p');
+            error.className = 'text-amber-700 dark:text-amber-300';
+            error.setAttribute('role', 'status');
+            error.textContent = 'Diagram preview is unavailable; the Mermaid source is shown below.';
+            block.before(error);
+          };
 
-      const { default: mermaid } = await import('mermaid');
-      await document.fonts.ready;
-      mermaid.initialize({
-        startOnLoad: false,
-        securityLevel: 'strict',
-        theme: document.documentElement.classList.contains('dark') ? 'dark' : 'default',
-      });
-      await mermaid.run({ nodes: diagrams });
+          if (generation !== articleGeneration || !diagram.isConnected || !block.isConnected) return;
 
+          try {
+            await document.fonts.ready;
+            if (generation !== articleGeneration || !diagram.isConnected || !block.isConnected) return;
+
+            const { mountAsync } = await import('pele/lazy');
+            if (generation !== articleGeneration || !diagram.isConnected || !block.isConnected) return;
+            const fontFamily = getComputedStyle(diagram).fontFamily;
+            const mounted = await mountIfCurrent(
+              () =>
+                mountAsync(diagram, source, {
+                  autoDirection: true,
+                  fontFamily,
+                  fontFamilyMono: fontFamily,
+                  idPrefix: `blog-pele-${index + 1}`,
+                  images: false,
+                  links: true,
+                }),
+              () => generation === articleGeneration && diagram.isConnected && block.isConnected,
+            );
+
+            if (!mounted) return;
+            if (mounted.error) {
+              mounted.destroy();
+              showRenderError();
+              return;
+            }
+            mountedPeleDiagrams.set(diagram, mounted);
+            block.remove();
+            markDiagramRendered(diagram);
+          } catch {
+            showRenderError();
+          }
+        }),
+      );
+
+      if (generation !== articleGeneration || diagrams.some(({ diagram }) => !diagram.isConnected)) return;
       await new Promise<void>((resolve) => {
         requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
       });
-      for (const diagram of diagrams) diagram.dataset.blogMermaidComplete = 'true';
-      document.dispatchEvent(new CustomEvent('blog:mermaid-rendered'));
+      if (generation !== articleGeneration) return;
+      document.dispatchEvent(new CustomEvent('blog:mermaid-rendered', { detail: { count: diagrams.length } }));
     };
 
     const initArticleEnhancements = () => {
@@ -232,5 +291,6 @@ const giscusConfig = {
     document.addEventListener('astro:page-load', () => {
       void initArticleEnhancements();
     });
+    document.addEventListener('astro:before-swap', destroyPeleDiagrams);
   </script>
 </ShellLayout>

@@ -165,3 +165,16 @@ Owner explicitly requests automatic main publication after PR21 merge. New isola
 ## 2026-10-09 AUTO02 implementation accepted
 
 Draft PR #23 introduces owner main publication using canonical accepted content references plus complete immutable snapshot validation, retaining all existing policy/environment/preview/serialization/recovery gates and read-only permissions. 53 deployment,112 unit,31 Chromium fixture tests plus a separate real-corpus image acceptance exercised on the public synthetic build pass. CI #38 for implementation fd373197ddbc6c129effef72161f7dd5d5426ab5 passed. The missing real-publication demo-route gate is repaired by fixture/real-corpus suite boundaries. Specs synced and archived; task done and locks released. Documentation/archive head CI is recorded in PR body. No production operation or external permission change occurred. Next action is owner review/merge then main-run/online acceptance; OSS/Astro catalogue work remains deferred. No additional plan adjustment suggested.
+
+## 2026-10-19 PELE01 renderer evaluation
+
+PELE01 is in review on `codex/evaluate-pele-mermaid`, based on main `7577a11`. Draft PR #32 is open and unmerged. It finds a substantial same-article JS payload reduction for four real published flowcharts (83.06% raw / 74.76% gzip incremental), with near-identical warm build time. Full Mermaid removal is not safe because Pele does not preserve all directives, HTML labels, or callbacks; the candidate retains lazy Mermaid fallback and thus increases total emitted JS. Local unit/deployment/check/build/E2E suites pass. CI run `39213884520` for implementation SHA `c345560e70e152e72bcbc469c77b68fd8aa147f4` passed all steps. Report and detailed reproducible measurements are in `.agent/reports/PELE01-evaluate-pele-mermaid-renderer.md` and `docs/pele-mermaid-migration-benchmark.md`. Do not merge or deploy. PR #28 remains unrelated and untouched. No plan task/priorities changed.
+
+## 2026-10-19 delegated PELE01 continuation
+
+- User explicitly authorized a Pele-only migration for draft PR #32 and accepted Mermaid compatibility loss; do not restore a fallback.
+- Working branch: `codex/evaluate-pele-mermaid`, based on `7577a11`; latest PR head `2a78a03527238d442b973d21f6a87bf64cce300e` is pushed.
+- Current work removes the Mermaid runtime, preserves source and status on import/render failure, and destroys stale async mounts after Astro navigation. Benchmarks and PR body have been corrected using the final five-run JSON outputs.
+- Measured Pele-vs-main four-chart JS increment: 133,465 raw / 52,142 gzip vs 787,971 / 206,591, reductions 83.06% / 74.76%. Rendering medians: 64.6 vs 167.1 ms. Clean build medians: 2.004571 vs 2.157445 s, candidate includes a 2.587 s outlier. See `.agent/reports/PELE01-evaluate-pele-mermaid-renderer.md` and benchmark document.
+- Local validation for current app changes was reported passing: 127 unit, 53 deployment, Astro check 0 errors/warnings, production build, E2E 35 passed/12 skipped, focused Pele E2E 4/4. Final `git diff --check` passed; CI run `39217345586` reached terminal success for install, unit, deployment, Astro check, build, Chromium setup, and full E2E.
+- PR #28 remains untouched; no merge/deploy.

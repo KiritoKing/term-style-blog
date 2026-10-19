@@ -173,8 +173,8 @@ PELE01 is in review on `codex/evaluate-pele-mermaid`, based on main `7577a11`. D
 ## 2026-10-19 delegated PELE01 continuation
 
 - User explicitly authorized a Pele-only migration for draft PR #32 and accepted Mermaid compatibility loss; do not restore a fallback.
-- Working branch: `codex/evaluate-pele-mermaid`, based on `7577a11`; current PR head is still `1346e8b` until revised code is committed and pushed.
+- Working branch: `codex/evaluate-pele-mermaid`, based on `7577a11`; latest PR head `2a78a03527238d442b973d21f6a87bf64cce300e` is pushed.
 - Current work removes the Mermaid runtime, preserves source and status on import/render failure, and destroys stale async mounts after Astro navigation. Benchmarks and PR body have been corrected using the final five-run JSON outputs.
 - Measured Pele-vs-main four-chart JS increment: 133,465 raw / 52,142 gzip vs 787,971 / 206,591, reductions 83.06% / 74.76%. Rendering medians: 64.6 vs 167.1 ms. Clean build medians: 2.004571 vs 2.157445 s, candidate includes a 2.587 s outlier. See `.agent/reports/PELE01-evaluate-pele-mermaid-renderer.md` and benchmark document.
-- Local validation for current app changes was reported passing: 127 unit, 53 deployment, Astro check 0 errors/warnings, production build, E2E 35 passed/12 skipped, focused Pele E2E 4/4. Need recheck final `git diff --check`, commit/push, then wait for new head CI terminal state.
+- Local validation for current app changes was reported passing: 127 unit, 53 deployment, Astro check 0 errors/warnings, production build, E2E 35 passed/12 skipped, focused Pele E2E 4/4. Final `git diff --check` passed; CI run `39217345586` reached terminal success for install, unit, deployment, Astro check, build, Chromium setup, and full E2E.
 - PR #28 remains untouched; no merge/deploy.

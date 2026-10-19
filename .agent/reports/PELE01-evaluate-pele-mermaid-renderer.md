@@ -28,7 +28,7 @@ Five clean production builds had medians 2.157445 s baseline and 2.004571 s Pele
 - `pnpm build`: pass; existing missing `src/icons` and Pagefind redirect HTML warnings. Mermaid large-chunk warning is gone.
 - `pnpm test:e2e`: pass, 35 passed / 12 skipped (external publication corpus unavailable).
 - Latest focused Pele E2E: 4/4 pass, including source preservation when lazy chunk is blocked and delayed completion after two Astro navigations.
-- `git diff --check`: to rerun before commit.
+- `git diff --check`: pass before commit.
 
 Browser verification used Playwright 1.63 with local headless Chromium `153.0.8010.12`. The user's interactive Mac browser was not used.
 
@@ -42,4 +42,4 @@ Known accepted compatibility losses: Mermaid `init`/theme directives and `themeV
 
 Draft PR: https://github.com/KiritoKing/term-style-blog/pull/32
 
-Existing CI success belongs to an earlier PR head (`39214195750`, commit `1346e8b50a834c6c11253d6414a63c2303124e52`). The current pure-Pele updates are not yet pushed; latest-head CI remains pending. PR #28 is untouched. No merge, deployment, credential, or permission changes were made.
+Existing CI success belongs to an earlier PR head (`39214195750`, commit `1346e8b50a834c6c11253d6414a63c2303124e52`). Current pure-Pele head `2a78a03527238d442b973d21f6a87bf64cce300e` was pushed. CI run `39217345586` reached terminal `success`; verify passed install, unit, deployment, Astro check, build, Chromium setup, and full Playwright E2E. PR #28 is untouched. No merge, deployment, credential, or permission changes were made.

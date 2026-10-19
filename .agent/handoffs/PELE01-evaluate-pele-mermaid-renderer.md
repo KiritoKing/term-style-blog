@@ -34,10 +34,7 @@ No known blocker. Need update PR body, inspect diff, rerun diff check, commit/pu
 
 ## Next actions
 
-1. Inspect final diff and verify benchmark documentation figures match saved JSON.
-2. Update draft PR #32 description with final data table, methods, compatibility risk, and rollback.
-3. Run `git diff --check`; commit and push authorized changes to the existing PR branch.
-4. Fetch workflow runs for new SHA and follow jobs to terminal state; report exact CI outcome.
+1. Owner/reviewer reviews draft PR #32; do not merge or deploy without separate authorization.
 
 ## Files changed
 
@@ -45,7 +42,7 @@ See `.agent/reports/PELE01-evaluate-pele-mermaid-renderer.md` and working tree.
 
 ## Commands / evidence
 
-Previously passed: `pnpm test` (127), `pnpm test:deployment` (53), `pnpm check` (0 errors/0 warnings/31 hints), `pnpm build`, `pnpm test:e2e` (35 passed/12 skipped), focused Pele E2E (4/4). Latest final raw benchmark output: `/tmp/pele-mermaid-baseline-final.json`, `/tmp/pele-mermaid-candidate-final.json`, `/tmp/pele-mermaid-baseline-build-v2.json`, `/tmp/pele-mermaid-candidate-build-final.json`.
+Previously passed: `pnpm test` (127), `pnpm test:deployment` (53), `pnpm check` (0 errors/0 warnings/31 hints), `pnpm build`, `pnpm test:e2e` (35 passed/12 skipped), focused Pele E2E (4/4). Latest final raw benchmark output: `/tmp/pele-mermaid-baseline-final.json`, `/tmp/pele-mermaid-candidate-final.json`, `/tmp/pele-mermaid-baseline-build-v2.json`, `/tmp/pele-mermaid-candidate-build-final.json`. CI run `39217345586` succeeded for commit `2a78a03527238d442b973d21f6a87bf64cce300e`.
 
 ## Risks
 

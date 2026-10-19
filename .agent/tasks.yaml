@@ -1115,5 +1115,5 @@ tasks:
   report: .agent/reports/PELE01-evaluate-pele-mermaid-renderer.md
   handoff: .agent/handoffs/PELE01-evaluate-pele-mermaid-renderer.md
   blocked_by: []
-  unblock_when: Push the revised pure-Pele PR 32 head, verify its CI reaches terminal success, and deliver benchmark-backed PR description for owner review
+  unblock_when: Latest pure-Pele PR 32 head 2a78a03527238d442b973d21f6a87bf64cce300e passed CI run 39217345586; awaiting owner review of draft PR
   last_updated: 2026-10-19

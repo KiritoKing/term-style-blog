@@ -144,6 +144,15 @@ describe('Pele Mermaid compatibility', () => {
     expect(unsafe.svg).not.toMatch(/javascript:|<script|onload=/i);
   });
 
+  it('does not emit executable markup from a malicious Mermaid label', () => {
+    const malicious = render(
+      `flowchart LR\n  A["<img src=x onerror=alert(1)> <script>alert(1)</script>"] --> B[Done]`,
+      { images: false },
+    );
+
+    expect(malicious.svg).not.toMatch(/<script|onerror\s*=|<img/i);
+  });
+
   it('detects flowcharts before C4-like words in ordinary labels', () => {
     const source = `flowchart LR
       A["C4Context is regular label text"] --> B["C4 is not the chart type"]`;

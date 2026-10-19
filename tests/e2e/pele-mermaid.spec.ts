@@ -5,10 +5,18 @@ const realBlogFlowcharts = JSON.parse(
   readFileSync(new URL('../fixtures/mermaid/real-blog-flowcharts.json', import.meta.url), 'utf8'),
 ) as string[];
 
-const installDiagrams = async (page: Page, sources: string[]) => {
+const installDiagrams = async (page: Page, sources: string[], expectPreview = true) => {
   await page.evaluate((diagrams) => {
     const article = document.querySelector('.prose-terminal');
     if (!article) throw new Error('The article container is missing.');
+
+    const state = window as Window & { __mermaidRenderEvents?: number; __mermaidRenderCounts?: number[] };
+    state.__mermaidRenderEvents = 0;
+    state.__mermaidRenderCounts = [];
+    document.addEventListener('blog:mermaid-rendered', (event) => {
+      state.__mermaidRenderEvents = (state.__mermaidRenderEvents ?? 0) + 1;
+      state.__mermaidRenderCounts?.push((event as CustomEvent<{ count?: number }>).detail?.count ?? 0);
+    });
 
     article.replaceChildren(
       ...diagrams.map((source) => {
@@ -21,9 +29,13 @@ const installDiagrams = async (page: Page, sources: string[]) => {
     document.dispatchEvent(new Event('astro:page-load'));
   }, sources);
 
-  await expect(page.locator('.prose-terminal .mermaid[data-blog-mermaid-complete="true"]')).toHaveCount(
-    sources.length,
-  );
+  if (expectPreview) {
+    await expect(page.locator('.prose-terminal .mermaid[data-blog-mermaid-complete="true"]')).toHaveCount(
+      sources.length,
+    );
+  } else {
+    await expect(page.locator('.prose-terminal pre[data-blog-mermaid-error="true"]')).toHaveCount(sources.length);
+  }
 };
 
 test('renders the four public Chinese flowcharts with readable mobile and desktop layouts', async ({ page }) => {
@@ -33,6 +45,8 @@ test('renders the four public Chinese flowcharts with readable mobile and deskto
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/posts/hello-world', { waitUntil: 'domcontentloaded' });
   await installDiagrams(page, realBlogFlowcharts);
+  await expect.poll(() => page.evaluate(() => (window as Window & { __mermaidRenderEvents?: number }).__mermaidRenderEvents)).toBe(1);
+  expect(await page.evaluate(() => (window as Window & { __mermaidRenderCounts?: number[] }).__mermaidRenderCounts)).toEqual([4]);
 
   const mobile = await page.locator('.prose-terminal .mermaid').evaluateAll((diagrams) =>
     diagrams.map((diagram) => {
@@ -82,7 +96,7 @@ test('renders the four public Chinese flowcharts with readable mobile and deskto
   expect(overflow).toBeLessThanOrEqual(1);
 });
 
-test('retains safe links, blocks dangerous URLs, and falls back for legacy Mermaid directives', async ({ page }) => {
+test('retains safe links and blocks dangerous URLs', async ({ page }) => {
   await page.route('**/*', (route) =>
     new URL(route.request().url()).hostname === '127.0.0.1' ? route.continue() : route.abort(),
   );
@@ -94,17 +108,82 @@ test('retains safe links, blocks dangerous URLs, and falls back for legacy Merma
     `flowchart LR
       A[Unsafe link] --> B[Finished]
       click A "javascript:alert(1)"`,
-    `%%{init: {'theme': 'dark'}}%%
-      flowchart LR
-      A[Legacy theme directive] --> B[Fallback renderer]`,
   ]);
 
   const diagrams = page.locator('.prose-terminal .mermaid');
-  await expect(diagrams.nth(0)).toHaveAttribute('data-blog-mermaid-renderer', 'pele');
-  await expect(diagrams.nth(1)).toHaveAttribute('data-blog-mermaid-renderer', 'pele');
-  await expect(diagrams.nth(2)).toHaveAttribute('data-blog-mermaid-renderer', 'mermaid-fallback');
+  await expect(diagrams).toHaveCount(2);
   await expect(diagrams.nth(0).locator('svg a')).toHaveAttribute('href', 'https://example.com/');
   await expect(diagrams.nth(0).locator('svg a')).toHaveAttribute('rel', /noopener/);
   await expect(diagrams.nth(1).locator('svg a[href^="javascript:"]')).toHaveCount(0);
-  await expect(diagrams.nth(2).locator('svg')).toBeVisible();
+});
+
+test('keeps the original source visible when Pele chunk loading fails', async ({ page }) => {
+  await page.route('**/*', (route) =>
+    new URL(route.request().url()).hostname === '127.0.0.1' ? route.continue() : route.abort(),
+  );
+  await page.route('**/_astro/lazy.*.js', (route) => route.abort());
+  await page.goto('/posts/hello-world', { waitUntil: 'domcontentloaded' });
+  await installDiagrams(page, [realBlogFlowcharts[0]], false);
+
+  const source = page.locator('.prose-terminal pre[data-blog-mermaid-error="true"]');
+  await expect(source).toContainText('电力');
+  await expect(page.getByRole('status')).toContainText('Mermaid source is shown below');
+  await expect(page.locator('.prose-terminal .mermaid svg')).toHaveCount(0);
+});
+
+test('ignores Pele module completion after two Astro navigations', async ({ page }) => {
+  let releaseChunk: (() => void) | undefined;
+  let resolveChunkRequest: (() => void) | undefined;
+  const chunkRequested = new Promise<void>((resolve) => {
+    resolveChunkRequest = resolve;
+  });
+  const heldChunk = new Promise<void>((resolve) => {
+    releaseChunk = resolve;
+  });
+
+  await page.addInitScript(() => {
+    const state = window as Window & { __mermaidRenderEvents?: number };
+    state.__mermaidRenderEvents = 0;
+    document.addEventListener('blog:mermaid-rendered', () => {
+      state.__mermaidRenderEvents = (state.__mermaidRenderEvents ?? 0) + 1;
+    });
+    document.addEventListener('astro:page-load', () => {
+      const article = document.querySelector('.prose-terminal');
+      if (!article || article.querySelector('[data-test-next-article]')) return;
+      const link = document.createElement('a');
+      link.dataset.testNextArticle = 'true';
+      link.href = location.pathname === '/posts/pixel-art-tips' ? '/posts/hello-world-cn' : '/posts/pixel-art-tips';
+      link.textContent = 'Next test article';
+      article.append(link);
+    });
+  });
+  await page.route('**/*', (route) =>
+    new URL(route.request().url()).hostname === '127.0.0.1' ? route.continue() : route.abort(),
+  );
+  await page.route('**/_astro/lazy.*.js', async (route) => {
+    resolveChunkRequest?.();
+    await heldChunk;
+    await route.continue();
+  });
+  await page.goto('/posts/hello-world', { waitUntil: 'domcontentloaded' });
+  await page.evaluate((source) => {
+    const article = document.querySelector('.prose-terminal');
+    if (!article) throw new Error('The article container is missing.');
+    const pre = document.createElement('pre');
+    pre.dataset.language = 'mermaid';
+    pre.textContent = source;
+    article.replaceChildren(pre);
+    document.dispatchEvent(new Event('astro:page-load'));
+  }, realBlogFlowcharts[0]);
+  await chunkRequested;
+
+  await page.locator('[data-test-next-article]').click();
+  await expect(page).toHaveURL(/\/posts\/pixel-art-tips\/?$/);
+  await page.locator('[data-test-next-article]').click();
+  await expect(page).toHaveURL(/\/posts\/hello-world-cn\/?$/);
+
+  releaseChunk?.();
+  await expect(page.locator('.prose-terminal .mermaid')).toHaveCount(0);
+  await page.waitForTimeout(100);
+  expect(await page.evaluate(() => (window as Window & { __mermaidRenderEvents?: number }).__mermaidRenderEvents)).toBe(0);
 });

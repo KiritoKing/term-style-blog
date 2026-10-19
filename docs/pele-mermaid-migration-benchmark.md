@@ -1,74 +1,77 @@
-# Pele / Mermaid migration benchmark
+# Pele / Mermaid benchmark
 
-This records the local comparison used for the Pele migration proposal. The change routes ordinary diagrams through Pele and keeps Mermaid as a lazy compatibility fallback. It does not remove Mermaid from the dependency graph.
+This benchmark compares the `main` renderer with a **Pele-only** candidate. The candidate removes Mermaid from runtime dependencies and has no Mermaid import or compatibility fallback. It retains a failed diagram's source block and announces when the preview cannot render.
 
-## Scope and method
+## Versions and input
 
-- Repository base: `main` at `7577a11e1a35535def2d082b65217fdac5982e2a`.
-- Candidate: this branch, with `pele@1.6.0`; baseline uses the base revision and `mermaid@11.17.2`.
-- Runtime: Node `26.0.0`, pnpm `10.28.0`, Astro `7.3.2`, Playwright `1.63.0` with its bundled Chromium revision `1243`.
-- Browser measure: local production build served on loopback; headless Playwright Chromium; new browser context per run; viewport `390 × 844`; external requests blocked. We measured the same built article shell with no diagram and with the four exact diagram source blocks extracted from the published article [`ai-productivity-paradigm`](https://chlorinec.top/posts/ai-productivity-paradigm/). The checked-in source repository's demo corpus has no Mermaid diagrams, so the published page is the real-content fixture.
-- “JS bytes” means the sum of JavaScript response bodies requested from the local `/_astro/` path. Gzip bytes are computed per response using Node zlib level 9. This measures downloaded JS resources without caching; it is not transferred size from the production CDN (which may use Brotli, caching, or different headers). HTML, CSS, fonts, images, and network latency are excluded.
-- Each browser case ran five times, with a fresh context each time. “Ready” is elapsed time from navigation start to `blog:mermaid-rendered` for a diagram page, or `networkidle` for the no-diagram control. Values below are milliseconds; medians are calculated over the five raw observations.
-- Production `pnpm build` ran five times per revision with the same dependency installation and build command. Build timing includes content/redirect prebuild scripts and Pagefind. The first baseline build is a cold optimizer run; subsequent runs are the warm comparison. `dist` was regenerated before each run.
+- Baseline commit: `7577a11e1a35535def2d082b65217fdac5982e2a` (`main`).
+- Candidate: this PR, `pele@1.6.0`, no Mermaid runtime dependency.
+- Environment: Node `26.0.0`, pnpm `10.28.0`, Astro `7.3.2`, Playwright `1.63.0`, Chromium `153.0.8010.12`.
+- Both revisions used five demo posts from the checked-in Markdown fixture source. The repository demo articles have no diagrams, so the browser harness injects the exact four Mermaid flowchart sources from the public Chinese article [ai-productivity-paradigm](https://chlorinec.top/posts/ai-productivity-paradigm/). The checked-in source is `tests/fixtures/mermaid/real-blog-flowcharts.json`.
+- Viewport: `390 × 844`, device scale 1. Each measurement uses a fresh browser context. The local benchmark server binds an ephemeral loopback port; external requests are blocked.
 
-## Client payload and readiness
+## Client download and render measurements
 
-| Revision / page | JS files | JS raw bytes | JS gzip bytes | Ready observations (ms) | Median (ms) |
+The harness records all successful JS responses under `/_astro/*.js` during the article navigation and chart enhancement. Raw bytes are response-body lengths; gzip is computed for each response at zlib level 9. This includes app entrypoints and dynamically loaded diagram code, but excludes HTML, CSS, fonts, images, CDN compression, caching, and network latency.
+
+Render time begins when the four chart blocks are injected after the article shell reaches `networkidle`. It ends at the single `blog:mermaid-rendered` event after all four diagrams are marked complete and two animation frames pass. The baseline event has no count detail, so the harness also requires all four completion markers; the Pele event reports `detail.count === 4`. This is renderer enhancement time, not navigation-to-render or a live-user metric.
+
+| Revision / page | JS files | Raw JS | Gzip JS | Five render observations (ms) | Median |
 | --- | ---: | ---: | ---: | --- | ---: |
-| Mermaid baseline, no diagrams | 11 | 232,158 | 75,870 | 544.835, 543.561, 542.449, 541.251, 541.790 | 542.449 |
-| Mermaid baseline, four diagrams | 38 | 1,020,129 | 282,461 | 607.200, 598.882, 603.570, 601.775, 602.987 | 602.987 |
-| Pele candidate, no diagrams | 11 | 233,292 | 76,370 | 578.059, 544.161, 544.613, 543.261, 543.306 | 544.161 |
-| Pele candidate, four diagrams | 23 | 366,757 | 128,512 | 579.231, 572.651, 571.367, 589.972, 589.240 | 579.231 |
+| Mermaid baseline, no charts | 11 | 232,158 B | 75,870 B | — | — |
+| Mermaid baseline, four charts | 38 | 1,020,129 B | 282,461 B | 161.7, 167.6, 152.9, 168.4, 167.1 | 167.1 |
+| Pele-only, no charts | 10 | 232,410 B | 75,713 B | — | — |
+| Pele-only, four charts | 22 | 365,875 B | 127,855 B | 68.2, 58.9, 55.0, 64.6, 72.4 | 64.6 |
 
-| Diagram-only increment (four diagrams minus same revision's control) | JS files | Raw bytes | Gzip bytes | Ready median |
-| --- | ---: | ---: | ---: | ---: |
-| Mermaid baseline | 27 | 787,971 | 206,591 | 60.538 ms over its control |
-| Pele candidate | 12 | 133,465 | 52,142 | 35.070 ms over its control |
-| Candidate change | −15 | −654,506 (−83.06%) | −154,449 (−74.76%) | −23.756 ms vs baseline four-chart page |
+| Chart-page increment over its no-chart control | JS files | Raw JS | Gzip JS |
+| --- | ---: | ---: | ---: |
+| Mermaid baseline | 27 | 787,971 B | 206,591 B |
+| Pele-only | 12 | 133,465 B | 52,142 B |
+| Reduction | 15 fewer | 654,506 B (83.06%) | 154,449 B (74.76%) |
 
-The candidate's four-chart page downloads 653,372 fewer raw JS bytes (153,949 fewer gzip bytes) than the baseline four-chart page. The no-chart controls are close: the candidate adds 1,134 raw / 500 gzip bytes and its median is 1.712 ms slower. The readiness observation is noisy and includes local navigation and browser scheduling; five runs are not enough to claim a general latency improvement. The defensible measured benefit is the large reduction in diagram-page JavaScript payload and script count.
+The four-chart page itself transfers 654,254 fewer raw JS bytes (64.14%) and 154,606 fewer gzip bytes (54.74%) in this local measurement. The chart enhancement median is 102.5 ms lower (61.3%) for the four source diagrams. Five runs on one local headless browser are a small sample; the timing result is directional and does not predict user-perceived production latency.
 
-## Build output and time
+Baseline and candidate each emitted one completion event per run. Candidate event detail count was 4 for all five runs. The four mobile viewBoxes were baseline `1010.17 × 70`, `438.91 × 486`, `841.44 × 174`, and `276 × 718`; Pele produced `228 × 544`, `367 × 336`, `355 × 316`, and `247 × 664`. Pele adapts wide LR layouts into vertical layouts. Chinese labels remained readable, and the document had no horizontal overflow (`0px`) in the measured viewport.
 
-| Revision | Build wall times (s) | Warm median (s) | Emitted JS files | Emitted JS raw bytes |
-| --- | --- | ---: | ---: | ---: |
-| Mermaid baseline | 7.232, 2.208, 2.247, 2.236, 2.229 | 2.236 | 107 | 3,622,010 |
-| Pele candidate | 2.279, 2.305, 2.225, 2.219, 2.213 | 2.225 | 161 | 4,303,459 |
+## Build measurements
 
-The first baseline run was cold and is excluded from its warm median. Candidate warm build time changed by −11 ms (−0.5%), which is not meaningful at this sample size. Pele plus the retained Mermaid fallback increases the sum of emitted JS chunks by 681,449 bytes (18.8%) across the whole site, although non-diagram pages do not load those new diagram chunks. This migration is a client payload optimization for pages with diagrams, not a build-time rendering optimization or a whole-site output-size win.
+Five clean `pnpm build` runs per revision; the build harness removes `dist` before each run and records successful wall time and emitted `_astro/*.js` byte totals. Node/pnpm/Astro versions match the browser test above.
 
-## Content and compatibility checks
+| Revision | Build observations (s) | Median | Emitted JS files / raw bytes |
+| --- | --- | ---: | ---: |
+| Mermaid baseline | 2.200, 2.164, 2.157, 2.155, 2.157 | 2.157445 s | 107 / 3,622,010 B |
+| Pele-only | 2.587, 1.998, 2.005, 2.005, 1.992 | 2.004571 s | 66 / 934,339 B |
 
-The real page contains four Chinese flowcharts using `flowchart LR` / `flowchart TD`. Under the tested `390 × 844` viewport, Pele produced all four SVGs with Chinese labels intact and no document-wide horizontal overflow. Pele adapted the wide LR charts into compact vertical layouts (observed viewBox sizes: `228 × 544`, `367 × 336`, `355 × 316`, `247 × 664`); this is a meaningful layout change, not a pixel-identical rendering. The old Mermaid outputs had viewBox widths `1010.17`, `438.91`, `841.44`, and `276`, with horizontal overflow for the wider charts.
+The candidate emitted 2,687,671 fewer JS bytes across the site (74.2%). Its measured build median was 153 ms lower (7.1%), though one candidate run was a 2.587 s outlier; the other four were 1.992–2.005 s. These are local build outputs, not a promise about another machine. Pele removed the previous Mermaid-related >500 kB chunk warning in this build.
 
-Checked locally against Pele 1.6.0:
+## Compatibility and security exercised
 
-| Area | Result |
-| --- | --- |
-| Diagram families | Four real blog flowcharts; sequence, class, state, ER, journey, Gantt, pie, mindmap, and xychart sample diagrams rendered in the compatibility suite. |
-| Mermaid-specific syntax | Mermaid init directives, HTML tags in labels, and callback-style `click` declarations route to Mermaid fallback. A quoted CJK xychart label rendered; the unquoted CJK xychart form did not parse in the test and should use fallback if such syntax is added. |
-| Theme / dark mode | Pele uses site CSS custom properties for foreground, background, and accent. E2E toggles light/dark and verifies the mounted SVG's CSS styling responds. Mermaid init directives use the existing light/dark Mermaid theme in the fallback. |
-| Chinese and responsive layout | Real Chinese labels preserved on the mobile fixture; adaptive direction keeps the rendered document within viewport width. Desktop and mobile cases are covered by Playwright. Font measurement can vary by browser/platform. |
-| Links and interaction | Safe external diagram links render with `target="_blank"` and `rel="noopener noreferrer"`. `javascript:` links do not survive sanitization. Mermaid callback click behavior is not supported by Pele and uses fallback. |
-| SVG safety | Pele output for tested script/event-handler payloads contains no executable script or event handler. Remote images are disabled with `images: false`. Mermaid fallback keeps `securityLevel: 'strict'`. |
-| Astro navigation | Mounted Pele diagrams are destroyed on `astro:before-swap` to release observers/listeners. |
+Unit samples rendered flowchart, sequence, class, state, ER, journey, Gantt, pie, mindmap, and xychart diagrams; all four real flowcharts and CJK labels were tested. A quoted CJK xychart form rendered, while the unquoted probe did not. Playwright checks cover mobile and desktop sizing, site light/dark theme variables, safe external links with `noopener noreferrer`, a `javascript:` URL, and an actual node label containing `<img onerror>` and `<script>` input; Pele output did not contain executable markup. `images: false` disables remote diagram images.
 
-These are representative, not exhaustive equivalence tests. Mermaid supports more configuration, plugins, HTML labels, callbacks, and theme variables than this migration maps. The application keeps Mermaid as a lazy fallback for init directives, HTML labels, callback-style click syntax, and Pele parse/render failures. The fallback means Mermaid is not removed from built output, and the total generated JS output grows. Unsupported Mermaid syntax not recognized by these feature checks may fall back only after Pele reports an error. Review actual chart sources when updating the external blog corpus.
+This intentionally accepts compatibility differences. Mermaid theme/init directives and `themeVariables` are not applied by Pele; HTML labels are not preserved; Mermaid JavaScript callback clicks are unsupported; plugin-specific directives and Mermaid extensions are not available. Chart layout and some syntax may differ or fail to parse. Unsupported diagrams show the original source with a status message; there is no Mermaid fallback. This comparison does not certify every Mermaid syntax form or every Pele security edge case.
 
-## Reproduction
+The user explicitly accepted removing the Mermaid fallback. Pele chunk-load or render failures are covered: the original code block remains visible with an accessible error status. Async mounts are generation-checked after completion and destroyed if Astro navigation has already invalidated the owning article.
 
-With Node 26 and pnpm 10.28:
+## Reproduce
 
-1. Check out the base commit and candidate commit separately, install dependencies with `pnpm install --frozen-lockfile`, and run `pnpm build` five times, removing `dist` before each run. Record wall time and sum `dist/_astro/*.js` byte sizes.
-2. Use the four source blocks from the published article linked above. Build two same-shell pages per revision: one with no chart and one with all four Mermaid blocks. Serve the build locally, block external requests, set Chromium to `390 × 844`, and run each page in five fresh contexts.
-3. Sum each requested `/_astro/*.js` response body; gzip each body independently at level 9. Record script count, raw/gzip totals, navigation-to-idle or navigation-to-rendered event time, and inspect each SVG viewBox and document scroll width.
-4. The repository checks for this change are `pnpm test`, `pnpm check`, `pnpm build`, and `pnpm exec playwright test tests/e2e/pele-mermaid.spec.ts`.
+From the PR checkout, with the documented Node/pnpm versions:
 
-The fixture source is checked in at `tests/fixtures/mermaid/real-blog-flowcharts.json`; its values were copied from the published page and the benchmark used the local production build. The measurement harness itself was a temporary local script and is not checked in, so reproduce the page injection and response collection described above.
+```sh
+mkdir -p /tmp/pele-baseline
+git archive 7577a11e1a35535def2d082b65217fdac5982e2a | tar -x -C /tmp/pele-baseline
+cd /tmp/pele-baseline
+pnpm install --frozen-lockfile
+pnpm build
+```
 
-## Upstream reports and remaining limits
+Then from the PR checkout (which contains the harness and four-chart fixture):
 
-Pele's [compatibility notes](https://pele.run/compatibility) describe support as a practical subset of Mermaid rather than a complete renderer replacement. Upstream has reports concerning sequence overlap, long tokens, subgraph edge crossings, disconnected classes, C4 type detection, and code-font handling. Those issue reports were not independently reproduced here. This work did exercise selected diagram types and the blog's real charts, but not every syntax variant, browser engine, or full external content corpus.
+```sh
+node scripts/benchmark-build.mjs --project-root /tmp/pele-baseline --runs 5 --output /tmp/pele-baseline-build.json
+node scripts/benchmark-mermaid.mjs --site-root /tmp/pele-baseline/dist --fixture "$PWD/tests/fixtures/mermaid/real-blog-flowcharts.json" --runs 5 --output /tmp/pele-baseline-browser.json
+pnpm build
+node scripts/benchmark-build.mjs --project-root "$PWD" --runs 5 --output /tmp/pele-pele-build.json
+node scripts/benchmark-mermaid.mjs --site-root "$PWD/dist" --runs 5 --output /tmp/pele-pele-browser.json
+```
 
-The browser tests ran in local headless Playwright Chromium on the developer Mac. The user's interactive Mac browser was locked and was not used. Results describe this local environment only; no production deployment or live-user measurement was performed.
+The scripts save all repeated raw results, including each response URL and raw/gzip byte size, per-run all-chart timings, event counts, viewBoxes, build durations, and emitted JS totals. Browser runs use local headless Playwright Chromium; they do not use the user's interactive browser or production CDN.

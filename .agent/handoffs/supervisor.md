@@ -169,3 +169,12 @@ Draft PR #23 introduces owner main publication using canonical accepted content 
 ## 2026-10-19 PELE01 renderer evaluation
 
 PELE01 is in review on `codex/evaluate-pele-mermaid`, based on main `7577a11`. Draft PR #32 is open and unmerged. It finds a substantial same-article JS payload reduction for four real published flowcharts (83.06% raw / 74.76% gzip incremental), with near-identical warm build time. Full Mermaid removal is not safe because Pele does not preserve all directives, HTML labels, or callbacks; the candidate retains lazy Mermaid fallback and thus increases total emitted JS. Local unit/deployment/check/build/E2E suites pass. CI run `39213884520` for implementation SHA `c345560e70e152e72bcbc469c77b68fd8aa147f4` passed all steps. Report and detailed reproducible measurements are in `.agent/reports/PELE01-evaluate-pele-mermaid-renderer.md` and `docs/pele-mermaid-migration-benchmark.md`. Do not merge or deploy. PR #28 remains unrelated and untouched. No plan task/priorities changed.
+
+## 2026-10-19 delegated PELE01 continuation
+
+- User explicitly authorized a Pele-only migration for draft PR #32 and accepted Mermaid compatibility loss; do not restore a fallback.
+- Working branch: `codex/evaluate-pele-mermaid`, based on `7577a11`; current PR head is still `1346e8b` until revised code is committed and pushed.
+- Current work removes the Mermaid runtime, preserves source and status on import/render failure, and destroys stale async mounts after Astro navigation. Benchmarks and PR body have been corrected using the final five-run JSON outputs.
+- Measured Pele-vs-main four-chart JS increment: 133,465 raw / 52,142 gzip vs 787,971 / 206,591, reductions 83.06% / 74.76%. Rendering medians: 64.6 vs 167.1 ms. Clean build medians: 2.004571 vs 2.157445 s, candidate includes a 2.587 s outlier. See `.agent/reports/PELE01-evaluate-pele-mermaid-renderer.md` and benchmark document.
+- Local validation for current app changes was reported passing: 127 unit, 53 deployment, Astro check 0 errors/warnings, production build, E2E 35 passed/12 skipped, focused Pele E2E 4/4. Need recheck final `git diff --check`, commit/push, then wait for new head CI terminal state.
+- PR #28 remains untouched; no merge/deploy.

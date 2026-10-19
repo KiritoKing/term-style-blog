@@ -1102,12 +1102,12 @@ tasks:
 - id: PELE01
   change: evaluate-pele-mermaid-renderer
   priority: P2
-  objective: Measure Pele against the site's real Mermaid diagrams and ship a guarded migration only if measured client savings justify the compatibility tradeoff
+  objective: Compare the site's real Mermaid diagrams against a Pele-only migration, which the owner explicitly approved with accepted compatibility loss, and submit measured changes on isolated PR 32
   deps: []
   status: review
   owner_session: delegated-codex
   branch: codex/evaluate-pele-mermaid
-  allowed_paths: [package.json, pnpm-lock.yaml, src/pages/posts/[id].astro, src/styles/global.css, src/test/pele-compatibility.test.ts, tests/e2e/pele-mermaid.spec.ts, tests/fixtures/mermaid/**, docs/pele-mermaid-migration-benchmark.md, .agent/**]
+  allowed_paths: [package.json, pnpm-lock.yaml, src/pages/posts/[id].astro, src/styles/global.css, src/lib/pele-lifecycle.ts, src/test/pele-compatibility.test.ts, src/test/pele-lifecycle.test.ts, tests/e2e/pele-mermaid.spec.ts, tests/fixtures/mermaid/**, scripts/benchmark-*.mjs, docs/pele-mermaid-migration-benchmark.md, .agent/**]
   locked_paths: [package.json, pnpm-lock.yaml, tests/**]
   relevant_specs: [openspec/specs/blog-post-pages/spec.md, openspec/specs/typography-rendering/spec.md]
   required_tests: [real_content_fixture, compatibility_unit, svg_security, dark_mode, responsive_mobile_desktop, build, astro_check, full_e2e, benchmark_reproduction]
@@ -1115,5 +1115,5 @@ tasks:
   report: .agent/reports/PELE01-evaluate-pele-mermaid-renderer.md
   handoff: .agent/handoffs/PELE01-evaluate-pele-mermaid-renderer.md
   blocked_by: []
-  unblock_when: CI run 39213884520 passed for commit c345560e70e152e72bcbc469c77b68fd8aa147f4; awaiting owner review of draft PR 32
+  unblock_when: Push the revised pure-Pele PR 32 head, verify its CI reaches terminal success, and deliver benchmark-backed PR description for owner review
   last_updated: 2026-10-19

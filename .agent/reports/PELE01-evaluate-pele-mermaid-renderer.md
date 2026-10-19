@@ -6,46 +6,40 @@ Branch: `codex/evaluate-pele-mermaid`, based on `main` `7577a11e1a35535def2d082b
 
 ## Result
 
-Pele is a worthwhile renderer for the site's common diagrams, but not a safe full replacement for Mermaid. The implementation routes ordinary diagrams to `pele@1.6.0`, retains Mermaid as an on-demand compatibility fallback for Mermaid init directives, HTML labels, callback click syntax, and Pele failures, and destroys Pele mounts across Astro navigation. This achieves an observed per-article diagram payload reduction without changing the build-time Markdown architecture.
+The owner explicitly chose a Pele-only migration and accepted Mermaid compatibility loss. The branch removes Mermaid runtime dependency; no Mermaid engine, dual-renderer fallback, or callback detector remains. Diagram enhancement stays client-side and lazy, preserving the existing static Markdown/build architecture.
 
-Five fresh local Chromium contexts at 390 × 844 measured four real published Chinese flowcharts. Baseline chart-page JS: 1,020,129 raw / 282,461 gzip bytes across 38 files; baseline no-chart control: 232,158 / 75,870 across 11. Candidate chart-page: 366,757 / 128,512 across 23; candidate control: 233,292 / 76,370 across 11. Same-revision incremental savings: 654,506 raw (83.06%) and 154,449 gzip (74.76%). The chart-ready median moved from 602.987 ms to 579.231 ms, but the sample is small and timing is noisy; no general latency claim is made. Warm build medians were 2.236 s baseline and 2.225 s candidate, effectively unchanged. Total emitted JS grows by 681,449 raw bytes because both renderers remain bundled.
+Five fresh local headless Chromium contexts at 390 × 844 measured four real published Chinese flowcharts. Baseline chart page JS was 1,020,129 raw / 282,461 gzip bytes across 38 files; no-chart control was 232,158 / 75,870 across 11. Pele chart page was 365,875 / 127,855 across 22; no-chart control was 232,410 / 75,713 across 10. Incremental payload fell from 787,971 / 206,591 to 133,465 / 52,142 bytes: 83.06% raw and 74.76% gzip savings over each revision's control. The chart-page absolute reduction was 654,254 raw / 154,606 gzip bytes. Chart enhancement medians were 167.1 ms baseline and 64.6 ms Pele (102.5 ms / 61.3% lower). Five runs on one local browser are directional only.
 
-Full measurement versions, method, raw repeated observations, compatibility matrix, constraints, and reproduction steps are in `docs/pele-mermaid-migration-benchmark.md` and should also be summarized in the PR description.
+Five clean production builds had medians 2.157445 s baseline and 2.004571 s Pele, with one 2.587 s candidate outlier. Emitted JS was 3,622,010 bytes (107 files) vs 934,339 (66 files), 2,687,671 fewer bytes. Details, per-run values, versions, methods, outputs, limitations, and reproduction commands are in `docs/pele-mermaid-migration-benchmark.md`; reproducible harnesses are `scripts/benchmark-mermaid.mjs` and `scripts/benchmark-build.mjs`.
 
-## Files changed
+## Changes
 
-- `package.json`, `pnpm-lock.yaml`
-- `src/pages/posts/[id].astro`, `src/styles/global.css`
-- `src/test/pele-compatibility.test.ts`
-- `tests/e2e/pele-mermaid.spec.ts`
-- `tests/fixtures/mermaid/real-blog-flowcharts.json`
-- `docs/pele-mermaid-migration-benchmark.md`
-- `.agent/tasks.yaml`, this report, handoff, and supervisor handoff
+- Removed `mermaid` dependency and lockfile graph.
+- Replaced the runtime renderer with `pele/lazy`; retained original fenced source and an accessible error status if import/render fails.
+- Added generation-aware async mount cleanup for Astro navigation and lifecycle tests.
+- Added representative compatibility, SVG payload, theme, responsive, links, chunk-failure, and delayed-navigation E2E coverage.
+- Added same-input browser/build benchmark harnesses and documented raw results.
 
-## Tests and commands
+## Validation
 
-- `pnpm test`: pass, 10 files / 124 tests.
+- `pnpm test`: pass, 11 files / 127 tests.
 - `pnpm test:deployment`: pass, 53 tests.
-- `pnpm check`: pass, 0 errors / 0 warnings / 31 pre-existing deprecation hints.
-- `pnpm build`: pass; Astro emitted the existing missing `src/icons` warning and a large-chunk warning while retaining Mermaid fallback; Pagefind indexed 5 fixture pages.
-- `pnpm test:e2e`: pass, 33 passed / 12 skipped. Skips include tests requiring the explicit external publication corpus; new Pele E2E covers actual extracted chart fixtures, mobile/desktop dimensions, light/dark theme variables, links, dangerous URL rejection, and Mermaid fallback.
-- `git diff --check`: pass.
+- `pnpm check`: pass, 0 errors / 0 warnings / 31 existing hints.
+- `pnpm build`: pass; existing missing `src/icons` and Pagefind redirect HTML warnings. Mermaid large-chunk warning is gone.
+- `pnpm test:e2e`: pass, 35 passed / 12 skipped (external publication corpus unavailable).
+- Latest focused Pele E2E: 4/4 pass, including source preservation when lazy chunk is blocked and delayed completion after two Astro navigations.
+- `git diff --check`: to rerun before commit.
 
-Browser verification used local headless Playwright 1.63 / bundled Chromium revision 1243. The user's interactive Mac browser was locked and was not used.
+Browser verification used Playwright 1.63 with local headless Chromium `153.0.8010.12`. The user's interactive Mac browser was not used.
 
-## OpenSpec impact
+## Compatibility and risks
 
-No OpenSpec change is proposed. `blog-post-pages` and `typography-rendering` were read before implementation. The Markdown input remains Mermaid syntax and is still progressively enhanced in the client; Mermaid remains available for unsupported content. This bounded change does not alter static build-time rendering or content models.
+Real article syntax covered four Chinese LR/TD flowcharts; unit samples cover flowchart, sequence, class, state, ER, journey, Gantt, pie, mindmap, and xychart. Mobile charts remain within viewport with readable CJK labels; Pele changes chart geometry and adapts LR diagrams into taller layouts. Unit/E2E samples cover light/dark theme variables, safe external links, `javascript:` URL, and actual `<img onerror>`/`<script>` label input; executable markup was absent from generated SVG in those samples. This does not certify all SVG/security inputs.
 
-## Risks and rollback
-
-- Pele is not API- or pixel-equivalent to Mermaid. The measured LR charts adapt into vertical/mobile layouts; unsupported directives, callback interactions, and HTML labels use Mermaid fallback. Other syntax may differ or fall back only after a parse/render failure.
-- Pele reports for sequence overlap, long tokens, subgraph crossings, disconnected classes, C4 detection, and code-font behavior remain upstream reports unless covered by our examples; they were not all reproduced.
-- The large generated JS total and chunk warning remain because compatibility fallback ships with Mermaid. Remove the Pele runtime/style/tests and restore the previous Mermaid renderer in `[id].astro` to roll back this proposal.
-- The content source in `main` contains only demo articles, so measurements inject the exact four source blocks from the public blog page into a local production build. CDN Brotli/cache effects are not represented.
+Known accepted compatibility losses: Mermaid `init`/theme directives and `themeVariables`, HTML labels, JavaScript callback clicks, Mermaid plugins/extensions, and untested syntax/layout-specific options. Parse/render failures preserve source and show an error status; there is no fallback engine. Restore Mermaid dependency, lockfile, and renderer in `src/pages/posts/[id].astro` to roll back.
 
 ## Pull request and CI
 
 Draft PR: https://github.com/KiritoKing/term-style-blog/pull/32
 
-CI run `39213884520` for commit `c345560e70e152e72bcbc469c77b68fd8aa147f4` completed successfully. Its `verify` job passed dependency installation, unit tests, deployment tests, Astro check, build, Chromium installation, and full Playwright E2E. The PR remains draft and unmerged. No deployment, credential change, or PR #28 modification occurred.
+Existing CI success belongs to an earlier PR head (`39214195750`, commit `1346e8b50a834c6c11253d6414a63c2303124e52`). The current pure-Pele updates are not yet pushed; latest-head CI remains pending. PR #28 is untouched. No merge, deployment, credential, or permission changes were made.

@@ -7,7 +7,7 @@ Last updated: 2026-10-19
 
 ## Objective
 
-Compare `pele` with the current Mermaid integration using the public blog's real charts, implement only if savings justify the compatibility tradeoff, and create an isolated draft PR with measured data.
+Finish the explicitly authorized Pele-only migration on isolated PR #32, with measured comparison, lifecycle/error preservation, reproducible scripts, local validation, push, and latest-head CI result. Do not merge or deploy.
 
 ## Relevant specs
 
@@ -16,49 +16,37 @@ Compare `pele` with the current Mermaid integration using the public blog's real
 
 ## Allowed paths
 
-`package.json`, `pnpm-lock.yaml`, `src/pages/posts/[id].astro`, `src/styles/global.css`, the new compatibility tests/fixture, benchmark doc, and `.agent` state files.
+`package.json`, `pnpm-lock.yaml`, `src/pages/posts/[id].astro`, `src/styles/global.css`, `src/lib/pele-lifecycle.ts`, compatibility/lifecycle tests, `tests/e2e/pele-mermaid.spec.ts`, chart fixture, benchmark scripts/docs, and `.agent/**`.
 
 ## Completed
 
-- Confirmed the current integration lazy-loads Mermaid in the article client script.
-- Extracted four Chinese flowcharts from the real public `ai-productivity-paradigm` article and checked them into the fixture.
-- Ran baseline and candidate five-run browser payload/readiness measurements plus five-run production build timing.
-- Implemented Pele for standard diagrams with Mermaid fallback, site theme tokens, and Astro navigation cleanup.
-- Added compatibility unit tests and Playwright coverage.
-- Passed local unit, deployment, Astro check, build, and full E2E suites.
-- Wrote benchmark doc and PELE01 report.
-
-## Completed
-
-- Created draft PR https://github.com/KiritoKing/term-style-blog/pull/32 with benchmark table, reproduction method, risks, and rollback.
-- Attached PR #32 to this task.
-- CI run `39213884520` for commit `c345560e70e152e72bcbc469c77b68fd8aa147f4` reached terminal `success`; its verify job passed all steps.
-- Updated report and supervisor snapshot with the PR and CI result.
+- Isolated branch based on current main; PR #32 is draft and PR #28 remains untouched.
+- Extracted four real Chinese flowcharts from the published blog article.
+- Removed Mermaid dependency and compatibility fallback per owner's explicit risk acceptance.
+- Kept source and error status on lazy load/render failure; made async mount completion generation-aware and destroy stale mounts across Astro navigation.
+- Added security/compatibility and E2E cases including failed chunk load and delayed chunk resolving after repeated navigation.
+- Added reproducible browser and clean-build benchmark harnesses; corrected measurement event to fire once after all charts and two animation frames.
+- Final five-run measurements in benchmark doc/report; local validations previously passed.
 
 ## Blocked by
 
-None known. The running preview server was stopped after browser checks.
+No known blocker. Need update PR body, inspect diff, rerun diff check, commit/push changes, then wait for latest-head CI to terminal result.
 
 ## Next actions
 
-1. Owner/reviewer may review draft PR #32. Do not merge or deploy without separate authorization.
+1. Inspect final diff and verify benchmark documentation figures match saved JSON.
+2. Update draft PR #32 description with final data table, methods, compatibility risk, and rollback.
+3. Run `git diff --check`; commit and push authorized changes to the existing PR branch.
+4. Fetch workflow runs for new SHA and follow jobs to terminal state; report exact CI outcome.
 
 ## Files changed
 
-See `.agent/reports/PELE01-evaluate-pele-mermaid-renderer.md`.
+See `.agent/reports/PELE01-evaluate-pele-mermaid-renderer.md` and working tree.
 
-## Commands run and results
+## Commands / evidence
 
-- `pnpm test`: 124 pass.
-- `pnpm test:deployment`: 53 pass.
-- `pnpm check`: 0 errors, 0 warnings, 31 hints.
-- `pnpm build`: pass.
-- `pnpm test:e2e`: 33 pass, 12 skipped (external publication corpus not enabled).
-- `git diff --check`: pass.
-- PR #32 CI run `39213884520`: `verify` success.
+Previously passed: `pnpm test` (127), `pnpm test:deployment` (53), `pnpm check` (0 errors/0 warnings/31 hints), `pnpm build`, `pnpm test:e2e` (35 passed/12 skipped), focused Pele E2E (4/4). Latest final raw benchmark output: `/tmp/pele-mermaid-baseline-final.json`, `/tmp/pele-mermaid-candidate-final.json`, `/tmp/pele-mermaid-baseline-build-v2.json`, `/tmp/pele-mermaid-candidate-build-final.json`.
 
 ## Risks
 
-See the report and `docs/pele-mermaid-migration-benchmark.md`; the most material is that Mermaid must remain as a fallback, so total emitted site JS increases while chart-page downloaded JS falls.
-
-Open questions: None.
+See report and benchmark doc. Main risk is accepted Mermaid syntax/feature incompatibility; there is intentionally no Mermaid fallback. Local headless Chromium was used, not the user's interactive Mac browser.

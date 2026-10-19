@@ -1117,3 +1117,64 @@ tasks:
   blocked_by: []
   unblock_when: Latest pure-Pele PR 32 head 2a78a03527238d442b973d21f6a87bf64cce300e passed CI run 39217345586; awaiting owner review of draft PR
   last_updated: 2026-10-19
+
+- id: SHELL02
+  change: resilient-shell-interactivity
+  priority: P1
+  objective: Make top-bar controls responsive without React hydration, initialize only one responsive terminal island, and make localStorage best-effort.
+  deps: []
+  status: review
+  owner_session: delegated-codex
+  branch: perf/early-interactivity-resilience
+  allowed_paths:
+  - src/layouts/Layout.astro
+  - src/layouts/ShellLayout.astro
+  - src/components/shell/TopBar.astro
+  - src/components/shell/TerminalPanel.astro
+  - src/components/react/TopBarControls.tsx
+  - src/components/react/TerminalPanel.tsx
+  - src/lib/safe-storage.ts
+  - src/test/**
+  - tests/e2e/**
+  - docs/shell-interactivity-benchmark.md
+  - docs/shell-interactivity-benchmark-data.json
+  - openspec/changes/resilient-shell-interactivity/**
+  - openspec/specs/shell-layout/spec.md
+  - .agent/**
+  locked_paths:
+  - src/layouts/Layout.astro
+  - src/layouts/ShellLayout.astro
+  - src/components/shell/TopBar.astro
+  - src/components/shell/TerminalPanel.astro
+  - src/components/react/TopBarControls.tsx
+  - src/components/react/TerminalPanel.tsx
+  - src/lib/safe-storage.ts
+  - tests/e2e/**
+  - .agent/tasks.yaml
+  relevant_specs:
+  - openspec/specs/shell-layout/spec.md
+  - openspec/specs/mobile-reading-experience/spec.md
+  - openspec/changes/resilient-shell-interactivity
+  required_tests:
+  - unit_storage_security_error
+  - unit_storage_quota_error
+  - native_topbar_initial_interactivity
+  - astro_navigation_and_history
+  - responsive_single_terminal_hydration
+  - storage_failures_keep_commands_and_navigation_working
+  - pele_mermaid_regression
+  - same_input_five_run_cold_browser_benchmark
+  acceptance_commands:
+  - pnpm test
+  - pnpm test:deployment
+  - E2E_REAL_CORPUS=1 E2E_POST_SLUG=KeePass pnpm test:e2e
+  - pnpm check
+  - CONTENT_DIR=/tmp/llm-published-snapshot/20-writing/published EXPECTED_CONTENT_COUNT=55 PUBLIC_DEPLOYMENT_ENV=preview STRICT_CONTENT_ASSETS=1 pnpm build:content
+  - Compare five-run raw data in docs/shell-interactivity-benchmark-data.json using docs/shell-interactivity-benchmark.md
+  - openspec validate shell-layout --type spec --strict
+  - git diff --check
+  report: .agent/reports/SHELL02-resilient-shell-interactivity.md
+  handoff: .agent/handoffs/SHELL02-resilient-shell-interactivity.md
+  blocked_by: []
+  unblock_when: Review findings are fixed, latest CI and review are clear, then merge and complete authorized publication verification
+  last_updated: 2026-10-19T21:55:00Z

@@ -44,6 +44,8 @@ No OpenSpec change is proposed. `blog-post-pages` and `typography-rendering` wer
 - The large generated JS total and chunk warning remain because compatibility fallback ships with Mermaid. Remove the Pele runtime/style/tests and restore the previous Mermaid renderer in `[id].astro` to roll back this proposal.
 - The content source in `main` contains only demo articles, so measurements inject the exact four source blocks from the public blog page into a local production build. CDN Brotli/cache effects are not represented.
 
-## Follow-up
+## Pull request and CI
 
-Draft PR creation and remote CI terminal results are pending. No merge, deployment, credential change, or PR #28 modification occurred.
+Draft PR: https://github.com/KiritoKing/term-style-blog/pull/32
+
+CI run `39213884520` for commit `c345560e70e152e72bcbc469c77b68fd8aa147f4` completed successfully. Its `verify` job passed dependency installation, unit tests, deployment tests, Astro check, build, Chromium installation, and full Playwright E2E. The PR remains draft and unmerged. No deployment, credential change, or PR #28 modification occurred.

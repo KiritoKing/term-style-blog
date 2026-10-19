@@ -28,10 +28,12 @@ Compare `pele` with the current Mermaid integration using the public blog's real
 - Passed local unit, deployment, Astro check, build, and full E2E suites.
 - Wrote benchmark doc and PELE01 report.
 
-## In progress
+## Completed
 
-- Create a draft PR from this branch with comparison table, reproduction method, compatibility risks, and rollback path.
-- Monitor GitHub checks until terminal status and update report/handoff/supervisor snapshot.
+- Created draft PR https://github.com/KiritoKing/term-style-blog/pull/32 with benchmark table, reproduction method, risks, and rollback.
+- Attached PR #32 to this task.
+- CI run `39213884520` for commit `c345560e70e152e72bcbc469c77b68fd8aa147f4` reached terminal `success`; its verify job passed all steps.
+- Updated report and supervisor snapshot with the PR and CI result.
 
 ## Blocked by
 
@@ -39,10 +41,7 @@ None known. The running preview server was stopped after browser checks.
 
 ## Next actions
 
-1. Verify diff and branch contain only this task.
-2. Commit and push `codex/evaluate-pele-mermaid`.
-3. Create and attach draft PR; do not merge or deploy.
-4. Query GitHub Actions checks until all are terminal; report failures and verified states.
+1. Owner/reviewer may review draft PR #32. Do not merge or deploy without separate authorization.
 
 ## Files changed
 
@@ -56,6 +55,7 @@ See `.agent/reports/PELE01-evaluate-pele-mermaid-renderer.md`.
 - `pnpm build`: pass.
 - `pnpm test:e2e`: 33 pass, 12 skipped (external publication corpus not enabled).
 - `git diff --check`: pass.
+- PR #32 CI run `39213884520`: `verify` success.
 
 ## Risks
 

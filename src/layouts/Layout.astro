@@ -136,6 +136,7 @@ const structuredData = article
           true,
         );
         document.addEventListener('DOMContentLoaded', sync, { once: true });
+        document.addEventListener('astro:after-swap', sync);
         document.addEventListener('astro:page-load', sync);
         window.addEventListener('storage', (event) => {
           if (event.key === THEME_KEY && (event.newValue === 'dark' || event.newValue === 'light')) {

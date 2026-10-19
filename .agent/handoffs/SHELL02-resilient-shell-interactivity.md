@@ -1,9 +1,9 @@
 # Handoff: SHELL02 resilient-shell-interactivity
 
-Status: review; implementation and original CI passed; two review findings fixed locally, pending push and updated CI/review
+Status: review; implementation and de124ac CI passed; next two review findings fixed locally, pending push and updated CI/review
 Owner: delegated-codex
 Branch: `perf/early-interactivity-resilience`
-Last updated: 2026-10-19T21:40:00Z
+Last updated: 2026-10-19T21:50:00Z
 
 ## Objective
 
@@ -30,14 +30,16 @@ See task SHELL02 in `.agent/tasks.yaml`. Changes remain within that scope.
 - Same-snapshot baseline/candidate builds pass. Initial full E2E run found stale selectors in `render-overflow.spec.ts`; they are updated and full E2E now passes 38/38 with 13 expected skips.
 - Shell/mobile specs are synced. Review identified lifecycle mismatch (archived while task remained review) and missing accessibility active styling. The change is restored to `openspec/changes/resilient-shell-interactivity/`, registry points there, and strict change/spec validation passes.
 - Accessibility active classes are restored in native sync and regression-checked after click and reload from saved preference.
+- Follow-up review on de124ac identified late ClientRouter synchronization of preferences and terminal disclosure state. Both now sync on `astro:after-swap`; the browser regression records state during that event and passes.
+- The base shell-layout spec and active delta now require preference/disclosure restoration before the swapped DOM paints.
 
 ## In progress
 
-- Commit/push fixes, then wait for latest-head CI and review to reach terminal state.
+- Commit/push lifecycle fixes, then wait for latest-head CI and review to reach terminal state.
 
 ## Blocked by
 
-- Latest committed head remains `eafa47832541a7eb9d4f5fbd6b383bee1bcc0c67`; original CI is green, but review findings on that head are not resolved on GitHub. Local fixes are uncommitted.
+- `de124ac5c2a37cc88ba3e9f8e9ed6d63ba72250e` is the latest committed head. Its CI run 39262242541 is green; initial review threads are resolved. Follow-up review found two further P2 lifecycle issues; local fixes are uncommitted and the corresponding review threads are still open.
 
 ## Files changed
 
@@ -63,6 +65,7 @@ See task SHELL02 in `.agent/tasks.yaml`. Changes remain within that scope.
 - `openspec validate resilient-shell-interactivity --strict` — pass.
 - `openspec validate shell-layout --type spec --strict` — pass.
 - `E2E_REAL_CORPUS=1 E2E_POST_SLUG=KeePass pnpm exec playwright test tests/e2e/shell-interactivity.spec.ts -g 'top bar controls respond when React hydration is unavailable'` — pass after rebuilding local dist; checks active styles and persistence after reload.
+- `E2E_REAL_CORPUS=1 E2E_POST_SLUG=KeePass pnpm exec playwright test tests/e2e/shell-interactivity.spec.ts --reporter=line` — pass, 3/3, including `astro:after-swap` state snapshots.
 - `git diff --check` — pass.
 - `pnpm test` — pass, 133/133; `pnpm test:deployment` — pass, 53/53.
 - Commit `ed5ddaaa27d724d0a26e8b2eb174e00b6e6972bf`; PR #36 is open. `verify`, CodeQL, and CodeQL language analyses all pass.

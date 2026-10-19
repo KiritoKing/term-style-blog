@@ -10,7 +10,8 @@ The system MUST render theme and accessibility mode controls that respond throug
 
 #### Scenario: Keep preferences across navigation
 - **WHEN** a user changes theme or accessibility mode and navigates through Astro ClientRouter or browser history
-- **THEN** the current preference MUST remain applied and controls MUST continue to respond
+- **THEN** the current preference MUST be applied on `astro:after-swap` before the swapped DOM is painted
+- **THEN** controls MUST continue to respond after navigation
 
 ### Requirement: Only one responsive terminal panel is initialized
 The system MUST render and initialize one TerminalPanel per page while preserving desktop visibility, the mobile disclosure control, existing commands, and behavior when the viewport changes.
@@ -19,6 +20,10 @@ The system MUST render and initialize one TerminalPanel per page while preservin
 - **WHEN** the viewport crosses the shell's responsive breakpoint
 - **THEN** the same terminal instance MUST remain functional
 - **THEN** desktop MUST show the panel and mobile MUST provide a usable collapsible terminal control
+
+#### Scenario: Preserve terminal disclosure across navigation
+- **WHEN** a user navigates through Astro ClientRouter with the terminal expanded on mobile or visible on desktop
+- **THEN** the new terminal panel MUST restore the corresponding open state on `astro:after-swap` before the swapped DOM is painted
 
 ### Requirement: Storage failures do not block shell interactions
 The system MUST treat localStorage reads and writes as best-effort and MUST keep theme/accessibility controls, terminal commands, and command-driven navigation usable when storage is denied, unavailable, corrupt, or full.

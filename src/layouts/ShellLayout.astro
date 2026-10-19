@@ -105,6 +105,7 @@ const postIndex = posts.map((post) => ({
       true,
     );
     desktop.addEventListener('change', sync);
+    document.addEventListener('astro:after-swap', sync);
     document.addEventListener('astro:page-load', sync);
     sync();
   })();

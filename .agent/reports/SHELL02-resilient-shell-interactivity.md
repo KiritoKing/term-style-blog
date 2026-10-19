@@ -1,11 +1,12 @@
 # Report: SHELL02 resilient-shell-interactivity
 
-Status: partial (review findings fixed locally; updated commit and CI still pending)
+Status: partial (latest review findings fixed locally; latest commit, CI, and review pending)
 
 ## Files changed
 
 - `src/layouts/Layout.astro`: inline theme/accessibility initialization, delegated controls, Astro navigation and storage synchronization.
 - `src/layouts/Layout.astro`: accessibility control now toggles its active foreground/background classes and removes hover-only styling while enabled.
+- `src/layouts/Layout.astro`, `src/layouts/ShellLayout.astro`: restore theme/accessibility and terminal disclosure state on `astro:after-swap`, before the swapped DOM paints.
 - `src/components/shell/TopBar.astro`: server-rendered buttons replace the React top-bar island.
 - `src/components/react/TopBarControls.tsx`: removed.
 - `src/layouts/ShellLayout.astro`: one responsive `<details>` wrapper and one terminal island for mobile/desktop.
@@ -13,6 +14,7 @@ Status: partial (review findings fixed locally; updated commit and CI still pend
 - `src/test/safe-storage.test.ts`, `tests/e2e/shell-interactivity.spec.ts`: storage unit and browser regressions.
 - `docs/shell-interactivity-benchmark.md`, `docs/shell-interactivity-benchmark-data.json`: paired results and all raw runs.
 - `openspec/changes/resilient-shell-interactivity/`: proposal, design, test design, tasks, and spec delta.
+- `openspec/specs/shell-layout/spec.md`: clarify pre-paint preference and responsive disclosure restoration.
 - `.agent/tasks.yaml`, report, and handoffs: SHELL02 stays in review with the change active until acceptance.
 
 ## Commands run
@@ -22,6 +24,7 @@ Status: partial (review findings fixed locally; updated commit and CI still pend
 - `E2E_REAL_CORPUS=1 E2E_POST_SLUG=KeePass pnpm exec playwright test tests/e2e/shell-interactivity.spec.ts -g 'top bar controls respond when React hydration is unavailable'` — pass after local rebuild; verifies active classes after click and persisted state after reload.
 - `openspec validate resilient-shell-interactivity --strict` and `openspec validate shell-layout --type spec --strict` — pass with change active.
 - `git diff --check` — pass.
+- `E2E_REAL_CORPUS=1 E2E_POST_SLUG=KeePass pnpm exec playwright test tests/e2e/shell-interactivity.spec.ts --reporter=line` — pass, 3/3; verifies theme/a11y and mobile/desktop disclosure state in an `astro:after-swap` observer.
 - `pnpm exec vitest run src/test/safe-storage.test.ts` — pass, 6/6.
 - `pnpm test` — pass, 133/133 across 12 files.
 - `pnpm test:deployment` — pass, 53/53.
@@ -36,11 +39,11 @@ Status: partial (review findings fixed locally; updated commit and CI still pend
 
 ## Result and risks
 
-The initial review found two issues: the OpenSpec delta was archived while SHELL02 remained in review, and the accessibility button lost its active visual state. Both are fixed locally: the change is restored to `openspec/changes/resilient-shell-interactivity/`, the task registry points to the active path, and active styling is covered for click and persisted preferences. Change validation and the focused browser regression pass. The fixes have not yet been committed or pushed, so updated PR checks/review remain pending. TDD sequencing was not fully met: tests were added after the first implementation rather than run red before the code change.
+The reviews on commits `ed5ddaa` and `de124ac` found four issues: OpenSpec archived before acceptance, missing accessibility active styling, and theme/a11y plus terminal disclosure synchronization occurring after first paint on ClientRouter swaps. The first two are committed in `de124ac`; the lifecycle fixes are local and now use `astro:after-swap`, with explicit browser snapshots at that event. Strict OpenSpec validation and focused E2E pass. The latest lifecycle changes are not yet committed/pushed; latest-head CI/review are pending. TDD sequencing was not fully met: tests were added after the first implementation rather than run red before the code change.
 
 The local benchmark is not a production network benchmark. It ran through Astro preview on localhost and did not model Cloudflare compression, CPU throttling, or remote latency. Script transfer/decoded data and timing limitations are documented alongside the raw samples.
 
 ## Follow-ups
 
-1. Commit/push the review fixes and wait for latest-head CI/review.
+1. Commit/push the lifecycle fixes and wait for latest-head CI/review.
 2. After review acceptance, mark SHELL02 done and archive its OpenSpec change; then follow the controlling user instruction for merge and production verification.

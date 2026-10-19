@@ -31,6 +31,18 @@ test('top bar controls respond when React hydration is unavailable', async ({ pa
 test('uses one responsive terminal across viewport changes and Astro navigation', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
+  const initialDark = await page.locator('html').evaluate((element) => element.classList.contains('dark'));
+  await page.evaluate(() => {
+    document.addEventListener('astro:after-swap', () => {
+      const terminalOpen =
+        document.querySelector<HTMLDetailsElement>('details[data-shell-terminal]')?.open ?? false;
+      document.documentElement.dataset.afterSwapShellState = [
+        String(document.documentElement.classList.contains('dark')),
+        String(document.body.classList.contains('font-mode-system')),
+        String(terminalOpen),
+      ].join(':');
+    });
+  });
 
   const terminal = page.locator('[data-shell-terminal]');
   await expect(terminal).toHaveCount(1);
@@ -42,6 +54,22 @@ test('uses one responsive terminal across viewport changes and Astro navigation'
   await input.press('Enter');
   await expect(terminal.getByText('mobile-terminal', { exact: true })).toBeVisible();
 
+  await page.locator('[data-mobile-navigation] > summary').click();
+  await page.getByRole('link', { name: '~/posts', exact: true }).click();
+  await expect(page).toHaveURL(/\/posts\/?$/);
+  await expect(page.locator('[data-shell-terminal]')).toHaveAttribute('open', '');
+  await expect(page.locator('html')).toHaveAttribute(
+    'data-after-swap-shell-state',
+    `${initialDark}:false:true`,
+  );
+  await page.goBack();
+  await expect(page).toHaveURL(/\/($|\?)/);
+  await expect(page.locator('[data-shell-terminal]')).toHaveAttribute('open', '');
+  await expect(page.locator('html')).toHaveAttribute(
+    'data-after-swap-shell-state',
+    `${initialDark}:false:true`,
+  );
+
   await page.setViewportSize({ width: 1440, height: 900 });
   await expect(terminal).toHaveAttribute('open', '');
   await expect(terminal.locator('astro-island')).toHaveCount(1);
@@ -51,10 +79,15 @@ test('uses one responsive terminal across viewport changes and Astro navigation'
     .poll(() => page.locator('html').evaluate((element) => element.classList.contains('dark')))
     .toBe(!wasDark);
   const selectedTheme = !wasDark;
+  await page.getByRole('button', { name: 'Toggle Accessibility Mode' }).click();
 
   await page.getByRole('link', { name: '~/posts', exact: true }).click();
   await expect(page).toHaveURL(/\/posts\/?$/);
   await expect(page.locator('[data-shell-terminal]')).toHaveCount(1);
+  await expect(page.locator('html')).toHaveAttribute(
+    'data-after-swap-shell-state',
+    `${selectedTheme}:true:true`,
+  );
   await expect
     .poll(() => page.locator('html').evaluate((element) => element.classList.contains('dark')))
     .toBe(selectedTheme);
@@ -62,6 +95,10 @@ test('uses one responsive terminal across viewport changes and Astro navigation'
   await page.goBack();
   await expect(page).toHaveURL(/\/($|\?)/);
   await expect(page.locator('[data-shell-terminal]')).toHaveCount(1);
+  await expect(page.locator('html')).toHaveAttribute(
+    'data-after-swap-shell-state',
+    `${selectedTheme}:true:true`,
+  );
   await expect
     .poll(() => page.locator('html').evaluate((element) => element.classList.contains('dark')))
     .toBe(selectedTheme);

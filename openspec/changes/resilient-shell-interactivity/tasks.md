@@ -6,4 +6,4 @@
 - [x] Replace duplicate responsive terminal islands with one responsive terminal island.
 - [x] Make terminal storage access best-effort without blocking commands or navigation.
 - [x] Run a same-input five-run cold-context browser comparison; publish raw data, method, and limitations.
-- [x] Run all repository checks and Pele regressions to terminal success, sync shell-layout spec, validate, and archive the change.
+- [ ] Run all repository checks and Pele regressions to terminal success, sync shell-layout spec, validate, and archive the change after review acceptance.

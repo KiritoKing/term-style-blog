@@ -1,9 +1,9 @@
 # Handoff: SHELL02 resilient-shell-interactivity
 
-Status: review; implementation, local acceptance, benchmark, OpenSpec archive, PR, and CI complete
+Status: review; implementation and original CI passed; two review findings fixed locally, pending push and updated CI/review
 Owner: delegated-codex
 Branch: `perf/early-interactivity-resilience`
-Last updated: 2026-10-19T21:22:00Z
+Last updated: 2026-10-19T21:40:00Z
 
 ## Objective
 
@@ -28,15 +28,16 @@ See task SHELL02 in `.agent/tasks.yaml`. Changes remain within that scope.
 - `pnpm check`, storage unit tests, strict OpenSpec validation, and diff whitespace check pass.
 - `pnpm test` passes 133/133; `pnpm test:deployment` passes 53/53; `pnpm check` passes with 0 errors/warnings and 31 hints.
 - Same-snapshot baseline/candidate builds pass. Initial full E2E run found stale selectors in `render-overflow.spec.ts`; they are updated and full E2E now passes 38/38 with 13 expected skips.
-- Shell/mobile specs are synced; both strict spec validation and strict change validation passed. Change archived at `openspec/changes/archive/2026-10-19-resilient-shell-interactivity/`.
+- Shell/mobile specs are synced. Review identified lifecycle mismatch (archived while task remained review) and missing accessibility active styling. The change is restored to `openspec/changes/resilient-shell-interactivity/`, registry points there, and strict change/spec validation passes.
+- Accessibility active classes are restored in native sync and regression-checked after click and reload from saved preference.
 
 ## In progress
 
-- Await owner/supervisor review of PR #36.
+- Commit/push fixes, then wait for latest-head CI and review to reach terminal state.
 
 ## Blocked by
 
-- Awaiting review. PR #36 is open and CI checks have reached terminal success.
+- Latest committed head remains `eafa47832541a7eb9d4f5fbd6b383bee1bcc0c67`; original CI is green, but review findings on that head are not resolved on GitHub. Local fixes are uncommitted.
 
 ## Files changed
 
@@ -60,10 +61,17 @@ See task SHELL02 in `.agent/tasks.yaml`. Changes remain within that scope.
 - `pnpm exec vitest run src/test/safe-storage.test.ts` — pass, 6/6.
 - After updating stale terminal selectors, complete E2E — pass, 38 passed / 13 skipped / 0 failed.
 - `openspec validate resilient-shell-interactivity --strict` — pass.
+- `openspec validate shell-layout --type spec --strict` — pass.
+- `E2E_REAL_CORPUS=1 E2E_POST_SLUG=KeePass pnpm exec playwright test tests/e2e/shell-interactivity.spec.ts -g 'top bar controls respond when React hydration is unavailable'` — pass after rebuilding local dist; checks active styles and persistence after reload.
 - `git diff --check` — pass.
 - `pnpm test` — pass, 133/133; `pnpm test:deployment` — pass, 53/53.
 - Commit `ed5ddaaa27d724d0a26e8b2eb174e00b6e6972bf`; PR #36 is open. `verify`, CodeQL, and CodeQL language analyses all pass.
 - Paired strict content builds — pass, 55 article pages / 9,911 indexed words each.
+
+## Next actions
+
+- Commit and push the two review fixes; await fresh CI/review.
+- After acceptance, mark SHELL02 done and archive OpenSpec, then continue the owner's authorized merge/publication verification.
 
 ## Risks
 

@@ -1154,7 +1154,7 @@ tasks:
   relevant_specs:
   - openspec/specs/shell-layout/spec.md
   - openspec/specs/mobile-reading-experience/spec.md
-  - openspec/changes/archive/2026-10-19-resilient-shell-interactivity
+  - openspec/changes/resilient-shell-interactivity
   required_tests:
   - unit_storage_security_error
   - unit_storage_quota_error
@@ -1176,5 +1176,5 @@ tasks:
   report: .agent/reports/SHELL02-resilient-shell-interactivity.md
   handoff: .agent/handoffs/SHELL02-resilient-shell-interactivity.md
   blocked_by: []
-  unblock_when: Supervisor/owner review of PR 36; keep unmerged and undeployed unless explicitly reauthorized
+  unblock_when: Review findings are fixed, latest CI and review are clear, then merge and complete authorized publication verification
   last_updated: 2026-10-19T21:30:00Z

@@ -2,7 +2,6 @@ import { expect, test } from '@playwright/test';
 
 test('top bar controls respond when React hydration is unavailable', async ({ page }) => {
   await page.addInitScript(() => {
-    window.localStorage.clear();
     window.localStorage.setItem('tsb:theme', 'dark');
   });
   await page.route('**/_astro/client.*.js', (route) => route.abort());
@@ -16,7 +15,17 @@ test('top bar controls respond when React hydration is unavailable', async ({ pa
   const accessibility = page.getByRole('button', { name: 'Toggle Accessibility Mode' });
   await accessibility.click();
   await expect(accessibility).toHaveAttribute('aria-pressed', 'true');
+  await expect(accessibility).toHaveClass(/text-blue-600/);
+  await expect(accessibility).toHaveClass(/dark:text-green-400/);
+  await expect(accessibility).toHaveClass(/bg-gray-300/);
+  await expect(accessibility).toHaveClass(/dark:bg-\[\#222\]/);
   await expect(page.locator('body')).toHaveClass(/font-mode-system/);
+
+  await page.reload();
+  const restoredAccessibility = page.getByRole('button', { name: 'Toggle Accessibility Mode' });
+  await expect(restoredAccessibility).toHaveAttribute('aria-pressed', 'true');
+  await expect(restoredAccessibility).toHaveClass(/text-blue-600/);
+  await expect(restoredAccessibility).toHaveClass(/bg-gray-300/);
 });
 
 test('uses one responsive terminal across viewport changes and Astro navigation', async ({ page }) => {

@@ -106,6 +106,15 @@ const structuredData = article
           document.querySelectorAll('[data-a11y-toggle]').forEach((button) => {
             button.title = state.a11y ? 'Disable Accessibility Mode' : 'Enable Accessibility Mode';
             button.setAttribute('aria-pressed', String(state.a11y));
+            button.classList.toggle('text-blue-600', state.a11y);
+            button.classList.toggle('dark:text-green-400', state.a11y);
+            button.classList.toggle('bg-gray-300', state.a11y);
+            button.classList.toggle('dark:bg-[#222]', state.a11y);
+            button.classList.toggle('text-gray-500', !state.a11y);
+            button.classList.toggle('hover:text-blue-600', !state.a11y);
+            button.classList.toggle('dark:hover:text-green-400', !state.a11y);
+            button.classList.toggle('hover:bg-gray-300', !state.a11y);
+            button.classList.toggle('dark:hover:bg-[#222]', !state.a11y);
           });
         };
 

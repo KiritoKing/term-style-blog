@@ -4,6 +4,11 @@ import { expect, test, type Page } from '@playwright/test';
 const realBlogFlowcharts = JSON.parse(
   readFileSync(new URL('../fixtures/mermaid/real-blog-flowcharts.json', import.meta.url), 'utf8'),
 ) as string[];
+const usesRealCorpus = process.env.E2E_REAL_CORPUS === '1';
+const articleSlug = process.env.E2E_MERMAID_POST_SLUG ?? (usesRealCorpus ? 'ai-catch-up-after-national-day-2026' : 'hello-world');
+const navigationSlug = usesRealCorpus ? 'deep-dive-react-hooks' : 'pixel-art-tips';
+const articlePath = `/posts/${articleSlug}`;
+const navigationPath = `/posts/${navigationSlug}`;
 
 const installDiagrams = async (page: Page, sources: string[], expectPreview = true) => {
   await page.evaluate((diagrams) => {
@@ -43,7 +48,7 @@ test('renders the four public Chinese flowcharts with readable mobile and deskto
     new URL(route.request().url()).hostname === '127.0.0.1' ? route.continue() : route.abort(),
   );
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto('/posts/hello-world', { waitUntil: 'domcontentloaded' });
+  await page.goto(articlePath, { waitUntil: 'domcontentloaded' });
   await installDiagrams(page, realBlogFlowcharts);
   await expect.poll(() => page.evaluate(() => (window as Window & { __mermaidRenderEvents?: number }).__mermaidRenderEvents)).toBe(1);
   expect(await page.evaluate(() => (window as Window & { __mermaidRenderCounts?: number[] }).__mermaidRenderCounts)).toEqual([4]);
@@ -100,7 +105,7 @@ test('retains safe links and blocks dangerous URLs', async ({ page }) => {
   await page.route('**/*', (route) =>
     new URL(route.request().url()).hostname === '127.0.0.1' ? route.continue() : route.abort(),
   );
-  await page.goto('/posts/hello-world', { waitUntil: 'domcontentloaded' });
+  await page.goto(articlePath, { waitUntil: 'domcontentloaded' });
   await installDiagrams(page, [
     `flowchart LR
       A[Safe external link] --> B[Finished]
@@ -122,7 +127,7 @@ test('keeps the original source visible when Pele chunk loading fails', async ({
     new URL(route.request().url()).hostname === '127.0.0.1' ? route.continue() : route.abort(),
   );
   await page.route('**/_astro/lazy.*.js', (route) => route.abort());
-  await page.goto('/posts/hello-world', { waitUntil: 'domcontentloaded' });
+  await page.goto(articlePath, { waitUntil: 'domcontentloaded' });
   await installDiagrams(page, [realBlogFlowcharts[0]], false);
 
   const source = page.locator('.prose-terminal pre[data-blog-mermaid-error="true"]');
@@ -141,7 +146,7 @@ test('ignores Pele module completion after two Astro navigations', async ({ page
     releaseChunk = resolve;
   });
 
-  await page.addInitScript(() => {
+  await page.addInitScript(({ firstPath, nextPath }) => {
     const state = window as Window & { __mermaidRenderEvents?: number };
     state.__mermaidRenderEvents = 0;
     document.addEventListener('blog:mermaid-rendered', () => {
@@ -152,11 +157,11 @@ test('ignores Pele module completion after two Astro navigations', async ({ page
       if (!article || article.querySelector('[data-test-next-article]')) return;
       const link = document.createElement('a');
       link.dataset.testNextArticle = 'true';
-      link.href = location.pathname === '/posts/pixel-art-tips' ? '/posts/hello-world-cn' : '/posts/pixel-art-tips';
+      link.href = location.pathname === nextPath ? firstPath : nextPath;
       link.textContent = 'Next test article';
       article.append(link);
     });
-  });
+  }, { firstPath: articlePath, nextPath: navigationPath });
   await page.route('**/*', (route) =>
     new URL(route.request().url()).hostname === '127.0.0.1' ? route.continue() : route.abort(),
   );
@@ -165,7 +170,7 @@ test('ignores Pele module completion after two Astro navigations', async ({ page
     await heldChunk;
     await route.continue();
   });
-  await page.goto('/posts/hello-world', { waitUntil: 'domcontentloaded' });
+  await page.goto(articlePath, { waitUntil: 'domcontentloaded' });
   await page.evaluate((source) => {
     const article = document.querySelector('.prose-terminal');
     if (!article) throw new Error('The article container is missing.');
@@ -178,9 +183,9 @@ test('ignores Pele module completion after two Astro navigations', async ({ page
   await chunkRequested;
 
   await page.locator('[data-test-next-article]').click();
-  await expect(page).toHaveURL(/\/posts\/pixel-art-tips\/?$/);
+  await expect(page).toHaveURL(new RegExp(`${navigationPath}/?$`));
   await page.locator('[data-test-next-article]').click();
-  await expect(page).toHaveURL(/\/posts\/hello-world-cn\/?$/);
+  await expect(page).toHaveURL(new RegExp(`${articlePath}/?$`));
 
   releaseChunk?.();
   await expect(page.locator('.prose-terminal .mermaid')).toHaveCount(0);

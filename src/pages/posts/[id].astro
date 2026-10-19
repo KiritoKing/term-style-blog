@@ -263,12 +263,23 @@ const giscusConfig = {
         }),
       );
 
-      if (generation !== articleGeneration || diagrams.some(({ diagram }) => !diagram.isConnected)) return;
+      const hasUnexpectedlyDetachedDiagram = diagrams.some(({ block, diagram }) => {
+        const preservedFailure =
+          block.isConnected && !diagram.isConnected && block.dataset.blogMermaidError === 'true';
+        const renderedSuccessfully =
+          !block.isConnected && diagram.isConnected && diagram.dataset.blogMermaidComplete === 'true';
+        return !preservedFailure && !renderedSuccessfully;
+      });
+      if (generation !== articleGeneration || hasUnexpectedlyDetachedDiagram) return;
+      const renderedCount = diagrams.filter(
+        ({ diagram }) => diagram.isConnected && diagram.dataset.blogMermaidComplete === 'true',
+      ).length;
+      if (renderedCount === 0) return;
       await new Promise<void>((resolve) => {
         requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
       });
       if (generation !== articleGeneration) return;
-      document.dispatchEvent(new CustomEvent('blog:mermaid-rendered', { detail: { count: diagrams.length } }));
+      document.dispatchEvent(new CustomEvent('blog:mermaid-rendered', { detail: { count: renderedCount } }));
     };
 
     const initArticleEnhancements = () => {

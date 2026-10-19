@@ -136,6 +136,68 @@ test('keeps the original source visible when Pele chunk loading fails', async ({
   await expect(page.locator('.prose-terminal .mermaid svg')).toHaveCount(0);
 });
 
+test('keeps failed source and makes a successful wide sibling scrollable without resizing', async ({ page }) => {
+  await page.route('**/*', (route) =>
+    new URL(route.request().url()).hostname === '127.0.0.1' ? route.continue() : route.abort(),
+  );
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto(articlePath, { waitUntil: 'domcontentloaded' });
+
+  const invalidSource = 'flowchart LR\n  A[Broken] -->';
+  const wideSource = `flowchart LR
+    A[Start] --> B[Collect the published article] --> C[Parse each Mermaid source] -->
+    D[Build the responsive Pele diagram] --> E[Wait for every sibling graph] -->
+    F[Dispatch the completion event] --> G[Apply the natural SVG width] -->
+    H[Scroll horizontally without resizing]`;
+  await page.evaluate((sources) => {
+    const article = document.querySelector('.prose-terminal');
+    if (!article) throw new Error('The article container is missing.');
+
+    const state = window as Window & { __mermaidRenderEvents?: number; __mermaidRenderCounts?: number[] };
+    state.__mermaidRenderEvents = 0;
+    state.__mermaidRenderCounts = [];
+    document.addEventListener('blog:mermaid-rendered', (event) => {
+      state.__mermaidRenderEvents = (state.__mermaidRenderEvents ?? 0) + 1;
+      state.__mermaidRenderCounts?.push((event as CustomEvent<{ count?: number }>).detail?.count ?? 0);
+    });
+
+    article.replaceChildren(
+      ...sources.map((source) => {
+        const pre = document.createElement('pre');
+        pre.dataset.language = 'mermaid';
+        pre.textContent = source;
+        return pre;
+      }),
+    );
+    document.dispatchEvent(new Event('astro:page-load'));
+  }, [invalidSource, wideSource]);
+
+  const errorSource = page.locator('.prose-terminal pre[data-blog-mermaid-error="true"]');
+  await expect(errorSource).toContainText(invalidSource);
+  await expect(page.getByRole('status')).toContainText('Mermaid source is shown below');
+
+  const rendered = page.locator('.prose-terminal .mermaid[data-blog-mermaid-complete="true"]');
+  await expect(rendered).toHaveCount(1);
+  await expect.poll(() => page.evaluate(() => (window as Window & { __mermaidRenderEvents?: number }).__mermaidRenderEvents)).toBe(1);
+  expect(await page.evaluate(() => (window as Window & { __mermaidRenderCounts?: number[] }).__mermaidRenderCounts)).toEqual([1]);
+
+  const geometry = await rendered.evaluate((container) => {
+    const svg = container.querySelector<SVGSVGElement>(':scope > svg[viewBox]');
+    if (!svg) throw new Error('Pele did not render the wide SVG.');
+    return {
+      clientWidth: container.clientWidth,
+      scrollWidth: container.scrollWidth,
+      svgWidth: svg.getBoundingClientRect().width,
+      viewBoxWidth: svg.viewBox.baseVal.width,
+    };
+  });
+  await expect(rendered).toHaveAttribute('data-mermaid-scrollable', 'true');
+  expect(geometry.viewBoxWidth).toBeGreaterThan(geometry.clientWidth);
+  expect(geometry.scrollWidth).toBeGreaterThan(geometry.clientWidth);
+  expect(geometry.svgWidth).toBeGreaterThanOrEqual(geometry.viewBoxWidth - 1);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
+});
+
 test('ignores Pele module completion after two Astro navigations', async ({ page }) => {
   let releaseChunk: (() => void) | undefined;
   let resolveChunkRequest: (() => void) | undefined;

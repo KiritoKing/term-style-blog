@@ -1,0 +1,1927 @@
+{
+  "method": {
+    "source": "term-style-blog main 72eedaff5032e45c50d6a860c5d81b725abc400d versus candidate perf/early-interactivity-resilience",
+    "contentSnapshot": "llm-obsidian published content snapshot a4d2069946d8479e551c3bef6965b266dd08ce9a; 55 Markdown files",
+    "server": "Astro preview server, localhost; production output built from identical content snapshot",
+    "browser": "Playwright Chromium (headless, local isolated browser; not user Mac Chrome)",
+    "viewport": "390x844 CSS px; dark scheme; each run used a new browser context with theme=dark and a11y=0",
+    "repetitions": "5 cold contexts per page per variant; homepage and real Mermaid article /posts/ai-productivity-paradigm",
+    "measurements": "DOMContentLoaded, load, browser Resource Timing script transfer/encoded/decoded bytes, island counts, overflow, page/console errors; click-to-theme-class response measured from click to html.dark removal. Article rows waited for all four rendered Mermaid SVGs.",
+    "limitations": "Astro preview is local and does not model Cloudflare Brotli, reader network latency, or third-party request costs. Transfer size is browser-reported and can reflect cache accounting; decoded bytes are informational. DCL/load are localhost timings. This benchmark measures UI response from a successful click, not time-to-first-possible-interaction. No long-task series was collected.",
+    "versions": {
+      "Node.js": "26.0.0",
+      "Astro": "7.3.2",
+      "Pele": "1.6.0",
+      "React": "19.2.4",
+      "Playwright": "1.63.0",
+      "Chromium": "153.0.8010.12"
+    }
+  },
+  "baseline": {
+    "browser": "Chromium via Playwright, Astro preview on localhost",
+    "runs": [
+      {
+        "page": "home",
+        "iteration": 1,
+        "dcl": 22.600000023841858,
+        "load": 22.700000047683716,
+        "resources": [
+          {
+            "url": "/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CYDbzu1r.js",
+            "transfer": 5891,
+            "encoded": 5591,
+            "decoded": 16357
+          },
+          {
+            "url": "/_astro/TopBarControls.Dmwnu2xz.js",
+            "transfer": 2894,
+            "encoded": 2594,
+            "decoded": 6091
+          },
+          {
+            "url": "/_astro/client.40qeM1cQ.js",
+            "transfer": 57599,
+            "encoded": 57299,
+            "decoded": 184065
+          },
+          {
+            "url": "/_astro/SystemInfo.CH18qRmN.js",
+            "transfer": 3555,
+            "encoded": 3255,
+            "decoded": 10716
+          },
+          {
+            "url": "/_astro/TerminalPanel.DaVkd11R.js",
+            "transfer": 3330,
+            "encoded": 3030,
+            "decoded": 9650
+          },
+          {
+            "url": "/_astro/jsx-runtime.Bmd7iEuj.js",
+            "transfer": 724,
+            "encoded": 424,
+            "decoded": 424
+          },
+          {
+            "url": "/_astro/react.ADnQu87e.js",
+            "transfer": 3420,
+            "encoded": 3120,
+            "decoded": 8058
+          }
+        ],
+        "islands": 4,
+        "terminalIslands": 2,
+        "overflow": 0,
+        "clickResponseMs": 56.36,
+        "errors": []
+      },
+      {
+        "page": "home",
+        "iteration": 2,
+        "dcl": 21.899999976158142,
+        "load": 21.899999976158142,
+        "resources": [
+          {
+            "url": "/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CYDbzu1r.js",
+            "transfer": 5891,
+            "encoded": 5591,
+            "decoded": 16357
+          },
+          {
+            "url": "/_astro/TopBarControls.Dmwnu2xz.js",
+            "transfer": 2894,
+            "encoded": 2594,
+            "decoded": 6091
+          },
+          {
+            "url": "/_astro/client.40qeM1cQ.js",
+            "transfer": 57599,
+            "encoded": 57299,
+            "decoded": 184065
+          },
+          {
+            "url": "/_astro/SystemInfo.CH18qRmN.js",
+            "transfer": 3555,
+            "encoded": 3255,
+            "decoded": 10716
+          },
+          {
+            "url": "/_astro/TerminalPanel.DaVkd11R.js",
+            "transfer": 3330,
+            "encoded": 3030,
+            "decoded": 9650
+          },
+          {
+            "url": "/_astro/jsx-runtime.Bmd7iEuj.js",
+            "transfer": 724,
+            "encoded": 424,
+            "decoded": 424
+          },
+          {
+            "url": "/_astro/react.ADnQu87e.js",
+            "transfer": 3420,
+            "encoded": 3120,
+            "decoded": 8058
+          }
+        ],
+        "islands": 4,
+        "terminalIslands": 2,
+        "overflow": 0,
+        "clickResponseMs": 51.41,
+        "errors": []
+      },
+      {
+        "page": "home",
+        "iteration": 3,
+        "dcl": 21.699999928474426,
+        "load": 21.799999952316284,
+        "resources": [
+          {
+            "url": "/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CYDbzu1r.js",
+            "transfer": 5891,
+            "encoded": 5591,
+            "decoded": 16357
+          },
+          {
+            "url": "/_astro/TopBarControls.Dmwnu2xz.js",
+            "transfer": 2894,
+            "encoded": 2594,
+            "decoded": 6091
+          },
+          {
+            "url": "/_astro/client.40qeM1cQ.js",
+            "transfer": 57599,
+            "encoded": 57299,
+            "decoded": 184065
+          },
+          {
+            "url": "/_astro/SystemInfo.CH18qRmN.js",
+            "transfer": 3555,
+            "encoded": 3255,
+            "decoded": 10716
+          },
+          {
+            "url": "/_astro/TerminalPanel.DaVkd11R.js",
+            "transfer": 3330,
+            "encoded": 3030,
+            "decoded": 9650
+          }
+        ],
+        "islands": 4,
+        "terminalIslands": 2,
+        "overflow": 0,
+        "clickResponseMs": 58.84,
+        "errors": []
+      },
+      {
+        "page": "home",
+        "iteration": 4,
+        "dcl": 21.90000009536743,
+        "load": 22,
+        "resources": [
+          {
+            "url": "/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CYDbzu1r.js",
+            "transfer": 5891,
+            "encoded": 5591,
+            "decoded": 16357
+          },
+          {
+            "url": "/_astro/TopBarControls.Dmwnu2xz.js",
+            "transfer": 2894,
+            "encoded": 2594,
+            "decoded": 6091
+          },
+          {
+            "url": "/_astro/client.40qeM1cQ.js",
+            "transfer": 57599,
+            "encoded": 57299,
+            "decoded": 184065
+          },
+          {
+            "url": "/_astro/SystemInfo.CH18qRmN.js",
+            "transfer": 3555,
+            "encoded": 3255,
+            "decoded": 10716
+          },
+          {
+            "url": "/_astro/TerminalPanel.DaVkd11R.js",
+            "transfer": 3330,
+            "encoded": 3030,
+            "decoded": 9650
+          }
+        ],
+        "islands": 4,
+        "terminalIslands": 2,
+        "overflow": 0,
+        "clickResponseMs": 57.1,
+        "errors": []
+      },
+      {
+        "page": "home",
+        "iteration": 5,
+        "dcl": 23.09999990463257,
+        "load": 23.199999928474426,
+        "resources": [
+          {
+            "url": "/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CYDbzu1r.js",
+            "transfer": 5891,
+            "encoded": 5591,
+            "decoded": 16357
+          },
+          {
+            "url": "/_astro/TopBarControls.Dmwnu2xz.js",
+            "transfer": 2894,
+            "encoded": 2594,
+            "decoded": 6091
+          },
+          {
+            "url": "/_astro/client.40qeM1cQ.js",
+            "transfer": 57599,
+            "encoded": 57299,
+            "decoded": 184065
+          },
+          {
+            "url": "/_astro/SystemInfo.CH18qRmN.js",
+            "transfer": 3555,
+            "encoded": 3255,
+            "decoded": 10716
+          },
+          {
+            "url": "/_astro/TerminalPanel.DaVkd11R.js",
+            "transfer": 3330,
+            "encoded": 3030,
+            "decoded": 9650
+          }
+        ],
+        "islands": 4,
+        "terminalIslands": 2,
+        "overflow": 0,
+        "clickResponseMs": 57.23,
+        "errors": []
+      },
+      {
+        "page": "article",
+        "iteration": 1,
+        "dcl": 39,
+        "load": 39.10000002384186,
+        "resources": [
+          {
+            "url": "/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CYDbzu1r.js",
+            "transfer": 5891,
+            "encoded": 5591,
+            "decoded": 16357
+          },
+          {
+            "url": "/_astro/ImageLightbox.astro_astro_type_script_index_0_lang.D5gTveDc.js",
+            "transfer": 1463,
+            "encoded": 1163,
+            "decoded": 2323
+          },
+          {
+            "url": "/_astro/_id_.astro_astro_type_script_index_0_lang.BXkTBXNk.js",
+            "transfer": 1438,
+            "encoded": 1138,
+            "decoded": 2520
+          },
+          {
+            "url": "/_astro/TopBarControls.Dmwnu2xz.js",
+            "transfer": 2894,
+            "encoded": 2594,
+            "decoded": 6091
+          },
+          {
+            "url": "/_astro/client.40qeM1cQ.js",
+            "transfer": 57599,
+            "encoded": 57299,
+            "decoded": 184065
+          },
+          {
+            "url": "/_astro/Comments.DhdehFr0.js",
+            "transfer": 1251,
+            "encoded": 951,
+            "decoded": 1846
+          },
+          {
+            "url": "/_astro/TerminalPanel.DaVkd11R.js",
+            "transfer": 3330,
+            "encoded": 3030,
+            "decoded": 9650
+          },
+          {
+            "url": "/_astro/preload-helper.CxFQXtKk.js",
+            "transfer": 1030,
+            "encoded": 730,
+            "decoded": 1342
+          },
+          {
+            "url": "/_astro/jsx-runtime.Bmd7iEuj.js",
+            "transfer": 724,
+            "encoded": 424,
+            "decoded": 424
+          },
+          {
+            "url": "/_astro/react.ADnQu87e.js",
+            "transfer": 3420,
+            "encoded": 3120,
+            "decoded": 8058
+          },
+          {
+            "url": "/_astro/lazy.DKMYSrZb.js",
+            "transfer": 15063,
+            "encoded": 14763,
+            "decoded": 36055
+          },
+          {
+            "url": "/_astro/NV4XNBIS.wkvcGhBM.js",
+            "transfer": 366,
+            "encoded": 66,
+            "decoded": 66
+          },
+          {
+            "url": "/_astro/DKTLEL5E.DciMwFJ1.js",
+            "transfer": 1129,
+            "encoded": 829,
+            "decoded": 829
+          },
+          {
+            "url": "/_astro/N2QHACHQ.BqSEfqvq.js",
+            "transfer": 12700,
+            "encoded": 12400,
+            "decoded": 34067
+          },
+          {
+            "url": "/_astro/RZSVICHU.BVkV_3D4.js",
+            "transfer": 4144,
+            "encoded": 3844,
+            "decoded": 8622
+          },
+          {
+            "url": "/_astro/URA2L2QI.Cnv0ucKd.js",
+            "transfer": 3426,
+            "encoded": 3126,
+            "decoded": 12078
+          },
+          {
+            "url": "/_astro/HWDLEDTA.DVMUhrqG.js",
+            "transfer": 11777,
+            "encoded": 11477,
+            "decoded": 28458
+          },
+          {
+            "url": "/_astro/JZWSX6AR.CKv4EQkZ.js",
+            "transfer": 1219,
+            "encoded": 919,
+            "decoded": 1630
+          },
+          {
+            "url": "/_astro/FKCDD66M.CdwMX5A0.js",
+            "transfer": 2852,
+            "encoded": 2552,
+            "decoded": 6196
+          },
+          {
+            "url": "/_astro/ELSXBIJH.CX59pFtS.js",
+            "transfer": 1277,
+            "encoded": 977,
+            "decoded": 977
+          },
+          {
+            "url": "/_astro/FTXIJQGB.CggtIYAM.js",
+            "transfer": 1396,
+            "encoded": 1096,
+            "decoded": 2540
+          },
+          {
+            "url": "/_astro/7WLXJQOR.D6QVYUu9.js",
+            "transfer": 1245,
+            "encoded": 945,
+            "decoded": 1947
+          }
+        ],
+        "islands": 4,
+        "terminalIslands": 2,
+        "overflow": 0,
+        "clickResponseMs": 39.36,
+        "errors": []
+      },
+      {
+        "page": "article",
+        "iteration": 2,
+        "dcl": 38.40000009536743,
+        "load": 38.5,
+        "resources": [
+          {
+            "url": "/_astro/ImageLightbox.astro_astro_type_script_index_0_lang.D5gTveDc.js",
+            "transfer": 1463,
+            "encoded": 1163,
+            "decoded": 2323
+          },
+          {
+            "url": "/_astro/_id_.astro_astro_type_script_index_0_lang.BXkTBXNk.js",
+            "transfer": 1438,
+            "encoded": 1138,
+            "decoded": 2520
+          },
+          {
+            "url": "/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CYDbzu1r.js",
+            "transfer": 5891,
+            "encoded": 5591,
+            "decoded": 16357
+          },
+          {
+            "url": "/_astro/TopBarControls.Dmwnu2xz.js",
+            "transfer": 2894,
+            "encoded": 2594,
+            "decoded": 6091
+          },
+          {
+            "url": "/_astro/client.40qeM1cQ.js",
+            "transfer": 57599,
+            "encoded": 57299,
+            "decoded": 184065
+          },
+          {
+            "url": "/_astro/Comments.DhdehFr0.js",
+            "transfer": 1251,
+            "encoded": 951,
+            "decoded": 1846
+          },
+          {
+            "url": "/_astro/TerminalPanel.DaVkd11R.js",
+            "transfer": 3330,
+            "encoded": 3030,
+            "decoded": 9650
+          },
+          {
+            "url": "/_astro/preload-helper.CxFQXtKk.js",
+            "transfer": 1030,
+            "encoded": 730,
+            "decoded": 1342
+          },
+          {
+            "url": "/_astro/jsx-runtime.Bmd7iEuj.js",
+            "transfer": 724,
+            "encoded": 424,
+            "decoded": 424
+          },
+          {
+            "url": "/_astro/react.ADnQu87e.js",
+            "transfer": 3420,
+            "encoded": 3120,
+            "decoded": 8058
+          },
+          {
+            "url": "/_astro/lazy.DKMYSrZb.js",
+            "transfer": 15063,
+            "encoded": 14763,
+            "decoded": 36055
+          },
+          {
+            "url": "/_astro/NV4XNBIS.wkvcGhBM.js",
+            "transfer": 366,
+            "encoded": 66,
+            "decoded": 66
+          },
+          {
+            "url": "/_astro/DKTLEL5E.DciMwFJ1.js",
+            "transfer": 1129,
+            "encoded": 829,
+            "decoded": 829
+          },
+          {
+            "url": "/_astro/N2QHACHQ.BqSEfqvq.js",
+            "transfer": 12700,
+            "encoded": 12400,
+            "decoded": 34067
+          },
+          {
+            "url": "/_astro/RZSVICHU.BVkV_3D4.js",
+            "transfer": 4144,
+            "encoded": 3844,
+            "decoded": 8622
+          },
+          {
+            "url": "/_astro/URA2L2QI.Cnv0ucKd.js",
+            "transfer": 3426,
+            "encoded": 3126,
+            "decoded": 12078
+          },
+          {
+            "url": "/_astro/HWDLEDTA.DVMUhrqG.js",
+            "transfer": 11777,
+            "encoded": 11477,
+            "decoded": 28458
+          },
+          {
+            "url": "/_astro/JZWSX6AR.CKv4EQkZ.js",
+            "transfer": 1219,
+            "encoded": 919,
+            "decoded": 1630
+          },
+          {
+            "url": "/_astro/FKCDD66M.CdwMX5A0.js",
+            "transfer": 2852,
+            "encoded": 2552,
+            "decoded": 6196
+          },
+          {
+            "url": "/_astro/ELSXBIJH.CX59pFtS.js",
+            "transfer": 1277,
+            "encoded": 977,
+            "decoded": 977
+          },
+          {
+            "url": "/_astro/FTXIJQGB.CggtIYAM.js",
+            "transfer": 1396,
+            "encoded": 1096,
+            "decoded": 2540
+          },
+          {
+            "url": "/_astro/7WLXJQOR.D6QVYUu9.js",
+            "transfer": 1245,
+            "encoded": 945,
+            "decoded": 1947
+          }
+        ],
+        "islands": 4,
+        "terminalIslands": 2,
+        "overflow": 0,
+        "clickResponseMs": 39.23,
+        "errors": []
+      },
+      {
+        "page": "article",
+        "iteration": 3,
+        "dcl": 38.60000002384186,
+        "load": 38.700000047683716,
+        "resources": [
+          {
+            "url": "/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CYDbzu1r.js",
+            "transfer": 5891,
+            "encoded": 5591,
+            "decoded": 16357
+          },
+          {
+            "url": "/_astro/ImageLightbox.astro_astro_type_script_index_0_lang.D5gTveDc.js",
+            "transfer": 1463,
+            "encoded": 1163,
+            "decoded": 2323
+          },
+          {
+            "url": "/_astro/_id_.astro_astro_type_script_index_0_lang.BXkTBXNk.js",
+            "transfer": 1438,
+            "encoded": 1138,
+            "decoded": 2520
+          },
+          {
+            "url": "/_astro/TopBarControls.Dmwnu2xz.js",
+            "transfer": 2894,
+            "encoded": 2594,
+            "decoded": 6091
+          },
+          {
+            "url": "/_astro/Comments.DhdehFr0.js",
+            "transfer": 1251,
+            "encoded": 951,
+            "decoded": 1846
+          },
+          {
+            "url": "/_astro/client.40qeM1cQ.js",
+            "transfer": 57599,
+            "encoded": 57299,
+            "decoded": 184065
+          },
+          {
+            "url": "/_astro/TerminalPanel.DaVkd11R.js",
+            "transfer": 3330,
+            "encoded": 3030,
+            "decoded": 9650
+          },
+          {
+            "url": "/_astro/preload-helper.CxFQXtKk.js",
+            "transfer": 1030,
+            "encoded": 730,
+            "decoded": 1342
+          },
+          {
+            "url": "/_astro/jsx-runtime.Bmd7iEuj.js",
+            "transfer": 724,
+            "encoded": 424,
+            "decoded": 424
+          },
+          {
+            "url": "/_astro/react.ADnQu87e.js",
+            "transfer": 3420,
+            "encoded": 3120,
+            "decoded": 8058
+          },
+          {
+            "url": "/_astro/lazy.DKMYSrZb.js",
+            "transfer": 15063,
+            "encoded": 14763,
+            "decoded": 36055
+          },
+          {
+            "url": "/_astro/NV4XNBIS.wkvcGhBM.js",
+            "transfer": 366,
+            "encoded": 66,
+            "decoded": 66
+          },
+          {
+            "url": "/_astro/N2QHACHQ.BqSEfqvq.js",
+            "transfer": 12700,
+            "encoded": 12400,
+            "decoded": 34067
+          },
+          {
+            "url": "/_astro/DKTLEL5E.DciMwFJ1.js",
+            "transfer": 1129,
+            "encoded": 829,
+            "decoded": 829
+          },
+          {
+            "url": "/_astro/RZSVICHU.BVkV_3D4.js",
+            "transfer": 4144,
+            "encoded": 3844,
+            "decoded": 8622
+          },
+          {
+            "url": "/_astro/URA2L2QI.Cnv0ucKd.js",
+            "transfer": 3426,
+            "encoded": 3126,
+            "decoded": 12078
+          },
+          {
+            "url": "/_astro/ELSXBIJH.CX59pFtS.js",
+            "transfer": 1277,
+            "encoded": 977,
+            "decoded": 977
+          },
+          {
+            "url": "/_astro/HWDLEDTA.DVMUhrqG.js",
+            "transfer": 11777,
+            "encoded": 11477,
+            "decoded": 28458
+          },
+          {
+            "url": "/_astro/JZWSX6AR.CKv4EQkZ.js",
+            "transfer": 1219,
+            "encoded": 919,
+            "decoded": 1630
+          },
+          {
+            "url": "/_astro/FKCDD66M.CdwMX5A0.js",
+            "transfer": 2852,
+            "encoded": 2552,
+            "decoded": 6196
+          },
+          {
+            "url": "/_astro/FTXIJQGB.CggtIYAM.js",
+            "transfer": 1396,
+            "encoded": 1096,
+            "decoded": 2540
+          },
+          {
+            "url": "/_astro/7WLXJQOR.D6QVYUu9.js",
+            "transfer": 1245,
+            "encoded": 945,
+            "decoded": 1947
+          }
+        ],
+        "islands": 4,
+        "terminalIslands": 2,
+        "overflow": 0,
+        "clickResponseMs": 37.61,
+        "errors": []
+      },
+      {
+        "page": "article",
+        "iteration": 4,
+        "dcl": 38.799999952316284,
+        "load": 38.89999997615814,
+        "resources": [
+          {
+            "url": "/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CYDbzu1r.js",
+            "transfer": 5891,
+            "encoded": 5591,
+            "decoded": 16357
+          },
+          {
+            "url": "/_astro/ImageLightbox.astro_astro_type_script_index_0_lang.D5gTveDc.js",
+            "transfer": 1463,
+            "encoded": 1163,
+            "decoded": 2323
+          },
+          {
+            "url": "/_astro/_id_.astro_astro_type_script_index_0_lang.BXkTBXNk.js",
+            "transfer": 1438,
+            "encoded": 1138,
+            "decoded": 2520
+          },
+          {
+            "url": "/_astro/TopBarControls.Dmwnu2xz.js",
+            "transfer": 2894,
+            "encoded": 2594,
+            "decoded": 6091
+          },
+          {
+            "url": "/_astro/client.40qeM1cQ.js",
+            "transfer": 57599,
+            "encoded": 57299,
+            "decoded": 184065
+          },
+          {
+            "url": "/_astro/Comments.DhdehFr0.js",
+            "transfer": 1251,
+            "encoded": 951,
+            "decoded": 1846
+          },
+          {
+            "url": "/_astro/TerminalPanel.DaVkd11R.js",
+            "transfer": 3330,
+            "encoded": 3030,
+            "decoded": 9650
+          },
+          {
+            "url": "/_astro/preload-helper.CxFQXtKk.js",
+            "transfer": 1030,
+            "encoded": 730,
+            "decoded": 1342
+          },
+          {
+            "url": "/_astro/jsx-runtime.Bmd7iEuj.js",
+            "transfer": 724,
+            "encoded": 424,
+            "decoded": 424
+          },
+          {
+            "url": "/_astro/react.ADnQu87e.js",
+            "transfer": 3420,
+            "encoded": 3120,
+            "decoded": 8058
+          },
+          {
+            "url": "/_astro/lazy.DKMYSrZb.js",
+            "transfer": 15063,
+            "encoded": 14763,
+            "decoded": 36055
+          },
+          {
+            "url": "/_astro/NV4XNBIS.wkvcGhBM.js",
+            "transfer": 366,
+            "encoded": 66,
+            "decoded": 66
+          },
+          {
+            "url": "/_astro/DKTLEL5E.DciMwFJ1.js",
+            "transfer": 1129,
+            "encoded": 829,
+            "decoded": 829
+          },
+          {
+            "url": "/_astro/RZSVICHU.BVkV_3D4.js",
+            "transfer": 4144,
+            "encoded": 3844,
+            "decoded": 8622
+          },
+          {
+            "url": "/_astro/N2QHACHQ.BqSEfqvq.js",
+            "transfer": 12700,
+            "encoded": 12400,
+            "decoded": 34067
+          },
+          {
+            "url": "/_astro/URA2L2QI.Cnv0ucKd.js",
+            "transfer": 3426,
+            "encoded": 3126,
+            "decoded": 12078
+          },
+          {
+            "url": "/_astro/HWDLEDTA.DVMUhrqG.js",
+            "transfer": 11777,
+            "encoded": 11477,
+            "decoded": 28458
+          },
+          {
+            "url": "/_astro/FKCDD66M.CdwMX5A0.js",
+            "transfer": 2852,
+            "encoded": 2552,
+            "decoded": 6196
+          },
+          {
+            "url": "/_astro/JZWSX6AR.CKv4EQkZ.js",
+            "transfer": 1219,
+            "encoded": 919,
+            "decoded": 1630
+          },
+          {
+            "url": "/_astro/ELSXBIJH.CX59pFtS.js",
+            "transfer": 1277,
+            "encoded": 977,
+            "decoded": 977
+          },
+          {
+            "url": "/_astro/7WLXJQOR.D6QVYUu9.js",
+            "transfer": 1245,
+            "encoded": 945,
+            "decoded": 1947
+          },
+          {
+            "url": "/_astro/FTXIJQGB.CggtIYAM.js",
+            "transfer": 1396,
+            "encoded": 1096,
+            "decoded": 2540
+          }
+        ],
+        "islands": 4,
+        "terminalIslands": 2,
+        "overflow": 0,
+        "clickResponseMs": 39.07,
+        "errors": []
+      },
+      {
+        "page": "article",
+        "iteration": 5,
+        "dcl": 38.800000071525574,
+        "load": 38.89999997615814,
+        "resources": [
+          {
+            "url": "/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CYDbzu1r.js",
+            "transfer": 5891,
+            "encoded": 5591,
+            "decoded": 16357
+          },
+          {
+            "url": "/_astro/ImageLightbox.astro_astro_type_script_index_0_lang.D5gTveDc.js",
+            "transfer": 1463,
+            "encoded": 1163,
+            "decoded": 2323
+          },
+          {
+            "url": "/_astro/_id_.astro_astro_type_script_index_0_lang.BXkTBXNk.js",
+            "transfer": 1438,
+            "encoded": 1138,
+            "decoded": 2520
+          },
+          {
+            "url": "/_astro/TopBarControls.Dmwnu2xz.js",
+            "transfer": 2894,
+            "encoded": 2594,
+            "decoded": 6091
+          },
+          {
+            "url": "/_astro/client.40qeM1cQ.js",
+            "transfer": 57599,
+            "encoded": 57299,
+            "decoded": 184065
+          },
+          {
+            "url": "/_astro/Comments.DhdehFr0.js",
+            "transfer": 1251,
+            "encoded": 951,
+            "decoded": 1846
+          },
+          {
+            "url": "/_astro/TerminalPanel.DaVkd11R.js",
+            "transfer": 3330,
+            "encoded": 3030,
+            "decoded": 9650
+          },
+          {
+            "url": "/_astro/preload-helper.CxFQXtKk.js",
+            "transfer": 1030,
+            "encoded": 730,
+            "decoded": 1342
+          },
+          {
+            "url": "/_astro/jsx-runtime.Bmd7iEuj.js",
+            "transfer": 724,
+            "encoded": 424,
+            "decoded": 424
+          },
+          {
+            "url": "/_astro/react.ADnQu87e.js",
+            "transfer": 3420,
+            "encoded": 3120,
+            "decoded": 8058
+          },
+          {
+            "url": "/_astro/lazy.DKMYSrZb.js",
+            "transfer": 15063,
+            "encoded": 14763,
+            "decoded": 36055
+          },
+          {
+            "url": "/_astro/NV4XNBIS.wkvcGhBM.js",
+            "transfer": 366,
+            "encoded": 66,
+            "decoded": 66
+          },
+          {
+            "url": "/_astro/DKTLEL5E.DciMwFJ1.js",
+            "transfer": 1129,
+            "encoded": 829,
+            "decoded": 829
+          },
+          {
+            "url": "/_astro/RZSVICHU.BVkV_3D4.js",
+            "transfer": 4144,
+            "encoded": 3844,
+            "decoded": 8622
+          },
+          {
+            "url": "/_astro/N2QHACHQ.BqSEfqvq.js",
+            "transfer": 12700,
+            "encoded": 12400,
+            "decoded": 34067
+          },
+          {
+            "url": "/_astro/URA2L2QI.Cnv0ucKd.js",
+            "transfer": 3426,
+            "encoded": 3126,
+            "decoded": 12078
+          },
+          {
+            "url": "/_astro/HWDLEDTA.DVMUhrqG.js",
+            "transfer": 11777,
+            "encoded": 11477,
+            "decoded": 28458
+          },
+          {
+            "url": "/_astro/ELSXBIJH.CX59pFtS.js",
+            "transfer": 1277,
+            "encoded": 977,
+            "decoded": 977
+          },
+          {
+            "url": "/_astro/JZWSX6AR.CKv4EQkZ.js",
+            "transfer": 1219,
+            "encoded": 919,
+            "decoded": 1630
+          },
+          {
+            "url": "/_astro/FTXIJQGB.CggtIYAM.js",
+            "transfer": 1396,
+            "encoded": 1096,
+            "decoded": 2540
+          },
+          {
+            "url": "/_astro/FKCDD66M.CdwMX5A0.js",
+            "transfer": 2852,
+            "encoded": 2552,
+            "decoded": 6196
+          },
+          {
+            "url": "/_astro/7WLXJQOR.D6QVYUu9.js",
+            "transfer": 1245,
+            "encoded": 945,
+            "decoded": 1947
+          }
+        ],
+        "islands": 4,
+        "terminalIslands": 2,
+        "overflow": 0,
+        "clickResponseMs": 37.8,
+        "errors": []
+      }
+    ]
+  },
+  "candidate": {
+    "browser": "Chromium via Playwright, Astro preview on localhost",
+    "runs": [
+      {
+        "page": "home",
+        "iteration": 1,
+        "dcl": 22.799999952316284,
+        "load": 22.899999976158142,
+        "resources": [
+          {
+            "url": "/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CYDbzu1r.js",
+            "transfer": 5891,
+            "encoded": 5591,
+            "decoded": 16357
+          },
+          {
+            "url": "/_astro/SystemInfo.zxQAN2dj.js",
+            "transfer": 3557,
+            "encoded": 3257,
+            "decoded": 10716
+          },
+          {
+            "url": "/_astro/client.40qeM1cQ.js",
+            "transfer": 57599,
+            "encoded": 57299,
+            "decoded": 184065
+          },
+          {
+            "url": "/_astro/TerminalPanel.CNv0PI-K.js",
+            "transfer": 3357,
+            "encoded": 3057,
+            "decoded": 9647
+          },
+          {
+            "url": "/_astro/jsx-runtime.5jE1_N8x.js",
+            "transfer": 680,
+            "encoded": 380,
+            "decoded": 380
+          },
+          {
+            "url": "/_astro/react.ADnQu87e.js",
+            "transfer": 3420,
+            "encoded": 3120,
+            "decoded": 8058
+          }
+        ],
+        "islands": 2,
+        "terminalIslands": 1,
+        "overflow": 0,
+        "clickResponseMs": 54.57,
+        "errors": []
+      },
+      {
+        "page": "home",
+        "iteration": 2,
+        "dcl": 21.100000023841858,
+        "load": 21.100000023841858,
+        "resources": [
+          {
+            "url": "/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CYDbzu1r.js",
+            "transfer": 5891,
+            "encoded": 5591,
+            "decoded": 16357
+          },
+          {
+            "url": "/_astro/SystemInfo.zxQAN2dj.js",
+            "transfer": 3557,
+            "encoded": 3257,
+            "decoded": 10716
+          },
+          {
+            "url": "/_astro/client.40qeM1cQ.js",
+            "transfer": 57599,
+            "encoded": 57299,
+            "decoded": 184065
+          },
+          {
+            "url": "/_astro/TerminalPanel.CNv0PI-K.js",
+            "transfer": 3357,
+            "encoded": 3057,
+            "decoded": 9647
+          },
+          {
+            "url": "/_astro/jsx-runtime.5jE1_N8x.js",
+            "transfer": 680,
+            "encoded": 380,
+            "decoded": 380
+          }
+        ],
+        "islands": 2,
+        "terminalIslands": 1,
+        "overflow": 0,
+        "clickResponseMs": 56.94,
+        "errors": []
+      },
+      {
+        "page": "home",
+        "iteration": 3,
+        "dcl": 21.800000071525574,
+        "load": 21.90000009536743,
+        "resources": [
+          {
+            "url": "/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CYDbzu1r.js",
+            "transfer": 5891,
+            "encoded": 5591,
+            "decoded": 16357
+          },
+          {
+            "url": "/_astro/SystemInfo.zxQAN2dj.js",
+            "transfer": 3557,
+            "encoded": 3257,
+            "decoded": 10716
+          },
+          {
+            "url": "/_astro/client.40qeM1cQ.js",
+            "transfer": 57599,
+            "encoded": 57299,
+            "decoded": 184065
+          },
+          {
+            "url": "/_astro/TerminalPanel.CNv0PI-K.js",
+            "transfer": 3357,
+            "encoded": 3057,
+            "decoded": 9647
+          }
+        ],
+        "islands": 2,
+        "terminalIslands": 1,
+        "overflow": 0,
+        "clickResponseMs": 57.42,
+        "errors": []
+      },
+      {
+        "page": "home",
+        "iteration": 4,
+        "dcl": 21.09999990463257,
+        "load": 21.199999928474426,
+        "resources": [
+          {
+            "url": "/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CYDbzu1r.js",
+            "transfer": 5891,
+            "encoded": 5591,
+            "decoded": 16357
+          },
+          {
+            "url": "/_astro/SystemInfo.zxQAN2dj.js",
+            "transfer": 3557,
+            "encoded": 3257,
+            "decoded": 10716
+          },
+          {
+            "url": "/_astro/client.40qeM1cQ.js",
+            "transfer": 57599,
+            "encoded": 57299,
+            "decoded": 184065
+          },
+          {
+            "url": "/_astro/TerminalPanel.CNv0PI-K.js",
+            "transfer": 3357,
+            "encoded": 3057,
+            "decoded": 9647
+          }
+        ],
+        "islands": 2,
+        "terminalIslands": 1,
+        "overflow": 0,
+        "clickResponseMs": 57.57,
+        "errors": []
+      },
+      {
+        "page": "home",
+        "iteration": 5,
+        "dcl": 21.200000047683716,
+        "load": 21.299999952316284,
+        "resources": [
+          {
+            "url": "/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CYDbzu1r.js",
+            "transfer": 5891,
+            "encoded": 5591,
+            "decoded": 16357
+          },
+          {
+            "url": "/_astro/SystemInfo.zxQAN2dj.js",
+            "transfer": 3557,
+            "encoded": 3257,
+            "decoded": 10716
+          },
+          {
+            "url": "/_astro/client.40qeM1cQ.js",
+            "transfer": 57599,
+            "encoded": 57299,
+            "decoded": 184065
+          },
+          {
+            "url": "/_astro/TerminalPanel.CNv0PI-K.js",
+            "transfer": 3357,
+            "encoded": 3057,
+            "decoded": 9647
+          },
+          {
+            "url": "/_astro/jsx-runtime.5jE1_N8x.js",
+            "transfer": 680,
+            "encoded": 380,
+            "decoded": 380
+          },
+          {
+            "url": "/_astro/react.ADnQu87e.js",
+            "transfer": 3420,
+            "encoded": 3120,
+            "decoded": 8058
+          }
+        ],
+        "islands": 2,
+        "terminalIslands": 1,
+        "overflow": 0,
+        "clickResponseMs": 52.17,
+        "errors": []
+      },
+      {
+        "page": "article",
+        "iteration": 1,
+        "dcl": 38.200000047683716,
+        "load": 38.300000071525574,
+        "resources": [
+          {
+            "url": "/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CYDbzu1r.js",
+            "transfer": 5891,
+            "encoded": 5591,
+            "decoded": 16357
+          },
+          {
+            "url": "/_astro/ImageLightbox.astro_astro_type_script_index_0_lang.D5gTveDc.js",
+            "transfer": 1463,
+            "encoded": 1163,
+            "decoded": 2323
+          },
+          {
+            "url": "/_astro/_id_.astro_astro_type_script_index_0_lang.BXkTBXNk.js",
+            "transfer": 1438,
+            "encoded": 1138,
+            "decoded": 2520
+          },
+          {
+            "url": "/_astro/Comments.DMWKhFgH.js",
+            "transfer": 1252,
+            "encoded": 952,
+            "decoded": 1846
+          },
+          {
+            "url": "/_astro/client.40qeM1cQ.js",
+            "transfer": 57599,
+            "encoded": 57299,
+            "decoded": 184065
+          },
+          {
+            "url": "/_astro/TerminalPanel.CNv0PI-K.js",
+            "transfer": 3357,
+            "encoded": 3057,
+            "decoded": 9647
+          },
+          {
+            "url": "/_astro/preload-helper.CxFQXtKk.js",
+            "transfer": 1030,
+            "encoded": 730,
+            "decoded": 1342
+          },
+          {
+            "url": "/_astro/react.ADnQu87e.js",
+            "transfer": 3420,
+            "encoded": 3120,
+            "decoded": 8058
+          },
+          {
+            "url": "/_astro/jsx-runtime.5jE1_N8x.js",
+            "transfer": 680,
+            "encoded": 380,
+            "decoded": 380
+          },
+          {
+            "url": "/_astro/lazy.DKMYSrZb.js",
+            "transfer": 15063,
+            "encoded": 14763,
+            "decoded": 36055
+          },
+          {
+            "url": "/_astro/NV4XNBIS.wkvcGhBM.js",
+            "transfer": 366,
+            "encoded": 66,
+            "decoded": 66
+          },
+          {
+            "url": "/_astro/N2QHACHQ.BqSEfqvq.js",
+            "transfer": 12700,
+            "encoded": 12400,
+            "decoded": 34067
+          },
+          {
+            "url": "/_astro/DKTLEL5E.DciMwFJ1.js",
+            "transfer": 1129,
+            "encoded": 829,
+            "decoded": 829
+          },
+          {
+            "url": "/_astro/RZSVICHU.BVkV_3D4.js",
+            "transfer": 4144,
+            "encoded": 3844,
+            "decoded": 8622
+          },
+          {
+            "url": "/_astro/URA2L2QI.Cnv0ucKd.js",
+            "transfer": 3426,
+            "encoded": 3126,
+            "decoded": 12078
+          },
+          {
+            "url": "/_astro/HWDLEDTA.DVMUhrqG.js",
+            "transfer": 11777,
+            "encoded": 11477,
+            "decoded": 28458
+          },
+          {
+            "url": "/_astro/JZWSX6AR.CKv4EQkZ.js",
+            "transfer": 1219,
+            "encoded": 919,
+            "decoded": 1630
+          },
+          {
+            "url": "/_astro/FKCDD66M.CdwMX5A0.js",
+            "transfer": 2852,
+            "encoded": 2552,
+            "decoded": 6196
+          },
+          {
+            "url": "/_astro/ELSXBIJH.CX59pFtS.js",
+            "transfer": 1277,
+            "encoded": 977,
+            "decoded": 977
+          },
+          {
+            "url": "/_astro/FTXIJQGB.CggtIYAM.js",
+            "transfer": 1396,
+            "encoded": 1096,
+            "decoded": 2540
+          },
+          {
+            "url": "/_astro/7WLXJQOR.D6QVYUu9.js",
+            "transfer": 1245,
+            "encoded": 945,
+            "decoded": 1947
+          }
+        ],
+        "islands": 2,
+        "terminalIslands": 1,
+        "overflow": 0,
+        "clickResponseMs": 37.7,
+        "errors": []
+      },
+      {
+        "page": "article",
+        "iteration": 2,
+        "dcl": 38.300000071525574,
+        "load": 38.5,
+        "resources": [
+          {
+            "url": "/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CYDbzu1r.js",
+            "transfer": 5891,
+            "encoded": 5591,
+            "decoded": 16357
+          },
+          {
+            "url": "/_astro/ImageLightbox.astro_astro_type_script_index_0_lang.D5gTveDc.js",
+            "transfer": 1463,
+            "encoded": 1163,
+            "decoded": 2323
+          },
+          {
+            "url": "/_astro/_id_.astro_astro_type_script_index_0_lang.BXkTBXNk.js",
+            "transfer": 1438,
+            "encoded": 1138,
+            "decoded": 2520
+          },
+          {
+            "url": "/_astro/Comments.DMWKhFgH.js",
+            "transfer": 1252,
+            "encoded": 952,
+            "decoded": 1846
+          },
+          {
+            "url": "/_astro/client.40qeM1cQ.js",
+            "transfer": 57599,
+            "encoded": 57299,
+            "decoded": 184065
+          },
+          {
+            "url": "/_astro/TerminalPanel.CNv0PI-K.js",
+            "transfer": 3357,
+            "encoded": 3057,
+            "decoded": 9647
+          },
+          {
+            "url": "/_astro/preload-helper.CxFQXtKk.js",
+            "transfer": 1030,
+            "encoded": 730,
+            "decoded": 1342
+          },
+          {
+            "url": "/_astro/jsx-runtime.5jE1_N8x.js",
+            "transfer": 680,
+            "encoded": 380,
+            "decoded": 380
+          },
+          {
+            "url": "/_astro/react.ADnQu87e.js",
+            "transfer": 3420,
+            "encoded": 3120,
+            "decoded": 8058
+          },
+          {
+            "url": "/_astro/lazy.DKMYSrZb.js",
+            "transfer": 15063,
+            "encoded": 14763,
+            "decoded": 36055
+          },
+          {
+            "url": "/_astro/NV4XNBIS.wkvcGhBM.js",
+            "transfer": 366,
+            "encoded": 66,
+            "decoded": 66
+          },
+          {
+            "url": "/_astro/DKTLEL5E.DciMwFJ1.js",
+            "transfer": 1129,
+            "encoded": 829,
+            "decoded": 829
+          },
+          {
+            "url": "/_astro/RZSVICHU.BVkV_3D4.js",
+            "transfer": 4144,
+            "encoded": 3844,
+            "decoded": 8622
+          },
+          {
+            "url": "/_astro/N2QHACHQ.BqSEfqvq.js",
+            "transfer": 12700,
+            "encoded": 12400,
+            "decoded": 34067
+          },
+          {
+            "url": "/_astro/URA2L2QI.Cnv0ucKd.js",
+            "transfer": 3426,
+            "encoded": 3126,
+            "decoded": 12078
+          },
+          {
+            "url": "/_astro/FKCDD66M.CdwMX5A0.js",
+            "transfer": 2852,
+            "encoded": 2552,
+            "decoded": 6196
+          },
+          {
+            "url": "/_astro/HWDLEDTA.DVMUhrqG.js",
+            "transfer": 11777,
+            "encoded": 11477,
+            "decoded": 28458
+          },
+          {
+            "url": "/_astro/JZWSX6AR.CKv4EQkZ.js",
+            "transfer": 1219,
+            "encoded": 919,
+            "decoded": 1630
+          },
+          {
+            "url": "/_astro/ELSXBIJH.CX59pFtS.js",
+            "transfer": 1277,
+            "encoded": 977,
+            "decoded": 977
+          },
+          {
+            "url": "/_astro/FTXIJQGB.CggtIYAM.js",
+            "transfer": 1396,
+            "encoded": 1096,
+            "decoded": 2540
+          },
+          {
+            "url": "/_astro/7WLXJQOR.D6QVYUu9.js",
+            "transfer": 1245,
+            "encoded": 945,
+            "decoded": 1947
+          }
+        ],
+        "islands": 2,
+        "terminalIslands": 1,
+        "overflow": 0,
+        "clickResponseMs": 35.81,
+        "errors": []
+      },
+      {
+        "page": "article",
+        "iteration": 3,
+        "dcl": 38.299999952316284,
+        "load": 38.39999997615814,
+        "resources": [
+          {
+            "url": "/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CYDbzu1r.js",
+            "transfer": 5891,
+            "encoded": 5591,
+            "decoded": 16357
+          },
+          {
+            "url": "/_astro/ImageLightbox.astro_astro_type_script_index_0_lang.D5gTveDc.js",
+            "transfer": 1463,
+            "encoded": 1163,
+            "decoded": 2323
+          },
+          {
+            "url": "/_astro/_id_.astro_astro_type_script_index_0_lang.BXkTBXNk.js",
+            "transfer": 1438,
+            "encoded": 1138,
+            "decoded": 2520
+          },
+          {
+            "url": "/_astro/Comments.DMWKhFgH.js",
+            "transfer": 1252,
+            "encoded": 952,
+            "decoded": 1846
+          },
+          {
+            "url": "/_astro/client.40qeM1cQ.js",
+            "transfer": 57599,
+            "encoded": 57299,
+            "decoded": 184065
+          },
+          {
+            "url": "/_astro/TerminalPanel.CNv0PI-K.js",
+            "transfer": 3357,
+            "encoded": 3057,
+            "decoded": 9647
+          },
+          {
+            "url": "/_astro/preload-helper.CxFQXtKk.js",
+            "transfer": 1030,
+            "encoded": 730,
+            "decoded": 1342
+          },
+          {
+            "url": "/_astro/jsx-runtime.5jE1_N8x.js",
+            "transfer": 680,
+            "encoded": 380,
+            "decoded": 380
+          },
+          {
+            "url": "/_astro/react.ADnQu87e.js",
+            "transfer": 3420,
+            "encoded": 3120,
+            "decoded": 8058
+          },
+          {
+            "url": "/_astro/lazy.DKMYSrZb.js",
+            "transfer": 15063,
+            "encoded": 14763,
+            "decoded": 36055
+          },
+          {
+            "url": "/_astro/NV4XNBIS.wkvcGhBM.js",
+            "transfer": 366,
+            "encoded": 66,
+            "decoded": 66
+          },
+          {
+            "url": "/_astro/DKTLEL5E.DciMwFJ1.js",
+            "transfer": 1129,
+            "encoded": 829,
+            "decoded": 829
+          },
+          {
+            "url": "/_astro/N2QHACHQ.BqSEfqvq.js",
+            "transfer": 12700,
+            "encoded": 12400,
+            "decoded": 34067
+          },
+          {
+            "url": "/_astro/RZSVICHU.BVkV_3D4.js",
+            "transfer": 4144,
+            "encoded": 3844,
+            "decoded": 8622
+          },
+          {
+            "url": "/_astro/URA2L2QI.Cnv0ucKd.js",
+            "transfer": 3426,
+            "encoded": 3126,
+            "decoded": 12078
+          },
+          {
+            "url": "/_astro/HWDLEDTA.DVMUhrqG.js",
+            "transfer": 11777,
+            "encoded": 11477,
+            "decoded": 28458
+          },
+          {
+            "url": "/_astro/JZWSX6AR.CKv4EQkZ.js",
+            "transfer": 1219,
+            "encoded": 919,
+            "decoded": 1630
+          },
+          {
+            "url": "/_astro/FKCDD66M.CdwMX5A0.js",
+            "transfer": 2852,
+            "encoded": 2552,
+            "decoded": 6196
+          },
+          {
+            "url": "/_astro/ELSXBIJH.CX59pFtS.js",
+            "transfer": 1277,
+            "encoded": 977,
+            "decoded": 977
+          },
+          {
+            "url": "/_astro/FTXIJQGB.CggtIYAM.js",
+            "transfer": 1396,
+            "encoded": 1096,
+            "decoded": 2540
+          },
+          {
+            "url": "/_astro/7WLXJQOR.D6QVYUu9.js",
+            "transfer": 1245,
+            "encoded": 945,
+            "decoded": 1947
+          }
+        ],
+        "islands": 2,
+        "terminalIslands": 1,
+        "overflow": 0,
+        "clickResponseMs": 38.52,
+        "errors": []
+      },
+      {
+        "page": "article",
+        "iteration": 4,
+        "dcl": 38.5,
+        "load": 38.60000002384186,
+        "resources": [
+          {
+            "url": "/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CYDbzu1r.js",
+            "transfer": 5891,
+            "encoded": 5591,
+            "decoded": 16357
+          },
+          {
+            "url": "/_astro/ImageLightbox.astro_astro_type_script_index_0_lang.D5gTveDc.js",
+            "transfer": 1463,
+            "encoded": 1163,
+            "decoded": 2323
+          },
+          {
+            "url": "/_astro/_id_.astro_astro_type_script_index_0_lang.BXkTBXNk.js",
+            "transfer": 1438,
+            "encoded": 1138,
+            "decoded": 2520
+          },
+          {
+            "url": "/_astro/Comments.DMWKhFgH.js",
+            "transfer": 1252,
+            "encoded": 952,
+            "decoded": 1846
+          },
+          {
+            "url": "/_astro/client.40qeM1cQ.js",
+            "transfer": 57599,
+            "encoded": 57299,
+            "decoded": 184065
+          },
+          {
+            "url": "/_astro/TerminalPanel.CNv0PI-K.js",
+            "transfer": 3357,
+            "encoded": 3057,
+            "decoded": 9647
+          },
+          {
+            "url": "/_astro/preload-helper.CxFQXtKk.js",
+            "transfer": 1030,
+            "encoded": 730,
+            "decoded": 1342
+          },
+          {
+            "url": "/_astro/jsx-runtime.5jE1_N8x.js",
+            "transfer": 680,
+            "encoded": 380,
+            "decoded": 380
+          },
+          {
+            "url": "/_astro/react.ADnQu87e.js",
+            "transfer": 3420,
+            "encoded": 3120,
+            "decoded": 8058
+          },
+          {
+            "url": "/_astro/lazy.DKMYSrZb.js",
+            "transfer": 15063,
+            "encoded": 14763,
+            "decoded": 36055
+          },
+          {
+            "url": "/_astro/NV4XNBIS.wkvcGhBM.js",
+            "transfer": 366,
+            "encoded": 66,
+            "decoded": 66
+          },
+          {
+            "url": "/_astro/N2QHACHQ.BqSEfqvq.js",
+            "transfer": 12700,
+            "encoded": 12400,
+            "decoded": 34067
+          },
+          {
+            "url": "/_astro/DKTLEL5E.DciMwFJ1.js",
+            "transfer": 1129,
+            "encoded": 829,
+            "decoded": 829
+          },
+          {
+            "url": "/_astro/RZSVICHU.BVkV_3D4.js",
+            "transfer": 4144,
+            "encoded": 3844,
+            "decoded": 8622
+          },
+          {
+            "url": "/_astro/URA2L2QI.Cnv0ucKd.js",
+            "transfer": 3426,
+            "encoded": 3126,
+            "decoded": 12078
+          },
+          {
+            "url": "/_astro/JZWSX6AR.CKv4EQkZ.js",
+            "transfer": 1219,
+            "encoded": 919,
+            "decoded": 1630
+          },
+          {
+            "url": "/_astro/FKCDD66M.CdwMX5A0.js",
+            "transfer": 2852,
+            "encoded": 2552,
+            "decoded": 6196
+          },
+          {
+            "url": "/_astro/ELSXBIJH.CX59pFtS.js",
+            "transfer": 1277,
+            "encoded": 977,
+            "decoded": 977
+          },
+          {
+            "url": "/_astro/HWDLEDTA.DVMUhrqG.js",
+            "transfer": 11777,
+            "encoded": 11477,
+            "decoded": 28458
+          },
+          {
+            "url": "/_astro/7WLXJQOR.D6QVYUu9.js",
+            "transfer": 1245,
+            "encoded": 945,
+            "decoded": 1947
+          },
+          {
+            "url": "/_astro/FTXIJQGB.CggtIYAM.js",
+            "transfer": 1396,
+            "encoded": 1096,
+            "decoded": 2540
+          }
+        ],
+        "islands": 2,
+        "terminalIslands": 1,
+        "overflow": 0,
+        "clickResponseMs": 37.39,
+        "errors": []
+      },
+      {
+        "page": "article",
+        "iteration": 5,
+        "dcl": 38.300000071525574,
+        "load": 38.40000009536743,
+        "resources": [
+          {
+            "url": "/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CYDbzu1r.js",
+            "transfer": 5891,
+            "encoded": 5591,
+            "decoded": 16357
+          },
+          {
+            "url": "/_astro/ImageLightbox.astro_astro_type_script_index_0_lang.D5gTveDc.js",
+            "transfer": 1463,
+            "encoded": 1163,
+            "decoded": 2323
+          },
+          {
+            "url": "/_astro/_id_.astro_astro_type_script_index_0_lang.BXkTBXNk.js",
+            "transfer": 1438,
+            "encoded": 1138,
+            "decoded": 2520
+          },
+          {
+            "url": "/_astro/Comments.DMWKhFgH.js",
+            "transfer": 1252,
+            "encoded": 952,
+            "decoded": 1846
+          },
+          {
+            "url": "/_astro/client.40qeM1cQ.js",
+            "transfer": 57599,
+            "encoded": 57299,
+            "decoded": 184065
+          },
+          {
+            "url": "/_astro/TerminalPanel.CNv0PI-K.js",
+            "transfer": 3357,
+            "encoded": 3057,
+            "decoded": 9647
+          },
+          {
+            "url": "/_astro/preload-helper.CxFQXtKk.js",
+            "transfer": 1030,
+            "encoded": 730,
+            "decoded": 1342
+          },
+          {
+            "url": "/_astro/jsx-runtime.5jE1_N8x.js",
+            "transfer": 680,
+            "encoded": 380,
+            "decoded": 380
+          },
+          {
+            "url": "/_astro/react.ADnQu87e.js",
+            "transfer": 3420,
+            "encoded": 3120,
+            "decoded": 8058
+          },
+          {
+            "url": "/_astro/lazy.DKMYSrZb.js",
+            "transfer": 15063,
+            "encoded": 14763,
+            "decoded": 36055
+          },
+          {
+            "url": "/_astro/NV4XNBIS.wkvcGhBM.js",
+            "transfer": 366,
+            "encoded": 66,
+            "decoded": 66
+          },
+          {
+            "url": "/_astro/DKTLEL5E.DciMwFJ1.js",
+            "transfer": 1129,
+            "encoded": 829,
+            "decoded": 829
+          },
+          {
+            "url": "/_astro/N2QHACHQ.BqSEfqvq.js",
+            "transfer": 12700,
+            "encoded": 12400,
+            "decoded": 34067
+          },
+          {
+            "url": "/_astro/RZSVICHU.BVkV_3D4.js",
+            "transfer": 4144,
+            "encoded": 3844,
+            "decoded": 8622
+          },
+          {
+            "url": "/_astro/URA2L2QI.Cnv0ucKd.js",
+            "transfer": 3426,
+            "encoded": 3126,
+            "decoded": 12078
+          },
+          {
+            "url": "/_astro/FKCDD66M.CdwMX5A0.js",
+            "transfer": 2852,
+            "encoded": 2552,
+            "decoded": 6196
+          },
+          {
+            "url": "/_astro/JZWSX6AR.CKv4EQkZ.js",
+            "transfer": 1219,
+            "encoded": 919,
+            "decoded": 1630
+          },
+          {
+            "url": "/_astro/ELSXBIJH.CX59pFtS.js",
+            "transfer": 1277,
+            "encoded": 977,
+            "decoded": 977
+          },
+          {
+            "url": "/_astro/FTXIJQGB.CggtIYAM.js",
+            "transfer": 1396,
+            "encoded": 1096,
+            "decoded": 2540
+          },
+          {
+            "url": "/_astro/HWDLEDTA.DVMUhrqG.js",
+            "transfer": 11777,
+            "encoded": 11477,
+            "decoded": 28458
+          },
+          {
+            "url": "/_astro/7WLXJQOR.D6QVYUu9.js",
+            "transfer": 1245,
+            "encoded": 945,
+            "decoded": 1947
+          }
+        ],
+        "islands": 2,
+        "terminalIslands": 1,
+        "overflow": 0,
+        "clickResponseMs": 37.46,
+        "errors": []
+      }
+    ]
+  },
+  "builtHtmlBytes": {
+    "method": "Built HTML artifact sizes; gzip level 6 estimates are separate from browser script Resource Timing.",
+    "baseline": {
+      "home": {
+        "raw": 64813,
+        "gzipLevel6": 9709
+      },
+      "fourChartArticle": {
+        "raw": 98137,
+        "gzipLevel6": 21512
+      }
+    },
+    "candidate": {
+      "home": {
+        "raw": 57165,
+        "gzipLevel6": 10391
+      },
+      "fourChartArticle": {
+        "raw": 90370,
+        "gzipLevel6": 22063
+      }
+    }
+  }
+}

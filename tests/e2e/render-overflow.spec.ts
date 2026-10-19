@@ -9,13 +9,13 @@ const viewports = [
   {
     name: 'desktop',
     viewport: { width: 1440, height: 900 },
-    inputSelector: 'div.crt-flicker.hidden input[aria-label="Terminal command input"]',
+    inputSelector: 'details[data-shell-terminal] input[aria-label="Terminal command input"]',
     openMobileTerminal: false,
   },
   {
     name: '390px',
     viewport: { width: 390, height: 844 },
-    inputSelector: 'details[data-mobile-terminal] input[aria-label="Terminal command input"]',
+    inputSelector: 'details[data-shell-terminal] input[aria-label="Terminal command input"]',
     openMobileTerminal: true,
   },
 ] as const;
@@ -28,7 +28,7 @@ for (const testCase of viewports) {
     await page.goto(absolutePostUrl ?? `/posts/${postSlug}`);
 
     if (testCase.openMobileTerminal) {
-      await page.locator('details[data-mobile-terminal] > summary').click();
+      await page.locator('details[data-shell-terminal] > summary').click();
     }
 
     const input = page.locator(testCase.inputSelector);

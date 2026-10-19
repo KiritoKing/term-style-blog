@@ -1,5 +1,11 @@
 # Supervisor Handoff
 
+## 2026-10-19 SHELL02 in progress
+
+Owner-authorized bounded responsiveness/reliability task starts from latest main `72eedaf` in `/tmp/term-style-blog-perf`, branch `perf/early-interactivity-resilience`. Scope: native top-bar theme/a11y controls, one responsive terminal island, safe storage. OpenSpec proposal/design/test plan and delta are in `openspec/changes/resilient-shell-interactivity`; strict validation passes. See `.agent/handoffs/SHELL02-resilient-shell-interactivity.md`. Existing production content/workflow, PR #28, and unrelated dependencies are outside scope. PR/merge/production release are authorized by the user after tests/CI.
+
+Implementation and five-run paired local benchmark are now recorded. Home JS transfer decreased 3.0%, article JS transfer 2.1%, islands reduced 4→2, while measured click-response changes are too small to claim as user-visible gains. `pnpm check`, storage unit tests (6/6), same-snapshot builds, strict OpenSpec validation and `git diff --check` pass. Combined shell/Pele E2E run was 7/8 due one wide-chart scroll geometry assertion; isolated rerun of that assertion passed. Full repository gates, spec sync/archive, commit and PR remain pending. Benchmark details/raw runs: `docs/shell-interactivity-benchmark.md` and `.json`; execution report: `.agent/reports/SHELL02-resilient-shell-interactivity.md`.
+
 Last updated: 2026-06-09
 
 ## Current Status

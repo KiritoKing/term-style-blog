@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { safeStorageGet, safeStorageSet } from '@/lib/safe-storage';
 
 type TerminalLineType = 'cmd' | 'out' | 'err';
 
@@ -47,8 +48,7 @@ const parseRoute = (route: string): RouteContext => {
 };
 
 const getStoredOutput = (): TerminalLine[] | null => {
-  if (typeof window === 'undefined') return null;
-  const stored = window.localStorage.getItem(OUTPUT_KEY);
+  const stored = safeStorageGet(OUTPUT_KEY);
   if (!stored) return null;
   try {
     const parsed = JSON.parse(stored) as TerminalLine[];
@@ -60,8 +60,7 @@ const getStoredOutput = (): TerminalLine[] | null => {
 };
 
 const getStoredHistory = (): string[] | null => {
-  if (typeof window === 'undefined') return null;
-  const stored = window.localStorage.getItem(HISTORY_KEY);
+  const stored = safeStorageGet(HISTORY_KEY);
   if (!stored) return null;
   try {
     const parsed = JSON.parse(stored) as string[];
@@ -73,9 +72,8 @@ const getStoredHistory = (): string[] | null => {
 };
 
 const persistState = (output: TerminalLine[], history: string[]) => {
-  if (typeof window === 'undefined') return;
-  window.localStorage.setItem(OUTPUT_KEY, JSON.stringify(output));
-  window.localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+  safeStorageSet(OUTPUT_KEY, JSON.stringify(output));
+  safeStorageSet(HISTORY_KEY, JSON.stringify(history));
 };
 
 const commandList = ['ls', 'dir', 'cd', 'pwd', 'cat', 'clear', 'echo', 'whoami', 'date', 'help', 'grep'];

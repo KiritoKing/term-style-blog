@@ -68,6 +68,78 @@ const structuredData = article
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
     <title>{pageTitle}</title>
+    <script is:inline>
+      (() => {
+        const THEME_KEY = 'tsb:theme';
+        const A11Y_KEY = 'tsb:a11y';
+        const read = (key) => {
+          try {
+            return window.localStorage.getItem(key);
+          } catch {
+            return null;
+          }
+        };
+        const write = (key, value) => {
+          try {
+            window.localStorage.setItem(key, value);
+          } catch {
+            // Preferences are best-effort; the current document state remains usable.
+          }
+        };
+        const storedTheme = read(THEME_KEY);
+        const state = {
+          theme:
+            storedTheme === 'dark' || storedTheme === 'light'
+              ? storedTheme
+              : window.matchMedia?.('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light',
+          a11y: read(A11Y_KEY) === '1',
+        };
+        const sync = () => {
+          document.documentElement.classList.toggle('dark', state.theme === 'dark');
+          document.body?.classList.toggle('font-mode-system', state.a11y);
+          document.body?.classList.toggle('font-mode-pixel', !state.a11y);
+          document.querySelectorAll('[data-theme-toggle]').forEach((button) => {
+            button.title = state.theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+          });
+          document.querySelectorAll('[data-a11y-toggle]').forEach((button) => {
+            button.title = state.a11y ? 'Disable Accessibility Mode' : 'Enable Accessibility Mode';
+            button.setAttribute('aria-pressed', String(state.a11y));
+          });
+        };
+
+        sync();
+        document.addEventListener(
+          'click',
+          (event) => {
+            if (!(event.target instanceof Element)) return;
+            if (event.target.closest('[data-theme-toggle]')) {
+              state.theme = state.theme === 'dark' ? 'light' : 'dark';
+              write(THEME_KEY, state.theme);
+              sync();
+            } else if (event.target.closest('[data-a11y-toggle]')) {
+              state.a11y = !state.a11y;
+              write(A11Y_KEY, state.a11y ? '1' : '0');
+              sync();
+            }
+          },
+          true,
+        );
+        document.addEventListener('DOMContentLoaded', sync, { once: true });
+        document.addEventListener('astro:page-load', sync);
+        window.addEventListener('storage', (event) => {
+          if (event.key === THEME_KEY && (event.newValue === 'dark' || event.newValue === 'light')) {
+            state.theme = event.newValue;
+            sync();
+          }
+          if (event.key === A11Y_KEY && (event.newValue === '1' || event.newValue === '0')) {
+            state.a11y = event.newValue === '1';
+            sync();
+          }
+        });
+      })();
+    </script>
     <ClientRouter />
   </head>
   <body class="font-mode-pixel" data-pagefind-ignore={article ? undefined : 'all'}>

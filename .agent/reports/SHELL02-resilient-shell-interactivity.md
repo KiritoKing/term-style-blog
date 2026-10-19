@@ -1,6 +1,6 @@
 # Report: SHELL02 resilient-shell-interactivity
 
-Status: pass (implementation and local acceptance complete; PR/CI pending)
+Status: pass (implementation, local acceptance, PR, and CI complete; awaiting review)
 
 ## Files changed
 
@@ -27,6 +27,8 @@ Status: pass (implementation and local acceptance complete; PR/CI pending)
 - `git diff --check` — pass.
 - `openspec validate shell-layout --type spec --strict` — pass after syncing the shell-layout spec.
 - `openspec archive resilient-shell-interactivity --yes --skip-specs` — pass after manual spec sync and validation; archive at `openspec/changes/archive/2026-10-19-resilient-shell-interactivity/`.
+- Commit `ed5ddaaa27d724d0a26e8b2eb174e00b6e6972bf` pushed as `perf/early-interactivity-resilience`.
+- PR [#36](https://github.com/KiritoKing/term-style-blog/pull/36) opened with measurement table, reproduction notes, raw-data links, compatibility risks, and rollback instructions. `verify`, three CodeQL analyses, and CodeQL all reached terminal success.
 
 ## Result and risks
 
@@ -36,5 +38,5 @@ The local benchmark is not a production network benchmark. It ran through Astro 
 
 ## Follow-ups
 
-1. Review the final branch diff, commit, open the authorized PR, and continue tracking CI until terminal status.
-2. Do not merge or deploy unless the user's previously recorded authorization remains in scope and all required gates pass.
+1. Await supervisor/owner review of PR #36.
+2. Keep it unmerged and do not deploy unless the controlling user instruction explicitly authorizes those actions.

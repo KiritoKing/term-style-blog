@@ -1176,5 +1176,5 @@ tasks:
   report: .agent/reports/SHELL02-resilient-shell-interactivity.md
   handoff: .agent/handoffs/SHELL02-resilient-shell-interactivity.md
   blocked_by: []
-  unblock_when: Supervisor review of report/diff; then commit and submit authorized PR, wait for CI terminal status
-  last_updated: 2026-10-19T21:25:00Z
+  unblock_when: Supervisor/owner review of PR 36; keep unmerged and undeployed unless explicitly reauthorized
+  last_updated: 2026-10-19T21:30:00Z

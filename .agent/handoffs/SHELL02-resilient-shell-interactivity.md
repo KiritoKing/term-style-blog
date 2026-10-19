@@ -1,6 +1,6 @@
 # Handoff: SHELL02 resilient-shell-interactivity
 
-Status: review; implementation, local acceptance, benchmark, and OpenSpec archive complete; PR/CI pending
+Status: review; implementation, local acceptance, benchmark, OpenSpec archive, PR, and CI complete
 Owner: delegated-codex
 Branch: `perf/early-interactivity-resilience`
 Last updated: 2026-10-19T21:22:00Z
@@ -32,11 +32,11 @@ See task SHELL02 in `.agent/tasks.yaml`. Changes remain within that scope.
 
 ## In progress
 
-- Review/commit branch, submit PR, and wait for all CI checks to finish.
+- Await owner/supervisor review of PR #36.
 
 ## Blocked by
 
-- Nothing external. PR and CI have not yet been completed.
+- Awaiting review. PR #36 is open and CI checks have reached terminal success.
 
 ## Files changed
 
@@ -62,6 +62,7 @@ See task SHELL02 in `.agent/tasks.yaml`. Changes remain within that scope.
 - `openspec validate resilient-shell-interactivity --strict` — pass.
 - `git diff --check` — pass.
 - `pnpm test` — pass, 133/133; `pnpm test:deployment` — pass, 53/53.
+- Commit `ed5ddaaa27d724d0a26e8b2eb174e00b6e6972bf`; PR #36 is open. `verify`, CodeQL, and CodeQL language analyses all pass.
 - Paired strict content builds — pass, 55 article pages / 9,911 indexed words each.
 
 ## Risks

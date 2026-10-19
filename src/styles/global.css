@@ -43,9 +43,28 @@
   }
 
   .prose-terminal .mermaid {
+    --pele-bg: #ffffff;
+    --pele-fg: #374151;
+    --pele-muted: #6b7280;
+    --pele-line: #6b7280;
+    --pele-surface: #f3f4f6;
+    --pele-surface-alt: #e5e7eb;
+    --pele-border: #9ca3af;
+    --pele-accent: #2563eb;
     max-width: 100%;
     overflow-x: auto;
     overscroll-behavior-inline: contain;
+  }
+
+  .dark .prose-terminal .mermaid {
+    --pele-bg: #020202;
+    --pele-fg: #d1d5db;
+    --pele-muted: #9ca3af;
+    --pele-line: #9ca3af;
+    --pele-surface: #111111;
+    --pele-surface-alt: #1f1f1f;
+    --pele-border: #4b5563;
+    --pele-accent: #4ade80;
   }
 
   .prose-terminal .mermaid[data-mermaid-scrollable='true'] > svg {

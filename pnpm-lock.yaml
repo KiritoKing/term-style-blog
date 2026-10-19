@@ -32,6 +32,9 @@ importers:
       mermaid:
         specifier: ^11.17.2
         version: 11.17.2
+      pele:
+        specifier: 1.6.0
+        version: 1.6.0
       react:
         specifier: ^19.0.0
         version: 19.2.4
@@ -2447,6 +2450,10 @@ packages:
 
   pathe@2.0.3:
     resolution: {integrity: sha512-WUjGcAqP1gQacoQe+OBJsFA7Ld4DyXuUIjZ5cc75cLHvJ7dtNsTugphxIADwspS+AraAUePCKrSVtPLFj/F88w==}
+
+  pele@1.6.0:
+    resolution: {integrity: sha512-VfAiVItsOGlGhvnBfphdT28VCG7mXMZxQNOwAGsCtxI2ztbUsT39MraEOYjsapLxVETkdUZscm0DdotYDQMLdw==}
+    engines: {node: '>=20'}
 
   piccolore@0.1.3:
     resolution: {integrity: sha512-o8bTeDWjE086iwKrROaDf31K0qC/BENdm15/uH9usSC/uZjJOKb2YGiVHfLY4GhwsERiPI1jmwI2XrA7ACOxVw==}
@@ -5948,6 +5955,8 @@ snapshots:
   path-data-parser@0.1.0: {}
 
   pathe@2.0.3: {}
+
+  pele@1.6.0: {}
 
   piccolore@0.1.3: {}
 

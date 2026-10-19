@@ -1,5 +1,5 @@
 version: 1
-last_updated: 2026-06-09T00:43:20+0800
+last_updated: 2026-10-19T23:20:00+0800
 source_documents:
 - AGENTS.md
 - docs/ai-agent-delivery-plan.md
@@ -1098,3 +1098,22 @@ tasks:
   report: .agent/reports/AUTO02-main-framework-publication.md
   handoff: .agent/handoffs/AUTO02-main-framework-publication.md
   last_updated: 2026-10-09
+
+- id: PELE01
+  change: evaluate-pele-mermaid-renderer
+  priority: P2
+  objective: Measure Pele against the site's real Mermaid diagrams and ship a guarded migration only if measured client savings justify the compatibility tradeoff
+  deps: []
+  status: review
+  owner_session: delegated-codex
+  branch: codex/evaluate-pele-mermaid
+  allowed_paths: [package.json, pnpm-lock.yaml, src/pages/posts/[id].astro, src/styles/global.css, src/test/pele-compatibility.test.ts, tests/e2e/pele-mermaid.spec.ts, tests/fixtures/mermaid/**, docs/pele-mermaid-migration-benchmark.md, .agent/**]
+  locked_paths: [package.json, pnpm-lock.yaml, tests/**]
+  relevant_specs: [openspec/specs/blog-post-pages/spec.md, openspec/specs/typography-rendering/spec.md]
+  required_tests: [real_content_fixture, compatibility_unit, svg_security, dark_mode, responsive_mobile_desktop, build, astro_check, full_e2e, benchmark_reproduction]
+  acceptance_commands: ["pnpm test", "pnpm test:deployment", "pnpm check", "pnpm build", "pnpm test:e2e", "git diff --check"]
+  report: .agent/reports/PELE01-evaluate-pele-mermaid-renderer.md
+  handoff: .agent/handoffs/PELE01-evaluate-pele-mermaid-renderer.md
+  blocked_by: []
+  unblock_when: Draft PR CI reaches a terminal state and review can verify reported results
+  last_updated: 2026-10-19

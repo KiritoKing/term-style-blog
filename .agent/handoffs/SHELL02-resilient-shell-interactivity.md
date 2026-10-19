@@ -1,9 +1,9 @@
 # Handoff: SHELL02 resilient-shell-interactivity
 
-Status: review; implementation and de124ac CI passed; next two review findings fixed locally, pending push and updated CI/review
+Status: review; implementation and 8cfe979 CI passed; metadata correction for the latest review finding is in progress
 Owner: delegated-codex
 Branch: `perf/early-interactivity-resilience`
-Last updated: 2026-10-19T21:50:00Z
+Last updated: 2026-10-19T21:55:00Z
 
 ## Objective
 
@@ -30,16 +30,16 @@ See task SHELL02 in `.agent/tasks.yaml`. Changes remain within that scope.
 - Same-snapshot baseline/candidate builds pass. Initial full E2E run found stale selectors in `render-overflow.spec.ts`; they are updated and full E2E now passes 38/38 with 13 expected skips.
 - Shell/mobile specs are synced. Review identified lifecycle mismatch (archived while task remained review) and missing accessibility active styling. The change is restored to `openspec/changes/resilient-shell-interactivity/`, registry points there, and strict change/spec validation passes.
 - Accessibility active classes are restored in native sync and regression-checked after click and reload from saved preference.
-- Follow-up review on de124ac identified late ClientRouter synchronization of preferences and terminal disclosure state. Both now sync on `astro:after-swap`; the browser regression records state during that event and passes.
+- Follow-up review on de124ac identified late ClientRouter synchronization of preferences and terminal disclosure state. Both now sync on `astro:after-swap`; the browser regression records state during that event and passes. Commit `8cfe979068f8dca1ce2f67d61d542f24edddf8a5` contains the fix.
 - The base shell-layout spec and active delta now require preference/disclosure restoration before the swapped DOM paints.
 
 ## In progress
 
-- Commit/push lifecycle fixes, then wait for latest-head CI and review to reach terminal state.
+- Commit/push the corrected status records, then wait for latest-head CI and review to reach terminal state.
 
 ## Blocked by
 
-- `de124ac5c2a37cc88ba3e9f8e9ed6d63ba72250e` is the latest committed head. Its CI run 39262242541 is green; initial review threads are resolved. Follow-up review found two further P2 lifecycle issues; local fixes are uncommitted and the corresponding review threads are still open.
+- Latest committed head is `8cfe979068f8dca1ce2f67d61d542f24edddf8a5`. CI run `39263697664` is green. All four code/lifecycle review threads are resolved; a follow-up review found stale status text in this handoff/report, being corrected in the current worktree.
 
 ## Files changed
 
@@ -73,7 +73,7 @@ See task SHELL02 in `.agent/tasks.yaml`. Changes remain within that scope.
 
 ## Next actions
 
-- Commit and push the two review fixes; await fresh CI/review.
+- Commit and push the corrected status records; await fresh CI/review.
 - After acceptance, mark SHELL02 done and archive OpenSpec, then continue the owner's authorized merge/publication verification.
 
 ## Risks

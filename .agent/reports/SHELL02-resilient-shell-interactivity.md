@@ -1,6 +1,6 @@
 # Report: SHELL02 resilient-shell-interactivity
 
-Status: partial (latest review findings fixed locally; latest commit, CI, and review pending)
+Status: review (implementation, local checks, and latest CI passed; awaiting final review acceptance)
 
 ## Files changed
 
@@ -39,11 +39,11 @@ Status: partial (latest review findings fixed locally; latest commit, CI, and re
 
 ## Result and risks
 
-The reviews on commits `ed5ddaa` and `de124ac` found four issues: OpenSpec archived before acceptance, missing accessibility active styling, and theme/a11y plus terminal disclosure synchronization occurring after first paint on ClientRouter swaps. The first two are committed in `de124ac`; the lifecycle fixes are local and now use `astro:after-swap`, with explicit browser snapshots at that event. Strict OpenSpec validation and focused E2E pass. The latest lifecycle changes are not yet committed/pushed; latest-head CI/review are pending. TDD sequencing was not fully met: tests were added after the first implementation rather than run red before the code change.
+Reviews on commits `ed5ddaa`, `de124ac`, and `8cfe979` found five issues: OpenSpec was archived before acceptance, accessibility styling was missing, theme/a11y and terminal state restored after first paint, and status metadata lagged the latest commit. All fixes are included in `8cfe979068f8dca1ce2f67d61d542f24edddf8a5`, pushed to PR #36. CI run `39263697664` passed all steps; strict OpenSpec and shell E2E 3/3 passed locally. The fifth review thread about status metadata is now fixed in this report and the handoffs; latest metadata-only CI/review remain pending. TDD sequencing was not fully met: tests were added after the first implementation rather than run red before the code change.
 
 The local benchmark is not a production network benchmark. It ran through Astro preview on localhost and did not model Cloudflare compression, CPU throttling, or remote latency. Script transfer/decoded data and timing limitations are documented alongside the raw samples.
 
 ## Follow-ups
 
-1. Commit/push the lifecycle fixes and wait for latest-head CI/review.
+1. Commit/push the corrected handoff and wait for latest-head CI/review.
 2. After review acceptance, mark SHELL02 done and archive its OpenSpec change; then follow the controlling user instruction for merge and production verification.

@@ -1177,4 +1177,4 @@ tasks:
   handoff: .agent/handoffs/SHELL02-resilient-shell-interactivity.md
   blocked_by: []
   unblock_when: Review findings are fixed, latest CI and review are clear, then merge and complete authorized publication verification
-  last_updated: 2026-10-19T21:50:00Z
+  last_updated: 2026-10-19T21:55:00Z
